@@ -20,7 +20,7 @@ export default function RoomsPage() {
       <h1>Rooms details</h1>
       <h1>Rooms details</h1>
       <h1>Rooms details</h1>
-      
+      <div className="h-[100rem]"></div>
     </div>
   );
 }

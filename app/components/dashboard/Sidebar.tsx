@@ -2,7 +2,7 @@ import Link from "next/link";
 
 function Sidebar() {
   return (
-    <div className="w-[20%] bg-white rounded-2xl p-3 shadow-lg">
+    <div className="w-3/12 bg-white rounded-2xl p-3 shadow-lg">
       <div className="flex items-center space-x-4 p-2 mb-5">Dashboard</div>
       <ul className="space-y-2 text-sm">
         <li>
