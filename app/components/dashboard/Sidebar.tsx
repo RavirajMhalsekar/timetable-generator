@@ -8,9 +8,9 @@ function Sidebar() {
         <li>
           <Link
             href="/components/dashboard/rooms"
-            className="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline"
+            className="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-red-400 focus:bg-white hover:text-white focus:shadow-outline"
           >
-            <span className="text-gray-600">
+            <span className="text-gray-600 ">
               <svg
                 className="h-5"
                 xmlns="http://www.w3.org/2000/svg"
@@ -33,7 +33,7 @@ function Sidebar() {
         <li>
           <Link
             href="/components/dashboard/labs"
-            className="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline"
+            className="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-purple-200 focus:bg-gray-200 focus:shadow-outline"
           >
             <span className="text-gray-600">
               <svg
