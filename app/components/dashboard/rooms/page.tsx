@@ -38,6 +38,7 @@ export default function RoomsPage() {
           <Button type="primary">Submit</Button>
         </Form.Item>
       </Form>
+
     </div>
   );
 }

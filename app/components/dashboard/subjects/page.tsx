@@ -1,7 +1,9 @@
+import SubjectForm from "./SubjectForm";
+
 export default function SubjectsPage() {
   return (
     <div className="bg-white">
-      <h1>Subjects details</h1>
+      <h1><SubjectForm/></h1>
     </div>
   );
 }
