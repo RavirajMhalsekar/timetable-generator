@@ -44,29 +44,39 @@ function RoomsForm() {
       </button>
       <Modal
        
-        title="Basic Modal"
+        title="Enter Room Data "
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
       >
-          <Form
-      {...layout}
-      form={form}
-      name="control-hooks"
-      onFinish={onFinish}
-      style={{ maxWidth: 600 }}
-    >
-      <Form.Item
-        name="note"
-        label="Note"
-        rules={[{ required: true }]}
-        style={{ marginBottom: 0 }}
-      >
-        <Input />
-      </Form.Item>
-    </Form>
-
-
+          <div className="grid gap-6 mb-6 md:grid-cols-2">
+      <div>
+        <label htmlFor="room_name" className="block mb-2 text-sm font-medium text-gray-900 ">
+          Name Of Room
+        </label>
+        <input
+          type="text"
+          id="room_name"
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+          placeholder="L28"
+          required
+        />
+      </div>
+      
+      
+      <div>
+        <label htmlFor="capacity" className="block mb-2 text-sm font-medium text-gray-900 ">
+          Capacity Of Room
+        </label>
+        <input
+          type="number"
+          id="capacity"
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          placeholder="0"
+          required
+        />
+      </div>
+    </div>
 
       </Modal>
     </div>
