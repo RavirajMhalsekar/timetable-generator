@@ -25,3 +25,89 @@ body {
     )
     rgb(var(--background-start-rgb));
 } */
+.App {
+  
+  
+  margin: 0 auto;
+} 
+.App h2{
+ padding-left: 500px;
+ color: #ffffffdd;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.dictionarys-list {
+  margin-bottom: 20px;
+} 
+.ant-modal .ant-modal-title {
+  color:rgb(128, 128, 209) ;
+}
+
+.total-field {
+  text-align: center;
+  margin-top: 20px;
+} 
+.button{
+  margin: 5px;
+  background-color:rgb(128, 128, 209);
+}  
+.ant-btn-primary{
+   
+  background-color:rgb(128, 128, 209); 
+   
+ }   
+ .ant-btn-primary.button:hover{
+  background-color:#4e0b4add; 
+ } 
+ .ant-btn-primary.button:active{
+  background-color:#4e0b4add; 
+ } 
+ .ant-btn{
+   
+  background-color:rgb(128, 128, 209); 
+  color:#ffffffdd; 
+  
+} 
+
+
+
+
+ 
+.header {
+  background-color:rgb(128, 128, 209);
+  
+  padding-left: 28px; 
+  padding-bottom: 15px; 
+  padding-top: 15px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
+} 
+h3{
+  color: rgb(128, 128, 209);
+}
+
+.header h1 {
+  color: #fff;
+  font-family: "McLaren", cursive;
+  font-weight: 200;
+} 
+/* App.css (or your custom CSS file) */
+
+/* Custom styles for the button */
+.no-click-effect {
+  background-color: rgb(128, 128, 209); /* Change this to the desired background color */
+  border-color: rgb(128, 128, 209); /* Change this to the desired border color */
+  color:#ffffff; /* Change this to the desired text color */
+}
+
+/* Remove the click effect */
+.no-click-effect:hover,
+.no-click-effect:active{
+  background-color:rgb(128, 128, 209); /* Ensure the background color remains the same */
+  border-color: rgb(128, 128, 209); /* Ensure the border color remains the same */
+  color:#ffffffdd; /* Ensure the text color remains the same */
+}
