@@ -8,7 +8,7 @@ function Sidebar() {
         <li>
           <Link
             href="/components/dashboard/rooms"
-            className="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-red-400 focus:bg-white hover:text-white focus:shadow-outline"
+            className="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium  hover:bg-indigo-500 focus:bg-indigo-500 hover:text-white focus:shadow-outline"
           >
             <span className="text-gray-600 ">
               <svg
@@ -33,7 +33,7 @@ function Sidebar() {
         <li>
           <Link
             href="/components/dashboard/labs"
-            className="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-purple-200 focus:bg-gray-200 focus:shadow-outline"
+            className="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-indigo-500 focus:bg-indigo-500  hover:text-white focus:shadow-outline"
           >
             <span className="text-gray-600">
               <svg
@@ -57,7 +57,7 @@ function Sidebar() {
         <li>
           <Link
             href="/components/dashboard/faculty"
-            className="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline"
+            className="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-indigo-500 focus:bg-indigo-500 hover:text-white focus:shadow-outline"
           >
             <span className="text-gray-600">
               <svg
@@ -81,7 +81,7 @@ function Sidebar() {
         <li>
           <Link
             href="/components/dashboard/subjects"
-            className="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline"
+            className="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-indigo-500 focus:bg-indigo-500 hover:text-white focus:shadow-outline"
           >
             <span className=" text-gray-600">
               <svg
@@ -105,7 +105,7 @@ function Sidebar() {
         <li>
           <Link
             href="/components/dashboard/classroomDetails"
-            className="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline"
+            className="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-indigo-500 focus:bg-indigo-500  hover:text-white focus:shadow-outline"
           >
             <span className="text-gray-600">
               <svg
@@ -129,7 +129,7 @@ function Sidebar() {
         <li>
           <Link
             href="/components/dashboard/meetingInfo"
-            className="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline"
+            className="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-indigo-500 focus:bg-indigo-500  hover:text-white focus:shadow-outline"
           >
             <span className="text-gray-600">
               <svg
@@ -153,7 +153,7 @@ function Sidebar() {
         <li>
           <Link
             href="/logout"
-            className="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium hover:bg-gray-200 focus:bg-gray-200 focus:shadow-outline"
+            className="flex items-center space-x-3 text-gray-700 p-2 rounded-md font-medium  hover:bg-indigo-500 focus:bg-indigo-500 hover:text-white focus:shadow-outline"
           >
             <span className="text-gray-600">
               <svg

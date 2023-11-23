@@ -1,86 +1,77 @@
-"use client";
-import React, { useState } from "react";
-import { Button, Modal ,Input,Select,Form} from "antd"; 
-const { Option } = Select;
-const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
-  };
-  
-  const tailLayout = {
-    wrapperCol: { offset: 8, span: 16 },
-  };
-  const onFinish = (values: any) => {
-    console.log(values);
-  };
+import React, { useEffect, useState, ChangeEvent } from "react";
+import { Modal, Input, InputNumber,Form } from "antd";
 
-function RoomsForm() { 
-    const [form] = Form.useForm();
+interface RoomFormProps {
+  modalVisible: boolean;
+ handleSaveRoomData: (name: string, capacity: number | undefined) => void;
+  setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+const RoomForm: React.FC<RoomFormProps> = ({
+  modalVisible,
+ handleSaveRoomData,
+  setModalVisible,
+}) => {
+  const [name, setname] = useState<string>("");
+  const [capacity, setcapacity] = useState<number | undefined>( undefined);
 
-  const showModal = () => {
-    setIsModalOpen(true);
+  useEffect(() => {
+    if (!modalVisible) {
+      setname("");
+      setcapacity(undefined);
+    }
+  }, [modalVisible]);
+
+  const handleCancel = () => {
+    setModalVisible(false);
   };
 
   const handleOk = () => {
-    setIsModalOpen(false);
+   handleSaveRoomData(name, capacity);
+    setModalVisible(false);
   };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
+  const handlenameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setname(e.target.value);
   };
+
+  const handlecapacityChange = (value: number ) => {
+    setcapacity(value);
+  };
+
   return (
-    <div>
-      {/* <Button type="default" onClick={showModal}>
-        Open Modal
-      </Button> */}
-      <button
-        type="button"
-        onClick={showModal}
-        className="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l  focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-      >
-        Purple to Pink
-      </button>
-      <Modal
+    <Modal
+      className="input"
+      title="Enter Data For Rooms !!!!!!"
+      visible={modalVisible}
+      onOk={handleOk}
+      onCancel={handleCancel}
+    > 
+     <Form>
+          {/* Add a label for the room name */}
+          <Form.Item >
+          <label className="block mb-2 text-sm font-medium text-gray-900">Room Name:</label>
+            <Input
+              className="input"
+              placeholder="Enter the room name"
+              value={name}
+              onChange={handlenameChange}
+            />
+          </Form.Item>
        
-        title="Enter Room Data "
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-          <div className="grid gap-6 mb-6 md:grid-cols-2">
-      <div>
-        <label htmlFor="room_name" className="block mb-2 text-sm font-medium text-gray-900 ">
-          Name Of Room
-        </label>
-        <input
-          type="text"
-          id="room_name"
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-          placeholder="L28"
-          required
-        />
-      </div>
       
-      
-      <div>
-        <label htmlFor="capacity" className="block mb-2 text-sm font-medium text-gray-900 ">
-          Capacity Of Room
-        </label>
-        <input
-          type="number"
-          id="capacity"
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-          placeholder="0"
-          required
-        />
-      </div>
-    </div>
-
-      </Modal>
-    </div>
+             <Form.Item >
+             <label className="block mb-2 text-sm font-medium text-gray-900">Room Capacity:</label>
+      <InputNumber
+        className="input"
+        placeholder="Enter capacity Of the room"
+        value={capacity}
+        onChange={handlecapacityChange}
+      /> 
+                </Form.Item>
+       </Form>
+    </Modal>
   );
-}
+};
 
-export default RoomsForm;
+export default RoomForm;
