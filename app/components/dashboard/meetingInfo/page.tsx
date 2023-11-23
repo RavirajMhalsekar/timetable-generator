@@ -1,3 +1,4 @@
+
 "use client";
 import React, { useState, useEffect } from "react";
 import { Button } from "antd";
@@ -45,6 +46,7 @@ const MeetingPage: React.FC = () => {
   };
 
   return (
+
       <div className="App"> 
         <h1 className="text-indigo-500 text-bold">Meeting Information</h1>
               <div className="mt-10"> 
@@ -66,6 +68,7 @@ const MeetingPage: React.FC = () => {
         handleSaveData={handleSaveData}
         setModalVisible={setModalVisible}
       />
+
     </div>
   );
 };
