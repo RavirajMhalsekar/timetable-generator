@@ -48,20 +48,24 @@ const MeetingPage: React.FC = () => {
   return (
 
       <div className="App"> 
-        <h1 className="text-indigo-500 text-bold">Meeting Information</h1>
+      <div className="bg-white shadow-lg shadow-indigo-200 rounded-xl p-4 ">
+        <h1 className="text-indigo-900 font-bold text-3xl">Meeting Information</h1>
+        </div>
+        <div className="mt-8 shadow-indigo-200 bg-white p-5 rounded-2xl shadow-xl">
               <div className="mt-10"> 
            
         <Button
           
           type="button"
           onClick={() => setModalVisible(true)} 
-          className="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l  focus:outline-none  font-medium rounded-lg text-sm px-7 py-5.5 text-center me-2 mb-2"
+          className="text-white  focus:outline-none hover:bg-indigo-900 font-medium rounded-lg text-sm px-7 py-5.5 text-center me-2 mb-2"
         >
           Add Data
         </Button>
         </div>
-        <div className="mt-48">
+        <div className="mt-10">
       <List data={data} onDelete={handleDelete} />
+      </div>
       </div>
       <Modal
         modalVisible={modalVisible}

@@ -42,19 +42,20 @@ const RoomPage: React.FC = () => {
   };
 
   return (
-    <div className="App">
-      <h1 className="text-indigo-500 text-3xl font-bold tracking-tight sm:text-4xl">Room Details</h1>
-      <div className="mt-10">
+      <div className="App">  
+              <h1 className="text-indigo-500 ">Room</h1>
+              <div className="mt-10">
         <Button
-          // type="button"
-          onClick={() => setModalVisible(true)}
+          
+          type="button"
+          onClick={() => setModalVisible(true)} 
           className="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l  focus:outline-none  font-medium rounded-lg text-sm px-7 py-5.5 text-center me-2 mb-2"
         >
           Add Data
         </Button>
-      </div>
-      <div className="mt-48">
-        <List data={data} onDelete={handleDelete} />
+        </div>
+        <div className="mt-48">
+      <List data={data} onDelete={handleDelete} />
       </div>
       <Modal
         modalVisible={modalVisible}
