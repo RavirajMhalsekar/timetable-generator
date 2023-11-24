@@ -13,8 +13,8 @@ export default function DashBoardLayout({
       <div className="p-2 bg-gray-100">
         <div className="flex flex-wrap justify-between bg-gray-100 h-[92vh] m-5 rounded-2xl">
           <Sidebar />
-          <div className=" w-[74%]  rounded-2xl bg-white shadow-xl">
-            <div className="p-4">{children}</div>
+          <div className=" w-[74%] rounded-2xl ">
+            <div>{children}</div>
           </div>
         </div>
       </div>

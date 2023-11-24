@@ -20,14 +20,13 @@ function SubjectForm() {
   return (
     <div>
       
-      <Button className="mt-2" type="default" onClick={showModal}>
+      <Button className="mt-2 text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l" type="default" onClick={showModal}>
         Open Modal
       </Button>
 
       <Modal
         // title="Add Subject Form"
         open={isModalOpen}
-        onOk={handleOk}
         onCancel={handleCancel}
         footer={null}
       >
@@ -144,7 +143,7 @@ function SubjectForm() {
               Split
             </label>
             <Select
-              placeholder="Select Department"
+              placeholder="Require split?"
               style={{ width: "100%", border: "none", height: 42 }} // Adjust width and border as needed
               onChange={handleChange}
               options={[

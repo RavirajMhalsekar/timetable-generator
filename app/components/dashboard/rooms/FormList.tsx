@@ -30,39 +30,35 @@ const FormList: React.FC<FormListProps> = ({ data, onDelete }) => {
   return (
     <div className="dictionarys-list">
       <List
-  header={<h3>The Room Data</h3>}
-  bordered
-  dataSource={data}
-  renderItem={(item, index) => (
-    <List.Item className="flex items-center">
-      <div className="mr-4">
-        <h3 style={customStyle}>name</h3>
-        {item.name}
-      </div>
-      <div className="mr-4">
-        <h3 style={customStyle}>capacity</h3>
-        {item.capacity}
-      </div>
-      <Button
-        onClick={() => onDelete(index)}
-        type="danger"
-      >
-        Delete
-      </Button>
-    </List.Item>
-  )}
-  pagination={
-    data.length > pageSize
-      ? {
-          current: currentPage,
-          pageSize: pageSize,
-          total: data.length,
-          onChange: handlePageChange,
+        header={<h3>The Room Data</h3>}
+        bordered
+        dataSource={data}
+        renderItem={(item, index) => (
+          <List.Item className="flex items-center">
+            <div className="mr-4">
+              <h3 style={customStyle}>name</h3>
+              {item.name}
+            </div>
+            <div className="mr-4">
+              <h3 style={customStyle}>capacity</h3>
+              {item.capacity}
+            </div>
+            <Button onClick={() => onDelete(index)} type="danger">
+              Delete
+            </Button>
+          </List.Item>
+        )}
+        pagination={
+          data.length > pageSize
+            ? {
+                current: currentPage,
+                pageSize: pageSize,
+                total: data.length,
+                onChange: handlePageChange,
+              }
+            : false
         }
-      : false
-  }
-/>
-
+      />
     </div>
   );
 };
