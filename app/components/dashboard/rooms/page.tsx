@@ -4,13 +4,12 @@ import { Button } from "antd";
 import List from "./FormList";
 import Modal from "./RoomForm";
 
-
 interface Data {
   name: string;
   capacity: string;
 }
 
-const RoomPage: React.FC = () => { 
+const RoomPage: React.FC = () => {
   const storageKey = "roomPageData"; // Unique key for RoomPage
   const [data, setData] = useState<Data[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -27,7 +26,6 @@ const RoomPage: React.FC = () => {
     setModalVisible(false);
 
     localStorage.setItem(storageKey, JSON.stringify(updatedData));
-
   };
 
   useEffect(() => {

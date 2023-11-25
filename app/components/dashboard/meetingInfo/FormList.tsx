@@ -50,7 +50,7 @@ const FormList: React.FC<FormListProps> = ({ data, onDelete }) => {
               <h3 style={customStyle}>Time</h3>
               {item.time ? moment(item.time).format("HH:mm:ss") : "N/A"}
             </div>
-            <Button onClick={() => onDelete(index)} type="danger">
+            <Button onClick={() => onDelete(index)}>
               Delete
             </Button>
           </List.Item>
