@@ -1,12 +1,25 @@
 import Link from "next/link";
-function HomePage() {
-  return (
-    <div>
-      <Link href="components/dashboard/rooms"><h1>Dashboard</h1></Link>
-      <Link href="components/output"><h1>Output</h1></Link>
-      
-    </div>
-  )
-}
+import React from 'react';
+import { Button } from 'antd';
 
-export default HomePage
+const HomePage: React.FC = () => (
+  <div className="flex flex-col items-center justify-center h-screen">
+    <h1 className="text-4xl font-bold mb-6">Time Table Generator</h1>
+
+    <div className="flex">
+      {/* Use Link component for client-side navigation */}
+      <Link href="/components/dashboard/rooms">
+        <Button type="primary" key="console">
+         Dashboard
+        </Button>
+      </Link>
+      <div className="mr-4"></div>
+      {/* Another link button */}
+      <Link href="/buy">
+        <Button key="buy">/</Button>
+      </Link>
+    </div>
+  </div>
+);
+
+export default HomePage;

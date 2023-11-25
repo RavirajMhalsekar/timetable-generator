@@ -30,7 +30,8 @@ const FormList: React.FC<FormListProps> = ({ data, onDelete }) => {
   };
 
   return (
-    <div className="dictionarys-list">
+    <div className="dictionarys-list"> 
+    
       <List
         header={<h3>The Room Data</h3>}
         bordered

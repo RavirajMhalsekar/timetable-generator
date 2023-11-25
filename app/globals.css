@@ -111,3 +111,6 @@ h3{
   border-color: rgb(128, 128, 209); /* Ensure the border color remains the same */
   color:#ffffffdd; /* Ensure the text color remains the same */
 }
+.carousel-content .slick-dots li {
+  background-color: black !important;
+}
