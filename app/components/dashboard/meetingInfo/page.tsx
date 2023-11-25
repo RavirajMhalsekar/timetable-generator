@@ -21,7 +21,7 @@ const MeetingPage: React.FC = () => {
     if (!name || !date || !time) return;
     const newData: Data = {
       name: name,   
-      date: date,
+      date: date ,
       time: time, 
     };
     const updatedData = [...data, newData];
@@ -47,11 +47,16 @@ const MeetingPage: React.FC = () => {
 
   return (
 
+<<<<<<< HEAD
+      <div className="App "> 
+        <h1 className="text-indigo-500 text-bold">Meeting Information</h1>
+=======
       <div className="App"> 
       <div className="bg-white shadow-lg shadow-indigo-200 rounded-xl p-4 ">
         <h1 className="text-indigo-900 font-bold text-3xl">Meeting Information</h1>
         </div>
         <div className="mt-8 shadow-indigo-200 bg-white p-5 rounded-2xl shadow-xl">
+>>>>>>> 9b9fb453bfb88413c79aabeb454fe7ffdea8ecb7
               <div className="mt-10"> 
            
         <Button

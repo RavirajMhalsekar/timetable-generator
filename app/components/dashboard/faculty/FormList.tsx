@@ -29,13 +29,13 @@ const FormList: React.FC<FormListProps> = ({ data, onDelete }) => {
   };
 
   return (
-    <div className="dictionarys-list">
+    <div className="dictionarys-list ">
       <List
         grid={{ gutter: 16, column: 3 }}
         dataSource={data}
         renderItem={(item, index) => (
           <List.Item>
-            <Card
+            <Card 
               title={item.facultyName}
               extra={<Button onClick={() => onDelete(index)} type="danger">Delete</Button>}
             >

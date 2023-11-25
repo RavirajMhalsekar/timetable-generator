@@ -1,15 +1,47 @@
-import ClassroomDetailsForm from "./ClassroomDetailsForm";
+"use client";
+import React, { useState } from 'react';
+import { Carousel, Radio } from 'antd';
+import type { DotPosition } from 'antd/es/carousel';
+import { LeftOutlined, RightOutlined } from '@ant-design/icons'; 
+import ClassroomDetailsForm from './CompClassroomDetails';
+const contentStyle: React.CSSProperties = {
+  height: '160px',
+  color: 'rgb(128, 128, 209)',
+  lineHeight: '160px',
+  textAlign: 'center', 
+  background:'black',
+  
+};
 
-export default function ClassroomDetailsPage() {
+const App: React.FC = () => {
+  const [dotPosition, setDotPosition] = useState<DotPosition>('top'); 
+
+  const dotStyle: React.CSSProperties = {
+    color: 'black', // Set the background color to black
+  };
+  
+
   return (
-    <div className="bg-white">
-      <div className="mx-auto max-w-2xl text-center">
-        <h2 className="text-3xl font-bold tracking-tight text-gray-700 sm:text-4xl">
-         Classroom Details
-        </h2>
-      </div>
-      <hr className="h-px my-4 bg-gray-300 border-0 "/>
-      <ClassroomDetailsForm/>
-    </div>
+    <>
+     
+      <Carousel dotPosition={dotPosition}  dotStyle={dotStyle}  >
+      <div > 
+      <div style={contentStyle}>
+            <ClassroomDetailsForm />
+          </div>
+          </div>
+        <div>
+          <h3 style={contentStyle}>2</h3>
+        </div>
+        <div>
+          <h3 style={contentStyle}>3</h3>
+        </div>
+        <div>
+          <h3 style={contentStyle}>4</h3>
+        </div>
+      </Carousel>
+    </>
   );
-}
+};
+
+export default App;
