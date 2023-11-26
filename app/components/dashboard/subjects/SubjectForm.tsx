@@ -2,16 +2,12 @@
 import React, { useState } from "react";
 import { Button, Modal, Select } from "antd";
 function SubjectForm() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const handleChange = (value: string) => {
     console.log(`selected ${value}`);
   };
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
   };
 
   const handleCancel = () => {

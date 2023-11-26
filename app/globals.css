@@ -26,15 +26,8 @@ body {
     rgb(var(--background-start-rgb));
 } */
 .App {
-  
-  
-  margin: 0 auto;
+  margin: 0;
 } 
-.App h2{
- padding-left: 500px;
- color: #ffffffdd;
-}
-
 .input-container {
   display: flex;
   align-items: center;
