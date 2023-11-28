@@ -1,13 +1,14 @@
 "use client";
 import React, { useState } from "react";
-import { Modal, Input, InputNumber, Form, Button } from "antd";
+import { Modal, Input, InputNumber, Form, Button, notification,Spin  } from "antd";
 import SubmitRoomData from "../../Database/SubmitRoomData";
+import { LoadingOutlined } from '@ant-design/icons';
 
 const RoomForm: React.FC = () => {
   const [name, setName] = useState<string>("");
   const [capacity, setCapacity] = useState<number | undefined>();
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -21,22 +22,36 @@ const RoomForm: React.FC = () => {
   };
 
   const handleSubmit = async () => {
+    setIsLoading(true);
+
     const formData = {
       name,
       capacity,
     };
+    try {
+      await SubmitRoomData(formData);
+      setTimeout(() => {
+        notification.success({
+          message: "Form data submitted successfully!",
+          placement: "topRight",
+          duration: 3,
+        });
 
-    await SubmitRoomData(formData);
-
-    setName("");
-    setCapacity(undefined);
-    setIsModalOpen(false);
+        setName("");
+        setCapacity(undefined);
+        setIsModalOpen(false);
+        setIsLoading(false);
+      }, 1000); // Simulating a delay before showing the success notification
+    } catch (error) {
+      notification.error({
+        message: "Error submitting form data!",
+        placement: "topRight",
+        duration: 3,
+      });
+      setIsLoading(false);
+    }
   };
 
-  const submitFormData = async (name: string, capacity: number | undefined) => {
-    // Logic to submit form data, e.g., API call
-    console.log("Submitting form data:", name, capacity);
-  };
 
   return (
     <>
@@ -47,7 +62,7 @@ const RoomForm: React.FC = () => {
       >
         Open Modal
       </Button>
-      <Modal visible={isModalOpen} onCancel={handleCancel} footer={null}>
+      <Modal open={isModalOpen} onCancel={handleCancel} footer={null}>
         <Form onFinish={handleSubmit}>
           {/* Add a label for the room name */}
           <Form.Item>
@@ -74,6 +89,11 @@ const RoomForm: React.FC = () => {
               onChange={handleCapacityChange}
             />
           </Form.Item>
+          
+          <div className="flex justify-center items-center mb-8 ">
+          {isLoading ? (
+            <div className="text-center b gap-2 w-full inline-flex items-center justify-center p-4 px-6 py-3 bg-gray-100 border-2 border-purple-500 rounded-lg shadow-md text-indigo-600 text-base"><LoadingOutlined style={{ fontSize: 24 }} spin /> Loading...</div>
+          ) : (
           <button
             type="submit"
             className="relative inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-indigo-600 transition duration-300 ease-out border-2 border-purple-500 rounded-lg shadow-md group w-full"
@@ -98,7 +118,8 @@ const RoomForm: React.FC = () => {
               Submit
             </span>
             <span className="relative invisible">Submit</span>
-          </button>
+          </button>)}
+          </div>
         </Form>
       </Modal>
     </>
