@@ -33,7 +33,7 @@ const Table: React.FC<TableProps> = ({ columns, data }) => {
           resizable: true,
           language: {
             'search': {
-              'placeholder': ' Search...'
+              'placeholder': '🔎 Search...'
 
             },
             'pagination': {
