@@ -7,11 +7,11 @@ interface HeaderProps {
 
 const Header: FC<HeaderProps> = ({ header }) => {
   return (
-    <div className="bg-white text-left p-3 rounded-2xl shadow-xl ">
-      <h2 className="text-xl font-bold tracking-tight text-indigo-500 sm:text-4xl">
+    <div className="bg-white shadow-lg shadow-indigo-200 rounded-xl p-4 ">
+    <h1 className="text-indigo-900 font-bold text-3xl">
         {header}
-      </h2>
-    </div>
+      </h1>
+      </div>
   );
 };
 

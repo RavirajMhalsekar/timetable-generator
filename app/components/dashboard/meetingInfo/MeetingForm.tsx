@@ -5,15 +5,20 @@ import {
   Input,
   InputNumber,
   Form,
+  DatePicker, 
+  TimePicker,
   // Button,
   notification,
   // Spin,
-} from "antd";
-import SubmitRoomData from "../../Database/SubmitRoomData";
+} from "antd"; 
+import dayjs, { Dayjs } from "dayjs";
+
+import SubmitMeetingData from "../..//Database/SubmitMeetingData";
 import { LoadingOutlined } from "@ant-design/icons";
-const RoomForm: React.FC = () => {
-  const [name, setName] = useState<string>("");
-  const [capacity, setCapacity] = useState<number | undefined>();
+const MeetingForm: React.FC = () => {
+  const [meetingName, setMeetingName] = useState<string>("");
+  const [date, setDate] = useState<string>("");
+  const [time, setTime] = useState<Dayjs | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const showModal = () => {
@@ -24,19 +29,22 @@ const RoomForm: React.FC = () => {
     setIsModalOpen(false);
   };
 
-  const handleCapacityChange = (value: number | undefined | null) => {
-    setCapacity(value === null ? undefined : value);
-  };
+  
+  
 
+  const handleTimeChange = (time: Dayjs | null) => {
+    setTime(time);
+  };
   const handleSubmit = async () => {
     setIsLoading(true);
 
     const formData = {
-      name,
-      capacity,
+      meetingName,
+      date,
+      time
     };
     try {
-      await SubmitRoomData(formData);
+      await SubmitMeetingData(formData);
       setTimeout(() => {
         notification.success({
           message: "Form data submitted successfully!",
@@ -44,8 +52,9 @@ const RoomForm: React.FC = () => {
           duration: 3,
         });
 
-        setName("");
-        setCapacity(undefined);
+        setMeetingName("");
+        setDate("");
+        setTime(null);
         setIsModalOpen(false);
         setIsLoading(false);
       }, 1000); // Simulating a delay before showing the success notification
@@ -91,7 +100,7 @@ const RoomForm: React.FC = () => {
                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-9V6a1 1 0 112 0v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3z"
                 clipRule="evenodd"
               />
-            </svg> Add Room
+            </svg> Add Meeting
           </span>
         </button>
       </div>
@@ -100,28 +109,40 @@ const RoomForm: React.FC = () => {
           {/* Add a label for the room name */}
           <Form.Item>
             <label className="block mb-2 text-sm font-medium text-gray-900">
-              Name
+             Meeting Name
             </label>
             <Input
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               placeholder="Enter the room name"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
+              value={meetingName}
+              onChange={(event) => setMeetingName(event.target.value)}
+            />
+          </Form.Item>
+          <Form.Item>
+            <label className="block mb-2 text-sm font-medium text-gray-900">
+              Date
+            </label>
+            <Input
+              type="name"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              placeholder="Enter the room capacity"
+              value={date}
+              onChange={(event) => setDate(event.target.value)}
             />
           </Form.Item>
 
           <Form.Item>
             <label className="block mb-2 text-sm font-medium text-gray-900">
-              Capacity
+              Time
             </label>
-            <InputNumber
-              type="number"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-              placeholder="Enter the room capacity"
-              value={capacity}
-              onChange={handleCapacityChange}
-            />
+            <TimePicker
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            placeholder="Select Time"
+            value={time}
+              onChange={(time) => handleTimeChange(dayjs(time))}
+          />
           </Form.Item>
+         
 
           <div className="flex justify-center items-center mb-8 ">
             {isLoading ? (
@@ -163,4 +184,4 @@ const RoomForm: React.FC = () => {
   );
 };
 
-export default RoomForm;
+export default MeetingForm;
