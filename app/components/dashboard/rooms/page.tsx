@@ -5,9 +5,11 @@ const RoomPage: React.FC = () => {
   return (
     <div>
       <Header header="Room Details" />
-      <div className="bg-white  text-left p-3 rounded-2xl mt-3 w-full shadow-xl">
+      <div className="mt-20 shadow-indigo-200 bg-white p-5 rounded-2xl shadow-xl">
+      
         <RoomForm />
-        <RoomTable />
+        <RoomTable /> 
+       
       </div>
     </div>
   );

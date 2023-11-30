@@ -9,11 +9,13 @@ import {
   notification,
   // Spin,
 } from "antd";
-import SubmitRoomData from "../../Database/SubmitRoomData";
+import SubmitLabData from "../../Database/SubmitLabData";
 import { LoadingOutlined } from "@ant-design/icons";
-const RoomForm: React.FC = () => {
-  const [name, setName] = useState<string>("");
-  const [capacity, setCapacity] = useState<number | undefined>();
+const LabForm: React.FC = () => {
+  const [labName, setLabName] = useState<string>("");
+  const [subName, setSubName] = useState<string>("");
+  const [department, setDepartment] = useState<string>("");
+  const [labCapacity, setLabCapacity] = useState<number | undefined>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const showModal = () => {
@@ -25,18 +27,20 @@ const RoomForm: React.FC = () => {
   };
 
   const handleCapacityChange = (value: number | undefined | null) => {
-    setCapacity(value === null ? undefined : value);
+    setLabCapacity(value === null ? undefined : value);
   };
 
   const handleSubmit = async () => {
     setIsLoading(true);
 
     const formData = {
-      name,
-      capacity,
+      labName,
+      subName,
+      department,
+      labCapacity,
     };
     try {
-      await SubmitRoomData(formData);
+      await SubmitLabData(formData);
       setTimeout(() => {
         notification.success({
           message: "Form data submitted successfully!",
@@ -44,8 +48,10 @@ const RoomForm: React.FC = () => {
           duration: 3,
         });
 
-        setName("");
-        setCapacity(undefined);
+        setLabName("");
+        setSubName("");
+        setDepartment("");
+        setLabCapacity(undefined);
         setIsModalOpen(false);
         setIsLoading(false);
       }, 1000); // Simulating a delay before showing the success notification
@@ -91,7 +97,7 @@ const RoomForm: React.FC = () => {
                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-9V6a1 1 0 112 0v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3z"
                 clipRule="evenodd"
               />
-            </svg> Add Room
+            </svg> Add Lab
           </span>
         </button>
       </div>
@@ -100,13 +106,35 @@ const RoomForm: React.FC = () => {
           {/* Add a label for the room name */}
           <Form.Item>
             <label className="block mb-2 text-sm font-medium text-gray-900">
-              Name
+             Lab Name
             </label>
             <Input
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               placeholder="Enter the room name"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
+              value={labName}
+              onChange={(event) => setLabName(event.target.value)}
+            />
+          </Form.Item>
+          <Form.Item>
+            <label className="block mb-2 text-sm font-medium text-gray-900">
+             Subject Name
+            </label>
+            <Input
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              placeholder="Enter the room name"
+              value={ subName}
+              onChange={(event) => setSubName(event.target.value)}
+            />
+          </Form.Item>
+          <Form.Item>
+            <label className="block mb-2 text-sm font-medium text-gray-900">
+            Department
+            </label>
+            <Input
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              placeholder="Enter the room name"
+              value={department}
+              onChange={(event) => setDepartment(event.target.value)}
             />
           </Form.Item>
 
@@ -118,7 +146,7 @@ const RoomForm: React.FC = () => {
               type="number"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
               placeholder="Enter the room capacity"
-              value={capacity}
+              value={labCapacity}
               onChange={handleCapacityChange}
             />
           </Form.Item>
@@ -163,4 +191,4 @@ const RoomForm: React.FC = () => {
   );
 };
 
-export default RoomForm;
+export default LabForm;
