@@ -95,8 +95,9 @@ const RoomForm: React.FC = () => {
           </span>
         </button>
       </div>
-      <Modal open={isModalOpen} onCancel={handleCancel} footer={null}>
-        <Form onFinish={handleSubmit}>
+      {isModalOpen && ( // Conditionally render the Modal
+        <Modal open={isModalOpen} onCancel={handleCancel} footer={null}>
+          <Form onFinish={handleSubmit}>
           {/* Add a label for the room name */}
           <Form.Item>
             <label className="block mb-2 text-sm font-medium text-gray-900">
@@ -158,6 +159,7 @@ const RoomForm: React.FC = () => {
           </div>
         </Form>
       </Modal>
+      )}
     </div> 
    
   );
