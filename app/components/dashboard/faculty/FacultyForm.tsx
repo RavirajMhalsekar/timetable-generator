@@ -1,10 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { Modal, Input, Form, Upload, Button, Select, message, notification } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
 import { LoadingOutlined } from "@ant-design/icons";
 import SubmitFacultyData from "../../Database/SubmitFacultyData";
-import type { UploadProps } from 'antd';
 
 const { Option } = Select;
 
@@ -14,7 +12,6 @@ const FacultyForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [designation, setDesignation] = useState<string | undefined>(undefined);
   const [department, setDepartment] = useState<string | undefined>(undefined);
-  const [fileList, setFileList] = useState<any[]>([]);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -36,75 +33,43 @@ const FacultyForm: React.FC = () => {
     setDepartment(value);
   };
 
-  const handleFileChange = ({ fileList }: any) => {
-    setFileList(fileList);
-  };
-
   const handleSubmit = async () => {
     setIsLoading(true);
-    const formData = new FormData();
-    formData.append("file", fileList[0]?.originFileObj);
 
+    const formData = {
+      facultyName,
+      designation,
+      department,
+    };
     try {
-      const response = await fetch("/api/uploadImage", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (response.ok) {
-        const imagePath = await response.json();
-
-        await SubmitFacultyData({
-          name: facultyName,
-          designation,
-          department,
-          imagePath,
-        });
-
-        notification.success({
-          message: "Form data submitted successfully!",
-          placement: "topRight",
-          duration: 3,
-        });
-
+      await SubmitFacultyData(formData);
+      setTimeout(() => {
+        // notification.success({
+        //   message: "Form data submitted successfully!",
+        //   placement: "topRight",
+        //   duration: 3,
+        // });
+        message.success("Form data submitted successfully!");
+        setFacultyName("");
+        setDesignation(undefined);
+        setDepartment(undefined);
         setIsModalOpen(false);
         setIsLoading(false);
-      } else {
-        message.error("Failed to upload image.");
-        notification.error({
-          message: "Error submitting form data!",
-          placement: "topRight",
-          duration: 3,
-        });
-        setIsLoading(false);
-      }
+      }, 1000); // Simulating a delay before showing the success notification
     } catch (error) {
-      notification.error({
-        message: "Error submitting form data!",
-        placement: "topRight",
-        duration: 3,
-      });
+      message.error("Error submitting form data!");
+      // notification.error({
+      //   message: "Error submitting form data!",
+      //   placement: "topRight",
+      //   duration: 3,
+      // });
       setIsLoading(false);
     }
   };
 
-  const props: UploadProps = {
-    action: '/api/uploadImage',
-    listType: 'picture',
-    fileList,
-    onChange: handleFileChange,
-    beforeUpload: (file) => {
-      const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-      if (!isJpgOrPng) {
-        message.error('You can only upload JPG/PNG file!');
-      }
-      return isJpgOrPng ? true : Upload.LIST_IGNORE;
-    },
-  };
-
   return (
     <div className="relative">
-      <div className="flex items-center justify-between pb-12">
+      <div className="flex items-center justify-between">
         {/* <p className="text-gray-700">Want to add a new room?</p> */}
       </div>
       <div className="absolute top-1 right-1 z-50 ">
@@ -181,22 +146,7 @@ const FacultyForm: React.FC = () => {
               <Option value="Humanities">Humanities</Option>
             </Select>
           </Form.Item>
-          <Form.Item>
-            <label className="block mb-2 text-sm font-medium text-gray-900">
-              Upload Image{" (Optional)"}
-            </label>
-            <Upload {...props}>
-              <Button icon={<UploadOutlined />}>Upload JPG/PNG only</Button>
-            </Upload>
-            {/* Image preview
-            {fileList.length > 0 && (
-              <img
-                src={URL.createObjectURL(fileList[0]?.originFileObj)}
-                alt="Preview"
-                style={{ maxWidth: "30%", marginTop: 10 }}
-              />
-            )} */}
-          </Form.Item>
+          
           <div className="flex justify-center items-center mb-8 ">
             {isLoading ? (
               <div className="text-center b gap-2 w-full inline-flex items-center justify-center p-4 px-6 py-3 bg-gray-100 border-2 border-purple-500 rounded-lg shadow-md text-indigo-600 text-base">
