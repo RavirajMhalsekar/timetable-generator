@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Modal, Input, Form, Upload, Button, Select, message, notification } from "antd";
+import { Modal, Input, Form, Select, message} from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import SubmitFacultyData from "../../Database/SubmitFacultyData";
 
@@ -55,7 +55,7 @@ const FacultyForm: React.FC = () => {
         setDepartment(undefined);
         setIsModalOpen(false);
         setIsLoading(false);
-      }, 1000); // Simulating a delay before showing the success notification
+      }, 700); // Simulating a delay before showing the success notification
     } catch (error) {
       message.error("Error submitting form data!");
       // notification.error({
