@@ -26,6 +26,24 @@ const SubjectForm: React.FC = () => {
     setIsModalOpen(true);
   };
 
+  const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>({
+    subjectName: false,
+    subjectCode: false,
+    lecture: false,
+    tutorial: false,
+    practical: false,
+    hours: false,
+    semester: false,
+    department: false,
+    requireSplit: false,
+    faculty: false,
+  });
+  const handleFieldTouch = (field: string) => {
+    setTouchedFields({
+      ...touchedFields,
+      [field]: true,
+    });
+  };
   const handleCancel = () => {
     setIsModalOpen(false);
     // Resetting all state values when canceling the modal
@@ -70,10 +88,12 @@ const SubjectForm: React.FC = () => {
 
   const handleDepartmentChange = (value: string) => {
     setDepartment(value);
+    handleFieldTouch("department");
   };
 
   const handleRequireSplitChange = (value: string) => {
     setRequireSplit(value);
+    handleFieldTouch("requireSplit");
   };
 
   const handleFacultyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,6 +102,38 @@ const SubjectForm: React.FC = () => {
   const handleSubmit = async () => {
     setIsLoading(true);
 
+    // Validation for required fields
+    const emptyFields = {
+      subjectName: !subjectName.trim(),
+      subjectCode: !subjectCode.trim(),
+      lecture: !lecture.trim(),
+      tutorial: !tutorial.trim(),
+      practical: !practical.trim(),
+      hours: !hours.trim(),
+      semester: !semester.trim(),
+      department: !department,
+      requireSplit: !requireSplit,
+      faculty: !faculty.trim(),
+    };
+    const anyEmptyField = Object.values(emptyFields).some((field) => field);
+
+    if (anyEmptyField) {
+      message.error("Please fill in all required fields.");
+      setTouchedFields({
+        subjectName: !!emptyFields.subjectName,
+        subjectCode: !!emptyFields.subjectCode,
+        lecture: !!emptyFields.lecture,
+        tutorial: !!emptyFields.tutorial,
+        practical: !!emptyFields.practical,
+        hours: !!emptyFields.hours,
+        semester: !!emptyFields.semester,
+        department: !!emptyFields.department,
+        requireSplit: !!emptyFields.requireSplit,
+        faculty: !!emptyFields.faculty,
+      });
+      setIsLoading(false);
+      return;
+    }
     const formData = {
       subjectName,
       subjectCode,
@@ -110,6 +162,18 @@ const SubjectForm: React.FC = () => {
         setFaculty("");
         setIsModalOpen(false);
         setIsLoading(false);
+        setTouchedFields({
+          subjectName: false,
+          subjectCode: false,
+          lecture: false,
+          tutorial: false,
+          practical: false,
+          hours: false,
+          semester: false,
+          department: false,
+          requireSplit: false,
+          faculty: false,
+        });
       }, 700); // Simulating a delay before showing the success notification
     } catch (error) {
       message.error("Error submitting form data!");
@@ -152,11 +216,17 @@ const SubjectForm: React.FC = () => {
                 </label>
                 <input
                   type="text"
-                  className=" border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                  className={`border ${
+                    touchedFields.subjectName &&
+                    !subjectName &&
+                    "border-red-500"
+                  } border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
                   placeholder="eg. Cloud Computing"
                   value={subjectName}
-                  onChange={handleSubjectNameChange}
-                  required
+                  onChange={(e) => {
+                    handleSubjectNameChange(e);
+                    handleFieldTouch("subjectName");
+                  }}
                 />
               </div>
               <div>
@@ -165,11 +235,17 @@ const SubjectForm: React.FC = () => {
                 </label>
                 <input
                   type="text"
-                  className=" border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                  className={`border ${
+                    touchedFields.subjectCode &&
+                    !subjectCode &&
+                    "border-red-500"
+                  } border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
                   placeholder="eg. CE710"
                   value={subjectCode}
-                  onChange={handleSubjectCodeChange}
-                  required
+                  onChange={(e) => {
+                    handleSubjectCodeChange(e);
+                    handleFieldTouch("subjectCode");
+                  }}
                 />
               </div>
               <div className="grid gap-3 mb-2 md:grid-cols-3">
@@ -179,11 +255,15 @@ const SubjectForm: React.FC = () => {
                   </label>
                   <input
                     type="number"
-                    className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                    className={`border ${
+                      touchedFields.lecture && !lecture && "border-red-500"
+                    } border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
                     pattern="[0-9]{3}"
                     value={lecture}
-                    onChange={handleLectureChange}
-                    required
+                    onChange={(e) => {
+                      handleLectureChange(e);
+                      handleFieldTouch("lecture");
+                    }}
                   />
                 </div>
                 <div>
@@ -192,11 +272,15 @@ const SubjectForm: React.FC = () => {
                   </label>
                   <input
                     type="number"
-                    className=" border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                    className={`border ${
+                      touchedFields.tutorial && !tutorial && "border-red-500"
+                    } border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
                     pattern="[0-9]{3}"
                     value={tutorial}
-                    onChange={handleTutorialChange}
-                    required
+                    onChange={(e) => {
+                      handleTutorialChange(e);
+                      handleFieldTouch("tutorial");
+                    }}
                   />
                 </div>
                 <div>
@@ -205,11 +289,15 @@ const SubjectForm: React.FC = () => {
                   </label>
                   <input
                     type="number"
-                    className=" border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                    className={`border ${
+                      touchedFields.practical && !practical && "border-red-500"
+                    } border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
                     pattern="[0-9]{3}"
                     value={practical}
-                    onChange={handlePracticalChange}
-                    required
+                    onChange={(e) => {
+                      handlePracticalChange(e);
+                      handleFieldTouch("practical");
+                    }}
                   />
                 </div>
               </div>
@@ -219,12 +307,16 @@ const SubjectForm: React.FC = () => {
                 </label>
                 <input
                   type="number"
-                  className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                  className={`border ${
+                    touchedFields.hours && !hours && "border-red-500"
+                  } border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
                   placeholder="Enter the hours..."
                   pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
                   value={hours}
-                  onChange={handleHoursChange}
-                  required
+                  onChange={(e) => {
+                    handleHoursChange(e);
+                    handleFieldTouch("hours");
+                  }}
                 />
               </div>
 
@@ -234,56 +326,104 @@ const SubjectForm: React.FC = () => {
                 </label>
                 <input
                   type="number"
-                  className=" border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                  className={`border ${
+                    touchedFields.semester && !semester && "border-red-500"
+                  } border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
                   placeholder="Offered in which sem?"
                   value={semester}
-                  onChange={handleSemesterChange}
-                  required
+                  onChange={(e) => {
+                    handleSemesterChange(e);
+                    handleFieldTouch("semester");
+                  }}
                 />
               </div>
               <div style={{ position: "relative", width: "100%" }}>
                 <label className="block mb-2 text-sm font-medium text-gray-900">
                   Department
                 </label>
-                <Select
-                  placeholder="Select Department"
-                  style={{ width: "100%", border: "none", height: 42 }}
-                  value={department}
-                  onChange={handleDepartmentChange}
+                <Form.Item
+                  validateStatus={
+                    touchedFields.department &&
+                    (!department || department === "undefined")
+                      ? "error"
+                      : ""
+                  }
+                  help={
+                    touchedFields.department &&
+                    (!department || department === "undefined")
+                      ? "Please select a department"
+                      : ""
+                  }
                 >
-                  <Option value="Mech">Mech</Option>
-                  <Option value="ETC">ETC</Option>
-                  <Option value="ECOMP">ECOMP</Option>
-                  <Option value="COMP">COMP</Option>
-                  <Option value="IT">IT</Option>
-                </Select>
+                  <Select
+                    placeholder="Select Department"
+                    value={department}
+                    onChange={(value) => {
+                      setDepartment(value);
+                      handleFieldTouch("department");
+                    }}
+                    style={{ height: 42 }} 
+                  >
+                    <Option value="undefined" disabled>
+                      Select an option
+                    </Option>
+                    <Option value="Mech">Mechanical</Option>
+                    <Option value="Ecomp">ECOMP</Option>
+                    <Option value="Comp">Computer</Option>
+                    <Option value="IT">IT</Option>
+                  </Select>
+                </Form.Item>
               </div>
-              <div style={{ position: "relative", width: "100%" }}>
+              <div style={{ position: "relative", width: "100%", marginTop: "-0.5rem" }}>
                 <label className="block mb-2 text-sm font-medium text-gray-900 ">
                   Split
                 </label>
-                <Select
-                  placeholder="Require split?"
-                  style={{ width: "100%", border: "none", height: 42 }}
-                  value={requireSplit}
-                  onChange={handleRequireSplitChange}
-                  options={[
-                    { value: "NO", label: "NO" },
-                    { value: "YES", label: "YES" },
-                  ]}
-                />
+                <Form.Item
+                  validateStatus={
+                    touchedFields.requireSplit &&
+                    (!requireSplit || requireSplit === "undefined")
+                      ? "error"
+                      : ""
+                  }
+                  help={
+                    touchedFields.requireSplit &&
+                    (!requireSplit || requireSplit === "undefined")
+                      ? "Please select an option"
+                      : ""
+                  }
+                >
+                  <Select
+                    placeholder="Require split?"
+                    value={requireSplit}
+                    onChange={(value) => {
+                      setRequireSplit(value);
+                      handleFieldTouch("requireSplit");
+                    }}
+                    style={{height: 42 }} 
+                  >
+                    <Option value="undefined" disabled>
+                      Select an option
+                    </Option>
+                    <Option value="NO">NO</Option>
+                    <Option value="YES">YES</Option>
+                  </Select>
+                </Form.Item>
               </div>
-              <div>
+              <div style={{ marginTop: "-0.5rem" }}>
                 <label className="block mb-2 text-sm font-medium text-gray-900 ">
                   Faculty
                 </label>
                 <input
                   type="text"
-                  className=" border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                  className={`border ${
+                    touchedFields.faculty && !faculty && "border-red-500"
+                  } border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
                   placeholder="Name of the faculty..."
                   value={faculty}
-                  onChange={handleFacultyChange}
-                  required
+                  onChange={(e) => {
+                    handleFacultyChange(e);
+                    handleFieldTouch("faculty");
+                  }}
                 />
               </div>
             </div>
