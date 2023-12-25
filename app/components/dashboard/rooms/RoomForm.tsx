@@ -1,40 +1,80 @@
 "use client";
 import React, { useState } from "react";
-import {
-  Modal,
-  Input,
-  InputNumber,
-  Form,
-  // Button,
-  notification,
-  // Spin,
-} from "antd";
+import { Modal, Input, InputNumber, Form, notification } from "antd";
 import SubmitRoomData from "../../Database/SubmitRoomData";
 import { LoadingOutlined } from "@ant-design/icons";
+
 const RoomForm: React.FC = () => {
   const [name, setName] = useState<string>("");
   const [capacity, setCapacity] = useState<number | undefined>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [touchedFields, setTouchedFields] = useState({
+    name: false,
+    capacity: false,
+  });
+
   const showModal = () => {
     setIsModalOpen(true);
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    resetForm();
   };
 
   const handleCapacityChange = (value: number | undefined | null) => {
     setCapacity(value === null ? undefined : value);
+    handleFieldTouch("capacity");
+  };
+
+  const resetForm = () => {
+    setName("");
+    setCapacity(undefined);
+    setTouchedFields({
+      name: false,
+      capacity: false,
+    });
+  };
+
+  const handleFieldTouch = (field: string) => {
+    setTouchedFields({
+      ...touchedFields,
+      [field]: true,
+    });
   };
 
   const handleSubmit = async () => {
     setIsLoading(true);
 
+    const emptyFields = {
+      name: !name.trim(),
+      capacity: capacity === undefined,
+    };
+
+    const anyEmptyField = Object.values(emptyFields).some((field) => field);
+
+    if (anyEmptyField) {
+      notification.error({
+        message: "Please fill in all required fields.",
+        placement: "topRight",
+        duration: 3,
+      });
+
+      setTouchedFields({
+        name: emptyFields.name,
+        capacity: emptyFields.capacity,
+      });
+
+      setIsLoading(false);
+      return;
+    }
+
     const formData = {
       name,
       capacity,
     };
+
     try {
       await SubmitRoomData(formData);
       setTimeout(() => {
@@ -44,11 +84,10 @@ const RoomForm: React.FC = () => {
           duration: 3,
         });
 
-        setName("");
-        setCapacity(undefined);
+        resetForm();
         setIsModalOpen(false);
         setIsLoading(false);
-      }, 1000); // Simulating a delay before showing the success notification
+      }, 1000);
     } catch (error) {
       notification.error({
         message: "Error submitting form data!",
@@ -61,16 +100,6 @@ const RoomForm: React.FC = () => {
 
   return (
     <div className="relative">
-      {/* <Button
-        className="mt-2 text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l"
-        type="default"
-        onClick={showModal}
-      >
-        Add Room
-      </Button> */}
-      <div className="flex items-center justify-between">
-        {/* <p className="text-gray-700">Want to add a new room?</p> */}
-      </div>
       <div className="absolute top-1 right-1 z-50">
         <button
           onClick={showModal}
@@ -94,32 +123,61 @@ const RoomForm: React.FC = () => {
           </span>
         </button>
       </div>
-      {isModalOpen && ( // Conditionally render the Modal
+      {isModalOpen && (
         <Modal open={isModalOpen} onCancel={handleCancel} footer={null}>
           <Form onFinish={handleSubmit}>
-            {/* Add a label for the room name */}
-            <Form.Item>
+            <Form.Item
+              validateStatus={touchedFields.name && !name.trim() ? "error" : ""}
+              help={
+                touchedFields.name && !name.trim()
+                  ? "Please enter a room name"
+                  : ""
+              }
+            >
               <label className="block mb-2 text-sm font-medium text-gray-900">
                 Name
               </label>
               <Input
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                placeholder="Enter the room name"
                 value={name}
-                onChange={(event) => setName(event.target.value)}
+                onChange={(event) => {
+                  setName(event.target.value);
+                  handleFieldTouch("name");
+                }}
+                className={`bg-gray-50 border ${
+                  touchedFields.name && !name.trim()
+                    ? "border-red-500"
+                    : "border-gray-300"
+                } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
+                placeholder="Enter the room name"
               />
             </Form.Item>
 
-            <Form.Item>
+            <Form.Item
+              validateStatus={
+                touchedFields.capacity && capacity === undefined ? "error" : ""
+              }
+              help={
+                touchedFields.capacity && capacity === undefined
+                  ? "Please enter the room capacity"
+                  : ""
+              }
+            >
               <label className="block mb-2 text-sm font-medium text-gray-900">
                 Capacity
               </label>
               <InputNumber
                 type="number"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                placeholder="Enter the room capacity"
                 value={capacity}
                 onChange={handleCapacityChange}
+                className={`bg-gray-50 border ${
+                  touchedFields.capacity && capacity === undefined
+                    ? "border-red-500"
+                    : "border-gray-300"
+                } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
+                placeholder="Enter the room capacity"
+                formatter={(value) =>
+                  value ? `${value}`.replace(/[^0-9]/g, "") : ""
+                }
               />
             </Form.Item>
 
@@ -142,11 +200,11 @@ const RoomForm: React.FC = () => {
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
                         d="M14 5l7 7m0 0l-7 7m7-7H3"
-                      ></path>
+                      />
                     </svg>
                   </span>
                   <span className="absolute flex items-center justify-center w-full h-full text-purple-500 transition-all duration-300 transform group-hover:translate-x-full ease">

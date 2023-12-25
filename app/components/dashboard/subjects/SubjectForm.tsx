@@ -120,16 +120,16 @@ const SubjectForm: React.FC = () => {
     if (anyEmptyField) {
       message.error("Please fill in all required fields.");
       setTouchedFields({
-        subjectName: !!emptyFields.subjectName,
-        subjectCode: !!emptyFields.subjectCode,
-        lecture: !!emptyFields.lecture,
-        tutorial: !!emptyFields.tutorial,
-        practical: !!emptyFields.practical,
-        hours: !!emptyFields.hours,
-        semester: !!emptyFields.semester,
-        department: !!emptyFields.department,
-        requireSplit: !!emptyFields.requireSplit,
-        faculty: !!emptyFields.faculty,
+        subjectName: emptyFields.subjectName,
+        subjectCode: emptyFields.subjectCode,
+        lecture: emptyFields.lecture,
+        tutorial: emptyFields.tutorial,
+        practical: emptyFields.practical,
+        hours: emptyFields.hours,
+        semester: emptyFields.semester,
+        department: emptyFields.department,
+        requireSplit: emptyFields.requireSplit,
+        faculty: emptyFields.faculty,
       });
       setIsLoading(false);
       return;

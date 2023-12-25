@@ -1,19 +1,19 @@
 import React, { useEffect, useState, ChangeEvent } from "react";
-import { Modal, Input, InputNumber,Form } from "antd";
+import { Modal, Input, InputNumber, Form } from "antd";
 
 interface RoomFormProps {
   modalVisible: boolean;
- handleSaveRoomData: (name: string, capacity: number | undefined) => void;
+  handleSaveRoomData: (name: string, capacity: number | undefined) => void;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const CompClassroomDetailsForm: React.FC<RoomFormProps> = ({
   modalVisible,
- handleSaveRoomData,
+  handleSaveRoomData,
   setModalVisible,
 }) => {
   const [name, setname] = useState<string>("");
-  const [capacity, setcapacity] = useState<number | undefined>( undefined);
+  const [capacity, setcapacity] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     if (!modalVisible) {
@@ -27,7 +27,7 @@ const CompClassroomDetailsForm: React.FC<RoomFormProps> = ({
   };
 
   const handleOk = () => {
-   handleSaveRoomData(name, capacity);
+    handleSaveRoomData(name, capacity);
     setModalVisible(false);
   };
 
@@ -35,7 +35,7 @@ const CompClassroomDetailsForm: React.FC<RoomFormProps> = ({
     setname(e.target.value);
   };
 
-  const handlecapacityChange = (value: number ) => {
+  const handlecapacityChange = (value: number) => {
     setcapacity(value);
   };
 
@@ -46,30 +46,33 @@ const CompClassroomDetailsForm: React.FC<RoomFormProps> = ({
       visible={modalVisible}
       onOk={handleOk}
       onCancel={handleCancel}
-    > 
-     <Form>
-          {/* Add a label for the room name */}
-          <Form.Item >
-          <label className="block mb-2 text-sm font-medium text-gray-900">Room Name:</label>
-            <Input
-              className="input"
-              placeholder="Enter the room name"
-              value={name}
-              onChange={handlenameChange}
-            />
-          </Form.Item>
-       
-      
-             <Form.Item >
-             <label className="block mb-2 text-sm font-medium text-gray-900">Room Capacity:</label>
-      <InputNumber
-        className="input"
-        placeholder="Enter capacity Of the room"
-        value={capacity}
-        onChange={handlecapacityChange}
-      /> 
-                </Form.Item>
-       </Form>
+    >
+      <Form>
+        {/* Add a label for the room name */}
+        <Form.Item>
+          <label className="block mb-2 text-sm font-medium text-gray-900">
+            Room Name:
+          </label>
+          <Input
+            className="input"
+            placeholder="Enter the room name"
+            value={name}
+            onChange={handlenameChange}
+          />
+        </Form.Item>
+
+        <Form.Item>
+          <label className="block mb-2 text-sm font-medium text-gray-900">
+            Room Capacity:
+          </label>
+          <InputNumber
+            className="input"
+            placeholder="Enter capacity Of the room"
+            value={capacity}
+            onChange={handlecapacityChange}
+          />
+        </Form.Item>
+      </Form>
     </Modal>
   );
 };

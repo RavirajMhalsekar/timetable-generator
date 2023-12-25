@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Modal, Input, Form, Select, message} from "antd";
+import { Modal, Input, Form, Select, message } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import SubmitFacultyData from "../../Database/SubmitFacultyData";
 
@@ -12,6 +12,11 @@ const FacultyForm: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [designation, setDesignation] = useState<string | undefined>(undefined);
   const [department, setDepartment] = useState<string | undefined>(undefined);
+  const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>({
+    facultyName: false,
+    designation: false,
+    department: false,
+  });
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -22,20 +27,49 @@ const FacultyForm: React.FC = () => {
   };
 
   const handleFacultyNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFacultyName(e.target.value);
+    setFacultyName(e.target.value.trim()); // Trim the value
+    handleFieldTouch("facultyName");
   };
 
   const handleDesignationChange = (value: string) => {
     setDesignation(value);
+    handleFieldTouch("designation");
   };
 
   const handleDepartmentChange = (value: string) => {
     setDepartment(value);
+    handleFieldTouch("department");
+  };
+
+  const handleFieldTouch = (field: string) => {
+    setTouchedFields({
+      ...touchedFields,
+      [field]: true,
+    });
   };
 
   const handleSubmit = async () => {
     setIsLoading(true);
-
+  
+    const emptyFields = {
+      facultyName: !facultyName.trim(),
+      designation: !designation || designation === 'undefined',
+      department: !department || department === 'undefined',
+    };
+  
+    const anyEmptyField = Object.values(emptyFields).some(field => field);
+  
+    if (anyEmptyField) {
+      message.error('Please fill in all required fields.');
+      setTouchedFields({
+        facultyName: emptyFields.facultyName,
+        designation: emptyFields.designation,
+        department: emptyFields.department,
+      });
+      setIsLoading(false);
+      return;
+    }
+  
     const formData = {
       facultyName,
       designation,
@@ -44,29 +78,23 @@ const FacultyForm: React.FC = () => {
     try {
       await SubmitFacultyData(formData);
       setTimeout(() => {
-        // notification.success({
-        //   message: "Form data submitted successfully!",
-        //   placement: "topRight",
-        //   duration: 3,
-        // });
-        message.success("Form data submitted successfully!");
-        setFacultyName("");
+        message.success('Form data submitted successfully!');
+        setFacultyName('');
         setDesignation(undefined);
         setDepartment(undefined);
         setIsModalOpen(false);
         setIsLoading(false);
+        setTouchedFields({
+          facultyName: false,
+          designation: false,
+          department: false,
+        });
       }, 700); // Simulating a delay before showing the success notification
     } catch (error) {
-      message.error("Error submitting form data!");
-      // notification.error({
-      //   message: "Error submitting form data!",
-      //   placement: "topRight",
-      //   duration: 3,
-      // });
+      message.error('Error submitting form data!');
       setIsLoading(false);
     }
   };
-
   return (
     <div className="relative">
       <div className="flex items-center justify-between">
@@ -98,18 +126,42 @@ const FacultyForm: React.FC = () => {
       {isModalOpen && ( // Conditionally render the Modal
         <Modal open={isModalOpen} onCancel={handleCancel} footer={null}>
           <Form onFinish={handleSubmit}>
-          <Form.Item>
-            <label className="block mb-2 text-sm font-medium text-gray-900">
-              Name
-            </label>
-            <Input
-              className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-              placeholder="Enter the name.."
-              value={facultyName}
-              onChange={handleFacultyNameChange}
-            />
-          </Form.Item>
-          <Form.Item>
+          <Form.Item
+              validateStatus={
+                touchedFields.facultyName && !facultyName ? "error" : ""
+              }
+              help={
+                touchedFields.facultyName && !facultyName
+                  ? "Please enter faculty name"
+                  : ""
+              }
+            >
+              <label className="block mb-2 text-sm font-medium text-gray-900">
+                Name
+              </label>
+              <Input
+                className={`border ${
+                  touchedFields.facultyName && !facultyName && "border-red-500"
+                } border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
+                placeholder="Enter the name.."
+                value={facultyName}
+                onChange={handleFacultyNameChange}
+              />
+            </Form.Item>
+            <Form.Item
+              validateStatus={
+                touchedFields.designation &&
+                (!designation || designation === "undefined")
+                  ? "error"
+                  : ""
+              }
+              help={
+                touchedFields.designation &&
+                (!designation || designation === "undefined")
+                  ? "Please select a designation"
+                  : ""
+              }
+            >
             <label className="block mb-2 text-sm font-medium text-gray-900">
               Designation
             </label>
@@ -129,7 +181,20 @@ const FacultyForm: React.FC = () => {
               </Option>
             </Select>
           </Form.Item>
-          <Form.Item>
+          <Form.Item
+              validateStatus={
+                touchedFields.department &&
+                (!department || department === "undefined")
+                  ? "error"
+                  : ""
+              }
+              help={
+                touchedFields.department &&
+                (!department || department === "undefined")
+                  ? "Please select a department"
+                  : ""
+              }
+            >
             <label className="block mb-2 text-sm font-medium text-gray-900">
               Department
             </label>
