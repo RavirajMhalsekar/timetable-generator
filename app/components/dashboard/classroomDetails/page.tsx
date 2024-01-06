@@ -1,47 +1,16 @@
-"use client";
-import React, { useState } from 'react';
-import { Carousel, Radio } from 'antd';
-import type { DotPosition } from 'antd/es/carousel';
-import { LeftOutlined, RightOutlined } from '@ant-design/icons'; 
-import ClassroomDetailsForm from './CompClassroomDetails';
-const contentStyle: React.CSSProperties = {
-  height: '160px',
-  color: 'rgb(128, 128, 209)',
-  lineHeight: '160px',
-  textAlign: 'center', 
-  background:'black',
-  
-};
+import Header from "../Header"
+import ClassNavigation from "./ClassNavigation"
 
-const App: React.FC = () => {
-  const [dotPosition, setDotPosition] = useState<DotPosition>('top'); 
-
-  const dotStyle: React.CSSProperties = {
-    color: 'black', // Set the background color to black
-  };
-  
-
+function page() {
   return (
-    <>
-     
-      <Carousel dotPosition={dotPosition}  dotStyle={dotStyle}  >
-      <div > 
-      <div style={contentStyle}>
-            <ClassroomDetailsForm />
-          </div>
-          </div>
-        <div>
-          <h3 style={contentStyle}>2</h3>
-        </div>
-        <div>
-          <h3 style={contentStyle}>3</h3>
-        </div>
-        <div>
-          <h3 style={contentStyle}>4</h3>
-        </div>
-      </Carousel>
-    </>
-  );
-};
+    <div>
+      <Header header="Subject Details" />
+      <ClassNavigation/>
+      <div className="bg-white  text-left p-3 rounded-2xl mt-3 w-full shadow-xl">
+      
+      </div>
+    </div>
+  )
+}
 
-export default App;
+export default page

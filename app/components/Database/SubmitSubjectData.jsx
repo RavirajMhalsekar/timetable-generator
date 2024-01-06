@@ -1,6 +1,6 @@
 // import connectToOracle from './ConnectionDB';
 
-async function SubmitRoomData(formData) {
+async function SubmitSubjectData(formData) {
     // const connection = await connectToOracle();
     const sql = `INSERT INTO form_data (subject, faculty, classroom) VALUES (:subject, :faculty, :classroom)`;
   
@@ -10,7 +10,7 @@ async function SubmitRoomData(formData) {
       //   faculty: formData.faculty,
       //   classroom: formData.classroom
       // });
-      console.log(formData.name,formData.capacity,'Form data submitted successfully');
+      console.log(formData.subjectName,formData.subjectCode,'Form data submitted successfully');
       
     } catch (error) {
       console.error('Error submitting form data:', error);
@@ -19,4 +19,4 @@ async function SubmitRoomData(formData) {
     }
   }
   
-  export default SubmitRoomData;
+  export default SubmitSubjectData;

@@ -10,7 +10,7 @@ async function SubmitRoomData(formData) {
       //   faculty: formData.faculty,
       //   classroom: formData.classroom
       // });
-      console.log(formData.name,formData.capacity,'Form data submitted successfully');
+      console.log(formData.meetingName,formData.date,formData.time,'Form data submitted successfully');
       
     } catch (error) {
       console.error('Error submitting form data:', error);
