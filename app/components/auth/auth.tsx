@@ -4,8 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import SignUpForm from "./SignUpForm";
 import SignInForm from "./SignInForm";
-import MyComponent from "./MyComponent"; 
-
+import MyComponent from "./MyComponent";
 const App = () => {
   const [showSignIn, setShowSignIn] = useState(true);
 
@@ -17,8 +16,7 @@ const App = () => {
     setShowSignIn(false);
   };
 
-  return ( 
-    <div className="box-2">
+  return (
     <div className="h-screen flex text-[white]">
      <div className="w-6/12 bg-[#6b5b95]" >
      <MyComponent/>
@@ -66,7 +64,6 @@ const App = () => {
         {/* Assuming SignUpForm and SignInForm are functional components */}
         {showSignIn ? <SignInForm /> : <SignUpForm />}
       </div>
-    </div>
     </div>
   );
 };
