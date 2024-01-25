@@ -1,23 +1,47 @@
-"use client";
-import { useEffect, useRef, useState } from 'react';
+"use client"
+// components/Table.tsx
+import React, { useState, useEffect, FC } from 'react';
 
 type SimpleTableProps = {
   columns: string[];
-  data: string[][];
+  data: (string | number)[][]; 
 };
 
-const Table: React.FC<SimpleTableProps> = ({ columns, data }) => {
-  const tableRef = useRef<HTMLTableElement>(null);
+type SortConfig = {
+  key: number;
+  direction: 'ascending' | 'descending';
+} | null;
+
+const Table: FC<SimpleTableProps> = ({ columns, data }) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const itemsPerPage = 6;
+  const [sortConfig, setSortConfig] = useState<SortConfig>(null);
+  const itemsPerPage = 7;
 
   useEffect(() => {
-    setCurrentPage(1); // Reset to first page when data changes
+    setCurrentPage(1); 
   }, [data]);
 
-  const filteredData = data.filter((row) =>
-    row.some((cell) => cell.toLowerCase().includes(searchTerm.toLowerCase()))
+  const sortedData = React.useMemo(() => {
+    let sortableItems = [...data];
+    if (sortConfig !== null) {
+      sortableItems.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableItems;
+  }, [data, sortConfig]);
+
+  const filteredData = sortedData.filter((row) =>
+    row.some((cell) => 
+      cell.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    )
   );
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -26,7 +50,7 @@ const Table: React.FC<SimpleTableProps> = ({ columns, data }) => {
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
-  const handlePagination = (action: string) => {
+  const handlePagination = (action: 'prev' | 'next') => {
     if (action === 'prev' && currentPage > 1) {
       setCurrentPage((prev) => prev - 1);
     } else if (action === 'next' && currentPage < totalPages) {
@@ -34,44 +58,13 @@ const Table: React.FC<SimpleTableProps> = ({ columns, data }) => {
     }
   };
 
-  useEffect(() => {
-    if (tableRef.current && columns && columns.length > 0 && currentItems && currentItems.length > 0) {
-      const table = tableRef.current;
-
-      // Clear existing table content if any
-      table.innerHTML = '';
-
-      // Create table header
-      const thead = document.createElement('thead');
-      const headerRow = document.createElement('tr');
-      headerRow.className = 'bg-gray-100';
-      columns.forEach((col) => {
-        const th = document.createElement('th');
-        th.textContent = col;
-        th.className = 'border-b-2 border-gray-300 py-2 px-4 text-center';
-        headerRow.appendChild(th);
-      });
-      thead.appendChild(headerRow);
-
-      // Create table body with data
-      const tbody = document.createElement('tbody');
-      currentItems.forEach((rowData) => {
-        const row = document.createElement('tr');
-        row.className = 'text-center';
-        rowData.forEach((cellData) => {
-          const cell = document.createElement('td');
-          cell.textContent = cellData;
-          cell.className = 'border px-4 py-2';
-          row.appendChild(cell);
-        });
-        tbody.appendChild(row);
-      });
-
-      // Append the header and body to the table
-      table.appendChild(thead);
-      table.appendChild(tbody);
+  const requestSort = (key: number) => {
+    let direction: 'ascending' | 'descending' = 'ascending';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
     }
-  }, [columns, currentItems]);
+    setSortConfig({ key, direction });
+  };
 
   return (
     <div className="overflow-x-auto">
@@ -84,11 +77,36 @@ const Table: React.FC<SimpleTableProps> = ({ columns, data }) => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-      <table className="min-w-full border-collapse border border-gray-300" ref={tableRef}></table>
+      <table className="min-w-full border-collapse border border-gray-300">
+        <thead>
+          <tr className="bg-gray-100">
+            {columns.map((col, index) => (
+              <th
+                key={index}
+                onClick={() => requestSort(index)}
+                className="border-b-2 border-gray-300 py-2 px-4 text-center cursor-pointer"
+              >
+                {col}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {currentItems.map((row, rowIndex) => (
+            <tr key={rowIndex} className="text-center">
+              {row.map((cell, cellIndex) => (
+                <td key={cellIndex} className="border px-4 py-2">
+                  {cell}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
       <div className="flex justify-between mt-4">
         <span>{`${indexOfFirstItem + 1} - ${
           indexOfLastItem > filteredData.length ? filteredData.length : indexOfLastItem
-        } of ${filteredData.length} rows selected`}</span>
+        } of ${filteredData.length} rows`}</span>
         <div className="flex space-x-2">
           <button
             className="bg-blue-500 text-white px-3 py-2 rounded-md disabled:bg-gray-300"

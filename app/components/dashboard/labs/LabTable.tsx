@@ -1,26 +1,50 @@
-import React from 'react';
-import Table from '../Table';
+"use client";
+import { useEffect, useState } from "react";
+import { Client, Databases } from "appwrite";
+import Table from "../Table";
 
 const LabTable: React.FC = () => {
-  const columns = ['Srno', 'Lab Name','Subject Name','Department', 'Lab Capacity'];
-  const data = [
-    ['1', 'L01','Operating system','Computer', '15'],
-    ['2', 'L02','Java','Information Technology', '90'],
-    ['3', 'L03','Operating system','Computer', '35'],
-    ['4', 'L04','Java','Information Technology', '80'],
-    ['5', 'L05','Operating system','Computer', '90'],
-    ['6', 'L11','Java','Information Technology', '80'],
-    ['7', 'L12','Operating system','Computer', '90'],
-    ['8', 'L13','Java','Information Technology', '85'],
-    ['9', 'L14','Operating system','Computer', '80'],
-    ['10', 'L15','Java','Information Technology', '90'],
-    ['11', 'L21','Operating system','Computer', '80'],
-    ['12', 'L22','Java','Information Technology', '90'],
-    ['13', 'L23','Operating system','Computer', '85'],
-    ['14', 'L24','Java','Information Technology', '80'],
-    ['15', 'L25','Operating system','Computer', '90'],
-    
+  const [data, setData] = useState<string[][]>([]);
+  const columns = [
+    "SrNo",
+    "Lab Name",
+    "Subject Name",
+    "Department",
+    "Lab Capacity",
   ];
+  const pollingInterval = 5000; // Poll every 5 seconds
+  useEffect(() => {
+    const client = new Client();
+    client
+      .setEndpoint("https://cloud.appwrite.io/v1")
+      .setProject("65af81642532e75bf90e");
+
+    const databases = new Databases(client);
+
+    const fetchData = () => {
+      databases
+        .listDocuments("65b12ffa18f8493c948e", "65b1316de22874480ee7")
+        .then((response) => {
+          const mappedData = response.documents.map((doc, index) => [
+            index + 1,
+            doc.name,
+            doc.subject,
+            doc.department,
+            doc.capacity
+          ]);
+          setData(mappedData);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
+    fetchData(); // Initial fetch
+
+    const interval = setInterval(fetchData, pollingInterval); // Set up polling
+
+    return () => clearInterval(interval); // Clear interval on component unmount
+  }, []);
 
   return (
     <div>
