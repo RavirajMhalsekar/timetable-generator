@@ -1,8 +1,8 @@
 
 export default function RoomsPage() {
   return (
-    <div className="bg-red-300">
-      <h1>hello there</h1>
+    <div className="bg-gray-400 text-lg">
+      <h1>Select on Option</h1>
     </div>
   );
 }
