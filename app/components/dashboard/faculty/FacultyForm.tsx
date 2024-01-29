@@ -50,17 +50,17 @@ const FacultyForm: React.FC = () => {
 
   const handleSubmit = async () => {
     setIsLoading(true);
-  
+
     const emptyFields = {
       facultyName: !facultyName.trim(),
-      designation: !designation || designation === 'undefined',
-      department: !department || department === 'undefined',
+      designation: !designation || designation === "undefined",
+      department: !department || department === "undefined",
     };
-  
-    const anyEmptyField = Object.values(emptyFields).some(field => field);
-  
+
+    const anyEmptyField = Object.values(emptyFields).some((field) => field);
+
     if (anyEmptyField) {
-      message.error('Please fill in all required fields.');
+      message.error("Please fill in all required fields.");
       setTouchedFields({
         facultyName: emptyFields.facultyName,
         designation: emptyFields.designation,
@@ -69,7 +69,7 @@ const FacultyForm: React.FC = () => {
       setIsLoading(false);
       return;
     }
-  
+
     const formData = {
       facultyName,
       designation,
@@ -78,8 +78,7 @@ const FacultyForm: React.FC = () => {
     try {
       await SubmitFacultyData(formData);
       setTimeout(() => {
-        message.success('Form data submitted successfully!');
-        setFacultyName('');
+        setFacultyName("");
         setDesignation(undefined);
         setDepartment(undefined);
         setIsModalOpen(false);
@@ -91,7 +90,6 @@ const FacultyForm: React.FC = () => {
         });
       }, 700); // Simulating a delay before showing the success notification
     } catch (error) {
-      message.error('Error submitting form data!');
       setIsLoading(false);
     }
   };
@@ -126,7 +124,7 @@ const FacultyForm: React.FC = () => {
       {isModalOpen && ( // Conditionally render the Modal
         <Modal open={isModalOpen} onCancel={handleCancel} footer={null}>
           <Form onFinish={handleSubmit}>
-          <Form.Item
+            <Form.Item
               validateStatus={
                 touchedFields.facultyName && !facultyName ? "error" : ""
               }
@@ -162,26 +160,26 @@ const FacultyForm: React.FC = () => {
                   : ""
               }
             >
-            <label className="block mb-2 text-sm font-medium text-gray-900">
-              Designation
-            </label>
-            <Select
-              style={{ width: "100%", border: "none", height: 42 }} // Adjust width and border as needed
-              placeholder="Select designation"
-              value={designation}
-              onChange={handleDesignationChange}
-            >
-              <Option value="Professor - Head of Department">
-                Professor - Head of Department
-              </Option>
-              <Option value="Associate Professor">Associate Professor</Option>
-              <Option value="Assistant Professor">Assistant Professor</Option>
-              <Option value="Assistant Professor (On Contract)">
-                Assistant Professor (On Contract)
-              </Option>
-            </Select>
-          </Form.Item>
-          <Form.Item
+              <label className="block mb-2 text-sm font-medium text-gray-900">
+                Designation
+              </label>
+              <Select
+                style={{ width: "100%", border: "none", height: 42 }} // Adjust width and border as needed
+                placeholder="Select designation"
+                value={designation}
+                onChange={handleDesignationChange}
+              >
+                <Option value="Professor - Head of Department">
+                  Professor - Head of Department
+                </Option>
+                <Option value="Associate Professor">Associate Professor</Option>
+                <Option value="Assistant Professor">Assistant Professor</Option>
+                <Option value="Assistant Professor (On Contract)">
+                  Assistant Professor (On Contract)
+                </Option>
+              </Select>
+            </Form.Item>
+            <Form.Item
               validateStatus={
                 touchedFields.department &&
                 (!department || department === "undefined")
@@ -195,58 +193,58 @@ const FacultyForm: React.FC = () => {
                   : ""
               }
             >
-            <label className="block mb-2 text-sm font-medium text-gray-900">
-              Department
-            </label>
-            <Select
-              style={{ width: "100%", border: "none", height: 42 }} // Adjust width and border as needed
-              placeholder="Select department"
-              value={department}
-              onChange={handleDepartmentChange}
-            >
-              <Option value="MECH">MECH</Option>
-              <Option value="ECOMP">ECOMP</Option>
-              <Option value="COMP">COMP</Option>
-              <Option value="IT">IT</Option>
-              <Option value="Humanities">Humanities</Option>
-            </Select>
-          </Form.Item>
-          
-          <div className="flex justify-center items-center mb-8 ">
-            {isLoading ? (
-              <div className="text-center b gap-2 w-full inline-flex items-center justify-center p-4 px-6 py-3 bg-gray-100 border-2 border-purple-500 rounded-lg shadow-md text-indigo-600 text-base">
-                <LoadingOutlined style={{ fontSize: 24 }} spin /> Loading...
-              </div>
-            ) : (
-              <button
-                type="submit"
-                className="relative inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-indigo-600 transition duration-300 ease-out border-2 border-purple-500 rounded-lg shadow-md group w-full"
+              <label className="block mb-2 text-sm font-medium text-gray-900">
+                Department
+              </label>
+              <Select
+                style={{ width: "100%", border: "none", height: 42 }} // Adjust width and border as needed
+                placeholder="Select department"
+                value={department}
+                onChange={handleDepartmentChange}
               >
-                <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-purple-500 group-hover:translate-x-0 ease">
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M14 5l7 7m0 0l-7 7m7-7H3"
-                    ></path>
-                  </svg>
-                </span>
-                <span className="absolute flex items-center justify-center w-full h-full text-purple-500 transition-all duration-300 transform group-hover:translate-x-full ease">
-                  Submit
-                </span>
-                <span className="relative invisible">Submit</span>
-              </button>
-            )}
-          </div>
-        </Form>
-      </Modal>
+                <Option value="MECH">MECH</Option>
+                <Option value="ECOMP">ECOMP</Option>
+                <Option value="COMP">COMP</Option>
+                <Option value="IT">IT</Option>
+                <Option value="Humanities">Humanities</Option>
+              </Select>
+            </Form.Item>
+
+            <div className="flex justify-center items-center mb-8 ">
+              {isLoading ? (
+                <div className="text-center b gap-2 w-full inline-flex items-center justify-center p-4 px-6 py-3 bg-gray-100 border-2 border-purple-500 rounded-lg shadow-md text-indigo-600 text-base">
+                  <LoadingOutlined style={{ fontSize: 24 }} spin /> Loading...
+                </div>
+              ) : (
+                <button
+                  type="submit"
+                  className="relative inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-indigo-600 transition duration-300 ease-out border-2 border-purple-500 rounded-lg shadow-md group w-full"
+                >
+                  <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-purple-500 group-hover:translate-x-0 ease">
+                    <svg
+                      className="w-6 h-6"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M14 5l7 7m0 0l-7 7m7-7H3"
+                      ></path>
+                    </svg>
+                  </span>
+                  <span className="absolute flex items-center justify-center w-full h-full text-purple-500 transition-all duration-300 transform group-hover:translate-x-full ease">
+                    Submit
+                  </span>
+                  <span className="relative invisible">Submit</span>
+                </button>
+              )}
+            </div>
+          </Form>
+        </Modal>
       )}
     </div>
   );
