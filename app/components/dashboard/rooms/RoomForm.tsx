@@ -77,23 +77,10 @@ const RoomForm: React.FC = () => {
 
     try {
       await SubmitRoomData(formData);
-      setTimeout(() => {
-        notification.success({
-          message: "Form data submitted successfully!",
-          placement: "topRight",
-          duration: 3,
-        });
-
-        resetForm();
-        setIsModalOpen(false);
-        setIsLoading(false);
-      }, 1000);
+      resetForm();
+      setIsModalOpen(false);
+      setIsLoading(false);
     } catch (error) {
-      notification.error({
-        message: "Error submitting form data!",
-        placement: "topRight",
-        duration: 3,
-      });
       setIsLoading(false);
     }
   };

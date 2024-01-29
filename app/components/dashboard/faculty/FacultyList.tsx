@@ -1,21 +1,51 @@
+"use client"
+import { useEffect, useState } from 'react';
+import { Client, Databases } from 'appwrite';
 import Table from "../Table";
 
 function FacultyList() {
+  const [data, setData] = useState<string[][]>([]);
   const columns = ["Srno", "facultyName", "designation", "department"];
-  const data = [
-    ["1", "Dr. Anusha Pai", "Professor - Head of Department", "Computer"],
-    ["2", "Lance De'Mello", "Associate Professor", "Information Technology"],
-    ["3", "Meghna Pai Kane", "Assistant Professor", "Computer"],
-    ["4", "Dr. Anusha Pai", "Assistant Professor (On Contract)", "Computer"],
-    ["5", "Lance De'Mello", "Associate Professor", "Information Technology"],
-    ["6", "Meghna Pai Kane", "Assistant Professor", "Computer"],
-    
-  ];
+  const pollingInterval = 5000; // Poll every 5 seconds
+
+  useEffect(() => {
+    const client = new Client();
+    client
+      .setEndpoint('https://cloud.appwrite.io/v1')
+      .setProject('65af81642532e75bf90e');
+
+    const databases = new Databases(client);
+
+    const fetchData = () => {
+      databases.listDocuments("65b12ffa18f8493c948e", "65b16e2d9a17881701e6")
+        .then((response) => {
+          const mappedData = response.documents.map((doc, index) => [
+            (index + 1),
+            doc.name,
+            doc.designation,
+            doc.department
+          ]);
+          setData(mappedData);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
+    fetchData(); // Initial fetch
+
+    const interval = setInterval(fetchData, pollingInterval); // Set up polling
+
+    return () => clearInterval(interval); // Clear interval on component unmount
+  }, []);
+
   return (
     <div>
       <Table columns={columns} data={data} />
     </div>
   );
-}
+};
 
 export default FacultyList;
+
+

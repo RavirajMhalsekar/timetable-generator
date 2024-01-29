@@ -1,8 +1,6 @@
 // components/SignInForm.tsx
 "use client";
-import { useState, ChangeEvent, FormEvent } from 'react';
-import Link from 'next/link';
-
+import { useState, ChangeEvent, FormEvent } from "react";
 
 interface SignInFormState {
   email: string;
@@ -11,13 +9,13 @@ interface SignInFormState {
 
 const SignInForm: React.FC = () => {
   const [state, setState] = useState<SignInFormState>({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { target } = event;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
 
     setState((prevState) => ({
@@ -29,19 +27,24 @@ const SignInForm: React.FC = () => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    console.log('The form was submitted with the following data:');
+    console.log("The form was submitted with the following data:");
     console.log(state);
   };
 
   return (
-    <div className="mb-[100px]"> 
-     <div className="text-[#707c8b] font-light mb-[50px]">  
-            <span  className="text-[#707c8b] no-underline inline-block text-[1.7em] mx-2.5 my-0 pb-[5px] first:ml-0">Sign In</span>     
-        </div> 
+    <div className="mb-[100px]">
+      <div className="text-[#707c8b] font-light mb-[50px]">
+        <span className="text-[#707c8b] no-underline inline-block text-[1.7em] mx-2.5 my-0 pb-[5px] first:ml-0">
+          Sign In
+        </span>
+      </div>
 
       <form className="mb-10" onSubmit={handleSubmit}>
         <div className="mb-10">
-          <label className="block uppercase text-[0.9em] text-[white]" htmlFor="email">
+          <label
+            className="block uppercase text-[0.9em] text-[white]"
+            htmlFor="email"
+          >
             E-Mail Address
           </label>
           <input
@@ -53,11 +56,15 @@ const SignInForm: React.FC = () => {
             name="email"
             value={state.email}
             onChange={handleChange}
+            required
           />
         </div>
 
         <div className="mb-10">
-          <label className="block uppercase text-[0.9em] text-[white]" htmlFor="password">
+          <label
+            className="block uppercase text-[0.9em] text-[white]"
+            htmlFor="password"
+          >
             Password
           </label>
           <input
@@ -69,21 +76,18 @@ const SignInForm: React.FC = () => {
             name="password"
             value={state.password}
             onChange={handleChange}
+            required
           />
         </div>
 
         <div className="mb-10">
-          <button type="submit" className="bg-[#6b5b95] text-[white] text-[0.8em] font-medium px-[70px] py-[15px] rounded-[25px] border-[none];
-  outline: none">
-            Sign In
-          </button>{' '}
-          <Link href="/">
-            <span className="text-[#66707d] no-underline inline-block pb-[5px] border-b-[1.5px] border-b-[#6b5b95] border-solid;
-">Create an account</span>
-          </Link>
+          <button
+            type="submit"
+            className="bg-[#6b5b95] text-[white] text-[0.8em] font-medium px-[70px] py-[15px] rounded-[25px] border-[none] outline: none transition duration-300 ease-in-out transform hover:scale-105"
+          >
+            Sign Up
+          </button>
         </div>
-
-       
       </form>
     </div>
   );

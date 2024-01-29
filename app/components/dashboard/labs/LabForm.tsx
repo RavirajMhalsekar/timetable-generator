@@ -66,11 +66,6 @@ const LabForm: React.FC = () => {
 
     try {
       await SubmitLabData(formData);
-      notification.success({
-        message: "Form data submitted successfully!",
-        placement: "topRight",
-        duration: 3,
-      });
 
       setLabName("");
       setSubName("");
@@ -79,11 +74,6 @@ const LabForm: React.FC = () => {
       setIsModalOpen(false);
       setIsLoading(false);
     } catch (error) {
-      notification.error({
-        message: "Error submitting form data!",
-        placement: "topRight",
-        duration: 3,
-      });
       setIsLoading(false);
     }
   };
@@ -198,9 +188,9 @@ const LabForm: React.FC = () => {
                 <Option value="undefined" disabled>
                   Select an option
                 </Option>
-                <Option value="Mech">Mechanical</Option>
-                <Option value="Ecomp">ECOMP</Option>
-                <Option value="Comp">Computer</Option>
+                <Option value="MECH">Mechanical</Option>
+                <Option value="ECOMP">ECOMP</Option>
+                <Option value="COMP">Computer</Option>
                 <Option value="IT">IT</Option>
               </Select>
             </Form.Item>
@@ -240,9 +230,9 @@ const LabForm: React.FC = () => {
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
                         d="M14 5l7 7m0 0l-7 7m7-7H3"
                       ></path>
                     </svg>

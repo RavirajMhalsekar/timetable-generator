@@ -1,10 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import { Modal, Input, Form, TimePicker, DatePicker, notification } from "antd";
+import { Modal, Input, Form, TimePicker, notification, Select } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import SubmitMeetingData from "../../Database/SubmitMeetingData";
 import { LoadingOutlined } from "@ant-design/icons";
-
+const { Option } = Select;
 const MeetingForm = () => {
   const [meetingName, setMeetingName] = useState("");
   const [date, setDate] = useState<string>("");
@@ -16,6 +16,15 @@ const MeetingForm = () => {
     date: false,
     time: false,
   });
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -77,23 +86,10 @@ const MeetingForm = () => {
 
     try {
       await SubmitMeetingData(formData);
-      setTimeout(() => {
-        notification.success({
-          message: "Form data submitted successfully!",
-          placement: "topRight",
-          duration: 3,
-        });
-
-        resetForm();
-        setIsModalOpen(false);
-        setIsLoading(false);
-      }, 1000); // Simulating a delay before showing the success notification
+      resetForm();
+      setIsModalOpen(false);
+      setIsLoading(false);
     } catch (error) {
-      notification.error({
-        message: "Error submitting form data!",
-        placement: "topRight",
-        duration: 3,
-      });
       setIsLoading(false);
     }
   };
@@ -146,20 +142,25 @@ const MeetingForm = () => {
                 onChange={(event) => setMeetingName(event.target.value)}
               />
             </Form.Item>
-
             <Form.Item
               validateStatus={touchedFields.date && !date ? "error" : ""}
-              help={touchedFields.date && !date ? "Please select a date" : ""}
+              help={touchedFields.date && !date ? "Please select a day" : ""}
             >
               <label className="block mb-2 text-sm font-medium text-gray-900">
-                Date
+                Day of the Week
               </label>
-              <DatePicker
+              <Select
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                placeholder="Select Date"
-                value={date ? dayjs(date) : null} // Convert the 'date' to Dayjs format if it exists
-                onChange={(selectedDate, dateString) => setDate(dateString)}
-              />
+                placeholder="Select a day"
+                value={date}
+                onChange={(value) => setDate(value)}
+              >
+                {daysOfWeek.map((day) => (
+                  <Option key={day} value={day}>
+                    {day}
+                  </Option>
+                ))}
+              </Select>
             </Form.Item>
 
             <Form.Item
@@ -204,9 +205,9 @@ const MeetingForm = () => {
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
                         d="M14 5l7 7m0 0l-7 7m7-7H3"
                       ></path>
                     </svg>
