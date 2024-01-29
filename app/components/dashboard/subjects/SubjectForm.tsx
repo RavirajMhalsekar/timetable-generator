@@ -149,7 +149,6 @@ const SubjectForm: React.FC = () => {
     try {
       await SubmitSubjectData(formData);
       setTimeout(() => {
-        message.success("Form data submitted successfully!");
         setSubjectName("");
         setSubjectCode("");
         setLecture("");
@@ -176,7 +175,6 @@ const SubjectForm: React.FC = () => {
         });
       }, 700); // Simulating a delay before showing the success notification
     } catch (error) {
-      message.error("Error submitting form data!");
       setIsLoading(false);
     }
   };
@@ -362,19 +360,26 @@ const SubjectForm: React.FC = () => {
                       setDepartment(value);
                       handleFieldTouch("department");
                     }}
-                    style={{ height: 42 }} 
+                    style={{ height: 42 }}
                   >
                     <Option value="undefined" disabled>
                       Select an option
                     </Option>
-                    <Option value="Mech">Mechanical</Option>
-                    <Option value="Ecomp">ECOMP</Option>
-                    <Option value="Comp">Computer</Option>
+                    <Option value="MECH">Mechanical</Option>
+                    <Option value="ECOMP">ECOMP</Option>
+                    <Option value="COMP">Computer</Option>
                     <Option value="IT">IT</Option>
+                    <Option value="HUMANITIES">IT</Option>
                   </Select>
                 </Form.Item>
               </div>
-              <div style={{ position: "relative", width: "100%", marginTop: "-0.5rem" }}>
+              <div
+                style={{
+                  position: "relative",
+                  width: "100%",
+                  marginTop: "-0.5rem",
+                }}
+              >
                 <label className="block mb-2 text-sm font-medium text-gray-900 ">
                   Split
                 </label>
@@ -399,13 +404,13 @@ const SubjectForm: React.FC = () => {
                       setRequireSplit(value);
                       handleFieldTouch("requireSplit");
                     }}
-                    style={{height: 42 }} 
+                    style={{ height: 42 }}
                   >
                     <Option value="undefined" disabled>
                       Select an option
                     </Option>
-                    <Option value="NO">NO</Option>
                     <Option value="YES">YES</Option>
+                    <Option value="NO">NO</Option>
                   </Select>
                 </Form.Item>
               </div>

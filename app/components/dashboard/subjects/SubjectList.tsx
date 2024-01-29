@@ -5,6 +5,7 @@ import Table from "../Table";
 const SubjectList: React.FC = () => {
   const [data, setData] = useState<string[][]>([]);
   const columns = [
+    "SrNo",
     "Name",
     "Code",
     "Lec",
