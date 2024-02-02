@@ -1,20 +1,36 @@
-import { Inter } from "next/font/google";
-import Link from "next/link";
-import Header from "../Header"
-const inter = Inter({ subsets: ["latin"] });
+"use client"
+import { useState } from 'react';
+import { Inter } from 'next/font/google';
+import Link from 'next/link'; 
+import { Switch, Space } from 'antd';
+
+
+import Header from '../Header';
+import MechClassForm from './Mechanical/MechClassForm'; 
+import CompClassForm from './Computer/CompClassForm';
+import EcompClassForm from './Ecomp/EcompClassForm';
+import ITClassForm from './IT/ITClassForm';
+const inter = Inter({ subsets: ['latin'] });
 
 export default function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const [selectedClass, setSelectedClass] = useState('Mechanical');
 
-  
-  return ( 
-    <> 
-     <Header header="Class Details" />
-    
-    <div id="default-carousel" className="relative w-full flex flex-col items-center mt-5">
+  const handleClassChange = (className: string) => {
+    setSelectedClass(className);
+  };
+
+  return (
+    <>
+      <Header header="Class Details" />
+
+      <div
+        id="default-carousel"
+        className="relative w-full flex flex-col items-center mt-5"
+      > 
       
       {/* Classroom indicators */}
       <ul className=" flex flex-row  text-sm">
@@ -32,9 +48,9 @@ export default function Layout({
                 stroke="currentColor"
               >
                 <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
                   d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
                 ></path>
               </svg>
@@ -57,9 +73,9 @@ export default function Layout({
                 stroke="currentColor"
               >
                 <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
                   d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                 />
               </svg>
@@ -81,9 +97,9 @@ export default function Layout({
                 stroke="currentColor"
               >
                 <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
                   d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
                 />
               </svg>
@@ -105,9 +121,9 @@ export default function Layout({
                 stroke="currentColor"
               >
                 <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
                   d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                 />
               </svg>
@@ -127,3 +143,4 @@ export default function Layout({
     </>
   );
 }
+
