@@ -1,29 +1,31 @@
 "use client";
 import React, { useState } from "react";
 import { Modal, Input, Form, TimePicker, notification, Select } from "antd";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs"; // Import only dayjs
 import SubmitMeetingData from "../../Database/SubmitMeetingData";
 import { LoadingOutlined } from "@ant-design/icons";
+
 const { Option } = Select;
-const MeetingForm = () => {
-  const [meetingName, setMeetingName] = useState("");
-  const [date, setDate] = useState<string>("");
+
+const MeetingForm: React.FC = () => {
+  const [meetingName, setMeetingName] = useState<string>("");
+  const [day, setDay] = useState<string>("");
   const [time, setTime] = useState<Dayjs | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [touchedFields, setTouchedFields] = useState({
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [touchedFields, setTouchedFields] = useState<{
+    [key: string]: boolean;
+  }>({
     meetingName: false,
     date: false,
     time: false,
   });
-  const daysOfWeek = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
+  const daysOfWeek: string[] = [
+    "MONDAY",
+    "TUESDAY",
+    "WEDNESDAY",
+    "THURSDAY",
+    "FRIDAY",
   ];
 
   const showModal = () => {
@@ -41,7 +43,7 @@ const MeetingForm = () => {
 
   const resetForm = () => {
     setMeetingName("");
-    setDate("");
+    setDay("");
     setTime(null);
     setTouchedFields({
       meetingName: false,
@@ -50,49 +52,55 @@ const MeetingForm = () => {
     });
   };
 
-  const handleSubmit = async () => {
-    setIsLoading(true);
+const handleSubmit = async () => {
+  setIsLoading(true);
 
-    const emptyFields = {
-      meetingName: !meetingName.trim(),
-      date: date === "",
-      time: time === null,
-    };
-
-    const anyEmptyField = Object.values(emptyFields).some((field) => field);
-
-    if (anyEmptyField) {
-      notification.error({
-        message: "Please fill in all required fields.",
-        placement: "topRight",
-        duration: 3,
-      });
-
-      setTouchedFields({
-        meetingName: emptyFields.meetingName,
-        date: emptyFields.date,
-        time: emptyFields.time,
-      });
-
-      setIsLoading(false);
-      return;
-    }
-
-    const formData = {
-      meetingName,
-      date,
-      time,
-    };
-
-    try {
-      await SubmitMeetingData(formData);
-      resetForm();
-      setIsModalOpen(false);
-      setIsLoading(false);
-    } catch (error) {
-      setIsLoading(false);
-    }
+  const emptyFields = {
+    meetingName: !meetingName.trim(),
+    date: day === "",
+    time: time === null,
   };
+
+  const anyEmptyField = Object.values(emptyFields).some((field) => field);
+
+  if (anyEmptyField) {
+    notification.error({
+      message: "Please fill in all required fields.",
+      placement: "topRight",
+      duration: 3,
+    });
+
+    setTouchedFields({
+      meetingName: emptyFields.meetingName,
+      date: emptyFields.date,
+      time: emptyFields.time,
+    });
+
+    setIsLoading(false);
+    return;
+  }
+
+  // Format hour into 12-hour format and add AM or PM after the minutes
+  const formattedTime = time?.format("hh:mmA") ?? "";
+
+  const formData = {
+    meetingName,
+    day,
+    time: formattedTime,
+  };
+  console.log(formData);
+
+  try {
+    await SubmitMeetingData(formData);
+    resetForm();
+    setIsModalOpen(false);
+    setIsLoading(false);
+  } catch (error) {
+    setIsLoading(false);
+  }
+};
+
+
 
   return (
     <div className="relative">
@@ -119,7 +127,7 @@ const MeetingForm = () => {
           </span>
         </button>
       </div>
-      {isModalOpen && ( // Conditionally render the Modal
+      {isModalOpen && (
         <Modal open={isModalOpen} onCancel={handleCancel} footer={null}>
           <Form onFinish={handleSubmit}>
             <Form.Item
@@ -136,24 +144,24 @@ const MeetingForm = () => {
                 Meeting Name
               </label>
               <Input
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                className=" border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 placeholder="Enter the room name"
                 value={meetingName}
                 onChange={(event) => setMeetingName(event.target.value)}
               />
             </Form.Item>
             <Form.Item
-              validateStatus={touchedFields.date && !date ? "error" : ""}
-              help={touchedFields.date && !date ? "Please select a day" : ""}
+              validateStatus={touchedFields.date && !day ? "error" : ""}
+              help={touchedFields.date && !day ? "Please select a day" : ""}
             >
               <label className="block mb-2 text-sm font-medium text-gray-900">
                 Day of the Week
               </label>
               <Select
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                style={{ width: "100%", border: "none", height: 42 }}
                 placeholder="Select a day"
-                value={date}
-                onChange={(value) => setDate(value)}
+                value={day}
+                onChange={(value) => setDay(value)}
               >
                 {daysOfWeek.map((day) => (
                   <Option key={day} value={day}>
@@ -177,11 +185,11 @@ const MeetingForm = () => {
                 Time
               </label>
               <TimePicker
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                className=" border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 placeholder="Select Time"
                 value={time}
-                format="h:mm A" // Use 12-hour format with AM/PM
-                use12Hours // Enable 12-hour mode
+                format="hh:mm A"
+                use12Hours
                 onChange={(newTime) => handleTimeChange(newTime)}
               />
             </Form.Item>

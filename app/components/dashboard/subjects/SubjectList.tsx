@@ -30,6 +30,7 @@ const SubjectList: React.FC = () => {
     const fetchData = () => {
       databases.listDocuments("65b12ffa18f8493c948e", "65b20fa542e20ae06aa4")
         .then((response) => {
+          console.log(response.documents);
           const mappedData = response.documents.map((doc, index) => [
             (index + 1),
             doc.name,

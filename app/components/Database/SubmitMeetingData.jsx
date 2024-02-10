@@ -12,8 +12,10 @@ async function SubmitMeetingData(formData) {
     const collectionId = "65b230d0a4b4344bbac0";
     const databaseID = "65b12ffa18f8493c948e";
     await databases.createDocument(databaseID, collectionId, ID.unique(), {
-      name: formData.name,
-      capacity: formData.capacity,
+      name: formData.meetingName,
+      day: formData.day,
+      time: formData.time,
+      
     });
     notification.success({
       message: "Form data submitted successfully!",
