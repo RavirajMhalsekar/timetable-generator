@@ -5,7 +5,7 @@ const RoomPage: React.FC = () => {
   return (
     <div>
       <Header header="Lab Details" />
-      <div className="mt-20 shadow-indigo-200 bg-white p-5 rounded-2xl shadow-xl">
+      <div className="mt-5 shadow-indigo-200 bg-white p-5 rounded-2xl shadow-xl">
       
         <LabForm/>
         <LabTable/> 

@@ -3,14 +3,14 @@ import { notification } from "antd";
 const client = new Client();
 client
   .setEndpoint("https://cloud.appwrite.io/v1")
-  .setProject("65af81642532e75bf90e");
+  .setProject("65cca38ecf87da7b211a");
 
 const databases = new Databases(client);
 
 async function SubmitSubjectData(formData) {
   try {
-    const collectionId = "65b20fa542e20ae06aa4";
-    const databaseID = "65b12ffa18f8493c948e";
+    const collectionId = "65cca44746b071c7d98a";
+    const databaseID = "65cca3b35db95a90e8c4";
     await databases.createDocument(databaseID, collectionId, ID.unique(), {
       name: formData.subjectName,
       code: formData.subjectCode,
@@ -20,8 +20,7 @@ async function SubmitSubjectData(formData) {
       hours: formData.hours,
       semester: formData.semester,
       department: formData.department,
-      split: formData.split,
-      faculty: formData.faculty,
+      split: formData.requireSplit,
     });
     notification.success({
       message: "Form data submitted successfully!",

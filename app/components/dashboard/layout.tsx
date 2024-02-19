@@ -11,9 +11,11 @@ export default function DashBoardLayout({
   return (
     <>
       <div className="p-2 bg-gray-100">
-        <div className="flex flex-wrap justify-between bg-gray-100 h-[92vh] m-5 rounded-2xl">
+        <div className="flex h-[92vh] m-5 rounded-2xl">
           <Sidebar />
-          <div className=" w-[74%]">
+          <div className="w-[74%] overflow-y-auto pl-4">
+            {" "}
+            
             <div>{children}</div>
           </div>
         </div>

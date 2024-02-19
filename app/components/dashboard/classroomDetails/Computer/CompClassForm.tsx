@@ -208,266 +208,280 @@ function CompClassForm() {
  
   return (
     <>
-      <div className="flex items-center mb-4">
-        <h1 className="mr-5">FE</h1> 
-       
-        <Form.Item className='mr-5'
-              validateStatus={
-                touchedFields.feStrength && feStrength === undefined ? "error" : ""
-              }
-              help={
-                touchedFields.feStrength && feStrength === undefined
-                  ? "Please enter the Fe  Strength"
-                  : ""
-              }
-            >
-              <label className="block mb-2 text-sm font-medium text-gray-900">
-                Strength
-              </label>
-              <InputNumber
-                type="number"
-                value={feStrength}
-                onChange={handleFeStrengthChange}
-                className={`bg-gray-50 border ${
-                  touchedFields.feStrength && feStrength === undefined
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
-                placeholder="Enter the Strength"
-                formatter={(value) =>
-                  value ? `${value}`.replace(/[^0-9]/g, "") : ""
-                }
-              />
-            </Form.Item>
-            <Form.Item className='mr-5'
-              validateStatus={
-                touchedFields.fePractical && fePractical === undefined ? "error" : ""
-              }
-              help={
-                touchedFields.fePractical && fePractical === undefined
-                  ? "Please enter the Fe  Practical"
-                  : ""
-              }
-            >
-              <label className="block mb-2 text-sm font-medium text-gray-900">
-              Practical Batch
-              </label>
-              <InputNumber
-                type="number"
-                value={fePractical}
-                onChange={handleFePracticalChange}
-                className={`bg-gray-50 border ${
-                  touchedFields.fePractical && fePractical=== undefined
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 `}
-                placeholder="Enter the Practical Batch"
-                formatter={(value) =>
-                  value ? `${value}`.replace(/[^0-9]/g, "") : ""
-                }
-              />
-            </Form.Item>
-           
-            
-          <Space direction="vertical" className='w-48 h-12  '>
+      <div className="grid gap-6 mb-6 md:grid-cols-4">
+        <h1 className="mr-5">FE</h1>
+
+        <Form.Item
+          className="mr-5"
+          validateStatus={
+            touchedFields.feStrength && feStrength === undefined ? "error" : ""
+          }
+          help={
+            touchedFields.feStrength && feStrength === undefined
+              ? "Please enter the Fe  Strength"
+              : ""
+          }
+        >
+          <label className="block mb-2 text-sm font-medium text-gray-900">
+            Strength
+          </label>
+          <InputNumber
+            type="number"
+            value={feStrength}
+            onChange={handleFeStrengthChange}
+            className={`bg-gray-50 border ${
+              touchedFields.feStrength && feStrength === undefined
+                ? "border-red-500"
+                : "border-gray-300"
+            } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
+            placeholder="Enter the Strength"
+            formatter={(value) =>
+              value ? `${value}`.replace(/[^0-9]/g, "") : ""
+            }
+          />
+        </Form.Item>
+        <Form.Item
+          className="mr-5"
+          validateStatus={
+            touchedFields.fePractical && fePractical === undefined
+              ? "error"
+              : ""
+          }
+          help={
+            touchedFields.fePractical && fePractical === undefined
+              ? "Please enter the Fe  Practical"
+              : ""
+          }
+        >
+          <label className="block mb-2 text-sm font-medium text-gray-900">
+            Practical Batch
+          </label>
+          <InputNumber
+            type="number"
+            value={fePractical}
+            onChange={handleFePracticalChange}
+            className={`bg-gray-50 border ${
+              touchedFields.fePractical && fePractical === undefined
+                ? "border-red-500"
+                : "border-gray-300"
+            } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 `}
+            placeholder="Enter the Practical Batch"
+            formatter={(value) =>
+              value ? `${value}`.replace(/[^0-9]/g, "") : ""
+            }
+          />
+        </Form.Item>
+
+        <Space direction="vertical" className="w-48 h-12  ">
           <Select {...feSelectProps} />
         </Space>
       </div>
 
       <div className="flex items-center mb-4">
         <h1 className="mr-5">SE</h1>
-        <Form.Item className='mr-5'
-              validateStatus={
-                touchedFields.seStrength && seStrength === undefined ? "error" : ""
-              }
-              help={
-                touchedFields.seStrength && seStrength === undefined
-                  ? "Please enter the Fe  Strength"
-                  : ""
-              }
-            >
-              <label className="block mb-2 text-sm font-medium text-gray-900">
-                Strength
-              </label>
-              <InputNumber
-                type="number"
-                value={seStrength}
-                onChange={handleSeStrengthChange}
-                className={`bg-gray-50 border ${
-                  touchedFields.seStrength && seStrength === undefined
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
-                placeholder="Enter the Strength"
-                formatter={(value) =>
-                  value ? `${value}`.replace(/[^0-9]/g, "") : ""
-                }
-              />
-            </Form.Item>
-            <Form.Item className='mr-5'
-              validateStatus={
-                touchedFields.sePractical && sePractical === undefined ? "error" : ""
-              }
-              help={
-                touchedFields.sePractical && sePractical === undefined
-                  ? "Please enter the Fe  Practical"
-                  : ""
-              }
-            >
-              <label className="block mb-2 text-sm font-medium text-gray-900">
-              Practical Batch
-              </label>
-              <InputNumber
-                type="number"
-                value={sePractical}
-                onChange={handleSePracticalChange}
-                className={`bg-gray-50 border ${
-                  touchedFields.sePractical && sePractical=== undefined
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 `}
-                placeholder="Enter the Practical Batch"
-                formatter={(value) =>
-                  value ? `${value}`.replace(/[^0-9]/g, "") : ""
-                }
-              />
-            </Form.Item>
-    
-           <Space direction="vertical" className='w-48 h-12'>
+        <Form.Item
+          className="mr-5"
+          validateStatus={
+            touchedFields.seStrength && seStrength === undefined ? "error" : ""
+          }
+          help={
+            touchedFields.seStrength && seStrength === undefined
+              ? "Please enter the Fe  Strength"
+              : ""
+          }
+        >
+          <label className="block mb-2 text-sm font-medium text-gray-900">
+            Strength
+          </label>
+          <InputNumber
+            type="number"
+            value={seStrength}
+            onChange={handleSeStrengthChange}
+            className={`bg-gray-50 border ${
+              touchedFields.seStrength && seStrength === undefined
+                ? "border-red-500"
+                : "border-gray-300"
+            } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
+            placeholder="Enter the Strength"
+            formatter={(value) =>
+              value ? `${value}`.replace(/[^0-9]/g, "") : ""
+            }
+          />
+        </Form.Item>
+        <Form.Item
+          className="mr-5"
+          validateStatus={
+            touchedFields.sePractical && sePractical === undefined
+              ? "error"
+              : ""
+          }
+          help={
+            touchedFields.sePractical && sePractical === undefined
+              ? "Please enter the Fe  Practical"
+              : ""
+          }
+        >
+          <label className="block mb-2 text-sm font-medium text-gray-900">
+            Practical Batch
+          </label>
+          <InputNumber
+            type="number"
+            value={sePractical}
+            onChange={handleSePracticalChange}
+            className={`bg-gray-50 border ${
+              touchedFields.sePractical && sePractical === undefined
+                ? "border-red-500"
+                : "border-gray-300"
+            } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 `}
+            placeholder="Enter the Practical Batch"
+            formatter={(value) =>
+              value ? `${value}`.replace(/[^0-9]/g, "") : ""
+            }
+          />
+        </Form.Item>
+
+        <Space direction="vertical" className="w-48 h-12">
           <Select {...seSelectProps} />
         </Space>
       </div>
 
       <div className="flex items-center mb-4">
         <h1 className="mr-5">TE</h1>
-        <Form.Item className='mr-5'
-              validateStatus={
-                touchedFields.teStrength && teStrength === undefined ? "error" : ""
-              }
-              help={
-                touchedFields.teStrength && teStrength === undefined
-                  ? "Please enter the Fe  Strength"
-                  : ""
-              }
-            >
-              <label className="block mb-2 text-sm font-medium text-gray-900">
-                Strength
-              </label>
-              <InputNumber
-                type="number"
-                value={teStrength}
-                onChange={handleTeStrengthChange}
-                className={`bg-gray-50 border ${
-                  touchedFields.teStrength && teStrength === undefined
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
-                placeholder="Enter the Strength"
-                formatter={(value) =>
-                  value ? `${value}`.replace(/[^0-9]/g, "") : ""
-                }
-              />
-            </Form.Item>
-            <Form.Item className='mr-5'
-              validateStatus={
-                touchedFields.tePractical && tePractical === undefined ? "error" : ""
-              }
-              help={
-                touchedFields.tePractical && tePractical === undefined
-                  ? "Please enter the Fe  Practical"
-                  : ""
-              }
-            >
-              <label className="block mb-2 text-sm font-medium text-gray-900">
-              Practical Batch
-              </label>
-              <InputNumber
-                type="number"
-                value={tePractical}
-                onChange={handleTePracticalChange}
-                className={`bg-gray-50 border ${
-                  touchedFields.tePractical && tePractical=== undefined
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 `}
-                placeholder="Enter the Practical Batch"
-                formatter={(value) =>
-                  value ? `${value}`.replace(/[^0-9]/g, "") : ""
-                }
-              />
-            </Form.Item>
-      
-           <Space direction="vertical" className='w-48 h-12'>
+        <Form.Item
+          className="mr-5"
+          validateStatus={
+            touchedFields.teStrength && teStrength === undefined ? "error" : ""
+          }
+          help={
+            touchedFields.teStrength && teStrength === undefined
+              ? "Please enter the Fe  Strength"
+              : ""
+          }
+        >
+          <label className="block mb-2 text-sm font-medium text-gray-900">
+            Strength
+          </label>
+          <InputNumber
+            type="number"
+            value={teStrength}
+            onChange={handleTeStrengthChange}
+            className={`bg-gray-50 border ${
+              touchedFields.teStrength && teStrength === undefined
+                ? "border-red-500"
+                : "border-gray-300"
+            } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
+            placeholder="Enter the Strength"
+            formatter={(value) =>
+              value ? `${value}`.replace(/[^0-9]/g, "") : ""
+            }
+          />
+        </Form.Item>
+        <Form.Item
+          className="mr-5"
+          validateStatus={
+            touchedFields.tePractical && tePractical === undefined
+              ? "error"
+              : ""
+          }
+          help={
+            touchedFields.tePractical && tePractical === undefined
+              ? "Please enter the Fe  Practical"
+              : ""
+          }
+        >
+          <label className="block mb-2 text-sm font-medium text-gray-900">
+            Practical Batch
+          </label>
+          <InputNumber
+            type="number"
+            value={tePractical}
+            onChange={handleTePracticalChange}
+            className={`bg-gray-50 border ${
+              touchedFields.tePractical && tePractical === undefined
+                ? "border-red-500"
+                : "border-gray-300"
+            } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 `}
+            placeholder="Enter the Practical Batch"
+            formatter={(value) =>
+              value ? `${value}`.replace(/[^0-9]/g, "") : ""
+            }
+          />
+        </Form.Item>
+
+        <Space direction="vertical" className="w-48 h-12">
           <Select {...teSelectProps} />
         </Space>
       </div>
 
       <div className="flex items-center mb-4">
         <h1 className="mr-5">BE</h1>
-        <Form.Item className='mr-5'
-              validateStatus={
-                touchedFields.feStrength && feStrength === undefined ? "error" : ""
-              }
-              help={
-                touchedFields.feStrength && feStrength === undefined
-                  ? "Please enter the Fe  Strength"
-                  : ""
-              }
-            >
-              <label className="block mb-2 text-sm font-medium text-gray-900">
-                Strength
-              </label>
-              <InputNumber
-                type="number"
-                value={beStrength}
-                onChange={handleBeStrengthChange}
-                className={`bg-gray-50 border ${
-                  touchedFields.feStrength && feStrength === undefined
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
-                placeholder="Enter the Strength"
-                formatter={(value) =>
-                  value ? `${value}`.replace(/[^0-9]/g, "") : ""
-                }
-              />
-            </Form.Item>
-            <Form.Item className='mr-5'
-              validateStatus={
-                touchedFields.bePractical && bePractical === undefined ? "error" : ""
-              }
-              help={
-                touchedFields.bePractical && bePractical === undefined
-                  ? "Please enter the Fe  Practical"
-                  : ""
-              }
-            >
-              <label className="block mb-2 text-sm font-medium text-gray-900">
-              Practical Batch
-              </label>
-              <InputNumber
-                type="number"
-                value={bePractical}
-                onChange={handleBePracticalChange}
-                className={`bg-gray-50 border ${
-                  touchedFields.bePractical && bePractical=== undefined
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 `}
-                placeholder="Enter the Practical Batch"
-                formatter={(value) =>
-                  value ? `${value}`.replace(/[^0-9]/g, "") : ""
-                }
-              />
-            </Form.Item>
-        
-         <Space direction="vertical" className='w-48 h-12'>
+        <Form.Item
+          className="mr-5"
+          validateStatus={
+            touchedFields.feStrength && feStrength === undefined ? "error" : ""
+          }
+          help={
+            touchedFields.feStrength && feStrength === undefined
+              ? "Please enter the Fe  Strength"
+              : ""
+          }
+        >
+          <label className="block mb-2 text-sm font-medium text-gray-900">
+            Strength
+          </label>
+          <InputNumber
+            type="number"
+            value={beStrength}
+            onChange={handleBeStrengthChange}
+            className={`bg-gray-50 border ${
+              touchedFields.feStrength && feStrength === undefined
+                ? "border-red-500"
+                : "border-gray-300"
+            } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
+            placeholder="Enter the Strength"
+            formatter={(value) =>
+              value ? `${value}`.replace(/[^0-9]/g, "") : ""
+            }
+          />
+        </Form.Item>
+        <Form.Item
+          className="mr-5"
+          validateStatus={
+            touchedFields.bePractical && bePractical === undefined
+              ? "error"
+              : ""
+          }
+          help={
+            touchedFields.bePractical && bePractical === undefined
+              ? "Please enter the Fe  Practical"
+              : ""
+          }
+        >
+          <label className="block mb-2 text-sm font-medium text-gray-900">
+            Practical Batch
+          </label>
+          <InputNumber
+            type="number"
+            value={bePractical}
+            onChange={handleBePracticalChange}
+            className={`bg-gray-50 border ${
+              touchedFields.bePractical && bePractical === undefined
+                ? "border-red-500"
+                : "border-gray-300"
+            } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 `}
+            placeholder="Enter the Practical Batch"
+            formatter={(value) =>
+              value ? `${value}`.replace(/[^0-9]/g, "") : ""
+            }
+          />
+        </Form.Item>
+
+        <Space direction="vertical" className="w-48 h-12">
           <Select {...beSelectProps} />
         </Space>
-      </div> 
-      
-      <Button  type="primary" >Primary Button</Button>
-     
+      </div>
+
+      <Button type="primary">Primary Button</Button>
     </>
   );
 }

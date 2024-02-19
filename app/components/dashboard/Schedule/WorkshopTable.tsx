@@ -1,11 +1,11 @@
-"use client"
-import { useEffect, useState } from 'react';
-import { Client, Databases } from 'appwrite';
+"use client";
+import React, { useEffect, useState } from "react";
+import { Client, Databases } from "appwrite";
 import Table from "../Table";
 
-function FacultyList() {
+const WorkshopTable: React.FC = () => {
   const [data, setData] = useState<string[][]>([]);
-  const columns = ["Srno", "facultyName", "designation", "department"];
+  const columns = ["Srno","Day", "Start Time", "End Time"];
   const pollingInterval = 5000; // Poll every 5 seconds
 
   useEffect(() => {
@@ -18,13 +18,13 @@ function FacultyList() {
 
     const fetchData = () => {
       databases
-        .listDocuments("65cca3b35db95a90e8c4", "65cca3db4edc1e2a17bf")
+        .listDocuments("65cca3b35db95a90e8c4", "65d34c33bd406f1d8f34")
         .then((response) => {
           const mappedData = response.documents.map((doc, index) => [
             index + 1,
-            doc.name,
-            doc.designation,
-            doc.department,
+            doc.day,
+            doc.startTime,
+            doc.endTime,
           ]);
           setData(mappedData);
         })
@@ -47,6 +47,4 @@ function FacultyList() {
   );
 };
 
-export default FacultyList;
-
-
+export default WorkshopTable;

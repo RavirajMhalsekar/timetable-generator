@@ -3,14 +3,14 @@ import { notification } from 'antd';
 const client = new Client();
 client
   .setEndpoint("https://cloud.appwrite.io/v1")
-  .setProject("65af81642532e75bf90e");
+  .setProject("65cca38ecf87da7b211a");
 
 const databases = new Databases(client);
 
 async function SubmitRoomData(formData) {
     try {
-        const collectionId = "65b1300f9d902549e29f"; 
-        const databaseID = "65b12ffa18f8493c948e"
+        const databaseID = "65cca3b35db95a90e8c4";
+        const collectionId = "65cca3c1705d93403824"; 
         await databases.createDocument(databaseID,collectionId, ID.unique(), {
             name: formData.name,
             capacity: formData.capacity,

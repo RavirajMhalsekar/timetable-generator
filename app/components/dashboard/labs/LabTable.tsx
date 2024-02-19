@@ -17,20 +17,20 @@ const LabTable: React.FC = () => {
     const client = new Client();
     client
       .setEndpoint("https://cloud.appwrite.io/v1")
-      .setProject("65af81642532e75bf90e");
+      .setProject("65cca38ecf87da7b211a");
 
     const databases = new Databases(client);
 
     const fetchData = () => {
       databases
-        .listDocuments("65b12ffa18f8493c948e", "65b1316de22874480ee7")
+        .listDocuments("65cca3b35db95a90e8c4", "65cca3d2d3e781f1f216")
         .then((response) => {
           const mappedData = response.documents.map((doc, index) => [
             index + 1,
             doc.name,
             doc.subject,
             doc.department,
-            doc.capacity
+            doc.capacity,
           ]);
           setData(mappedData);
         })

@@ -15,24 +15,25 @@ const SubjectList: React.FC = () => {
     "Sem",
     "Dept",
     "Split",
-    "Faculty",
+    // "Faculty",
   ];
   const pollingInterval = 5000; // Poll every 5 seconds
 
   useEffect(() => {
     const client = new Client();
     client
-      .setEndpoint('https://cloud.appwrite.io/v1')
-      .setProject('65af81642532e75bf90e');
+      .setEndpoint("https://cloud.appwrite.io/v1")
+      .setProject("65cca38ecf87da7b211a");
 
     const databases = new Databases(client);
 
     const fetchData = () => {
-      databases.listDocuments("65b12ffa18f8493c948e", "65b20fa542e20ae06aa4")
+      databases
+        .listDocuments("65cca3b35db95a90e8c4", "65cca44746b071c7d98a")
         .then((response) => {
           console.log(response.documents);
           const mappedData = response.documents.map((doc, index) => [
-            (index + 1),
+            index + 1,
             doc.name,
             doc.code,
             doc.lecture,
@@ -42,7 +43,7 @@ const SubjectList: React.FC = () => {
             doc.semester,
             doc.department,
             doc.split,
-            doc.faculty,
+            // doc.faculty,
           ]);
           setData(mappedData);
         })

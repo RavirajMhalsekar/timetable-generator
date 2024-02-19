@@ -18,7 +18,7 @@ const SubjectForm: React.FC = () => {
   const [requireSplit, setRequireSplit] = useState<string | undefined>(
     undefined
   );
-  const [faculty, setFaculty] = useState<string>("");
+  // const [faculty, setFaculty] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -36,7 +36,7 @@ const SubjectForm: React.FC = () => {
     semester: false,
     department: false,
     requireSplit: false,
-    faculty: false,
+    // faculty: false,
   });
   const handleFieldTouch = (field: string) => {
     setTouchedFields({
@@ -56,7 +56,7 @@ const SubjectForm: React.FC = () => {
     setSemester("");
     setDepartment(undefined);
     setRequireSplit(undefined);
-    setFaculty("");
+    // setFaculty("");
   };
   const handleSubjectNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSubjectName(e.target.value);
@@ -96,9 +96,9 @@ const SubjectForm: React.FC = () => {
     handleFieldTouch("requireSplit");
   };
 
-  const handleFacultyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFaculty(e.target.value);
-  };
+  // const handleFacultyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setFaculty(e.target.value);
+  // };
   const handleSubmit = async () => {
     setIsLoading(true);
 
@@ -113,7 +113,7 @@ const SubjectForm: React.FC = () => {
       semester: !semester.trim(),
       department: !department,
       requireSplit: !requireSplit,
-      faculty: !faculty.trim(),
+      // faculty: !faculty.trim(),
     };
     const anyEmptyField = Object.values(emptyFields).some((field) => field);
 
@@ -129,7 +129,7 @@ const SubjectForm: React.FC = () => {
         semester: emptyFields.semester,
         department: emptyFields.department,
         requireSplit: emptyFields.requireSplit,
-        faculty: emptyFields.faculty,
+        // faculty: emptyFields.faculty,
       });
       setIsLoading(false);
       return;
@@ -144,7 +144,7 @@ const SubjectForm: React.FC = () => {
       semester,
       department,
       requireSplit,
-      faculty,
+      // faculty,
     };
     try {
       await SubmitSubjectData(formData);
@@ -158,7 +158,7 @@ const SubjectForm: React.FC = () => {
         setSemester("");
         setDepartment(undefined);
         setRequireSplit(undefined);
-        setFaculty("");
+        // setFaculty("");
         setIsModalOpen(false);
         setIsLoading(false);
         setTouchedFields({
@@ -171,7 +171,7 @@ const SubjectForm: React.FC = () => {
           semester: false,
           department: false,
           requireSplit: false,
-          faculty: false,
+          // faculty: false,
         });
       }, 700); // Simulating a delay before showing the success notification
     } catch (error) {
@@ -369,7 +369,7 @@ const SubjectForm: React.FC = () => {
                     <Option value="ECOMP">ECOMP</Option>
                     <Option value="COMP">Computer</Option>
                     <Option value="IT">IT</Option>
-                    <Option value="HUMANITIES">IT</Option>
+                    <Option value="HUMANITIES">HUMANITIES</Option>
                   </Select>
                 </Form.Item>
               </div>
@@ -414,7 +414,7 @@ const SubjectForm: React.FC = () => {
                   </Select>
                 </Form.Item>
               </div>
-              <div style={{ marginTop: "-0.5rem" }}>
+              {/* <div style={{ marginTop: "-0.5rem" }}>
                 <label className="block mb-2 text-sm font-medium text-gray-900 ">
                   Faculty
                 </label>
@@ -430,7 +430,7 @@ const SubjectForm: React.FC = () => {
                     handleFieldTouch("faculty");
                   }}
                 />
-              </div>
+              </div> */}
             </div>
             <div className="flex justify-center items-center mb-8 ">
               {isLoading ? (

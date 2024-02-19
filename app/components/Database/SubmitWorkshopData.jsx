@@ -7,15 +7,14 @@ client
 
 const databases = new Databases(client);
 
-async function SubmitLabData(formData) {
+async function SubmitWorkshopData(formData) {
   try {
-    const collectionId = "65cca3d2d3e781f1f216";
+    const collectionId = "65d34c33bd406f1d8f34";
     const databaseID = "65cca3b35db95a90e8c4";
     await databases.createDocument(databaseID, collectionId, ID.unique(), {
-      name: formData.labName,
-      subject: formData.subName,
-      department: formData.department,
-      capacity: formData.labCapacity,
+      day: formData.day,
+      startTime: formData.startTime,
+      endTime: formData.endTime,
     });
     notification.success({
       message: "Form data submitted successfully!",
@@ -34,4 +33,4 @@ async function SubmitLabData(formData) {
   }
 }
 
-export default SubmitLabData;
+export default SubmitWorkshopData;

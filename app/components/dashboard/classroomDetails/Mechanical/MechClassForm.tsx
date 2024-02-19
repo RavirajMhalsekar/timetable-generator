@@ -1,475 +1,652 @@
 "use client";
-import React, { useState } from 'react';
-import type { SelectProps } from 'antd';
-import { Select, Space ,Button,InputNumber,Form} from 'antd';
+import React, { useEffect, useState } from "react";
+import { Select, Button } from "antd";
+import { MinusCircleOutlined } from "@ant-design/icons";
+import { Client, Databases } from "appwrite";
 
-interface ItemProps {
+interface Option {
   label: string;
   value: string;
+  department: string;
+  desc: string;
+  semester: string;
 }
+interface SubjectSelection {
+  selectedSubjects: string[];
+}
+const MechClassForm: React.FC = () => {
+  const [options, setOptions] = useState<Option[]>([]);
+  const [firstYearSelections, setFirstYearSelections] = useState<
+    SubjectSelection[]
+  >([{ selectedSubjects: [] }]);
+  const [secondYearSelections, setSecondYearSelections] = useState<
+    SubjectSelection[]
+  >([{ selectedSubjects: [] }]);
+  const [thirdYearSelections, setThirdYearSelections] = useState<
+    SubjectSelection[]
+  >([{ selectedSubjects: [] }]);
+  const [fourthYearSelections, setFourthYearSelections] = useState<
+    SubjectSelection[]
+  >([{ selectedSubjects: [] }]);
 
-const options: ItemProps[] = [];
+  useEffect(() => {
+    const client = new Client();
+    client
+      .setEndpoint("https://cloud.appwrite.io/v1")
+      .setProject("65af81642532e75bf90e");
 
+    const databases = new Databases(client);
 
-const addFeSubjects = (optionsArray: ItemProps[]) => {
-  // Clear the array before adding custom elements
-  optionsArray.length = 0;
-
-  // Add your custom elements here
-  optionsArray.push({
-    label: 'Custom Element 1',
-    value: 'custom1',
-  });
-  optionsArray.push({
-    label: 'Custom Element 2',
-    value: 'custom2',
-  });
-
-  return optionsArray;
-};
-const addSeSubjects = (optionsArray: ItemProps[]) => {
-  // Clear the array before adding custom elements
-  optionsArray.length = 0;
-
-  // Add your custom elements here
-  optionsArray.push({
-    label: 'Custom Element 1',
-    value: 'custom1',
-  });
-  optionsArray.push({
-    label: 'Custom Element 2',
-    value: 'custom2',
-  });
-
-  return optionsArray;
-};
-
-const addTeSubjects = (optionsArray: ItemProps[]) => {
-  // Clear the array before adding custom elements
-  optionsArray.length = 0;
-
-  // Add your custom elements here
-  optionsArray.push({
-    label: 'Custom Element 1',
-    value: 'custom1',
-  });
-  optionsArray.push({
-    label: 'Custom Element 2',
-    value: 'custom2',
-  });
-
-  return optionsArray;
-};
-
-const addBeSubjects = (optionsArray: ItemProps[]) => {
-  // Clear the array before adding custom elements
-  optionsArray.length = 0;
-
-  // Add your custom elements here
-  optionsArray.push({
-    label: 'Custom Element 1',
-    value: 'custom1',
-  });
-  optionsArray.push({
-    label: 'Custom Element 2',
-    value: 'custom2',
-  });
-
-  return optionsArray;
-};
-
-function MechClassForm() { 
-    // State for FE section
-    const [feValue, setFeValue] = useState<string[]>([]);
-    // State for SE section
-    const [seValue, setSeValue] = useState<string[]>([]);
-    // State for TE section
-    const [teValue, setTeValue] = useState<string[]>([]);
-    // State for BE section
-    const [beValue, setBeValue] = useState<string[]>([]);  
-
-    const [feStrength, setfeStrength] = useState<number | undefined>();
-    const [seStrength, setseStrength] = useState<number | undefined>();
-    const [teStrength, setteStrength] = useState<number | undefined>();
-    const [beStrength, setbeStrength] = useState<number | undefined>();
-
-    const [fePractical, setfePractical] = useState<number | undefined>(); 
-    const [sePractical, setsePractical] = useState<number | undefined>(); 
-    const [tePractical, settePractical] = useState<number | undefined>(); 
-    const [bePractical, setbePractical] = useState<number | undefined>(); 
-   
-
-    const [touchedFields, setTouchedFields] = useState({
-      feStrength: false,
-      seStrength: false,
-      teStrength: false,
-      beStrength: false,
-      fePractical:false,
-      sePractical:false,
-      tePractical:false,
-      bePractical:false,
-     
-    }); 
-   
-    const handleFeStrengthChange = (value: number | undefined | null) => {
-      setfeStrength(value === null ? undefined : value);
-      handleFieldTouch("feStrength");
-    }; 
-    const handleSeStrengthChange = (value: number | undefined | null) => {
-      setseStrength(value === null ? undefined : value);
-      handleFieldTouch("seStrength");
-    }; 
-    const handleTeStrengthChange = (value: number | undefined | null) => {
-      setteStrength(value === null ? undefined : value);
-      handleFieldTouch("teStrength");
-    }; 
-    const handleBeStrengthChange = (value: number | undefined | null) => {
-      setbeStrength(value === null ? undefined : value);
-      handleFieldTouch("beStrength");
-    }; 
-    const handleFePracticalChange = (value: number | undefined | null) => {
-      setfePractical(value === null ? undefined : value);
-      handleFieldTouch("fePractical");
-    }; 
-    const handleSePracticalChange = (value: number | undefined | null) => {
-      setsePractical(value === null ? undefined : value);
-      handleFieldTouch("sePractical");
-     }; 
-    const handleTePracticalChange = (value: number | undefined | null) => {
-      settePractical(value === null ? undefined : value);
-      handleFieldTouch("tePractical");
-     }; 
-    const handleBePracticalChange = (value: number | undefined | null) => {
-     setbePractical(value === null ? undefined : value);
-     handleFieldTouch("bePractical");
-     }; 
-   
-
-    const handleFieldTouch = (field: string) => {
-      setTouchedFields({
-        ...touchedFields,
-        [field]: true,
+    databases
+      .listDocuments("65b12ffa18f8493c948e", "65b20fa542e20ae06aa4")
+      .then((response) => {
+        const newOptions = response.documents.map((doc) => ({
+          label: doc.code,
+          value: doc.$id,
+          department: doc.department,
+          desc: doc.name,
+          semester: doc.semester.toString(),
+        }));
+        setOptions(newOptions);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch documents:", error);
       });
-    };
-  
-   // Props for each Select component
-   const feSelectProps: SelectProps = {
-     mode: 'multiple',
-     style: { width: '100%' },
-     value: feValue,
-     options: addFeSubjects(options),
-     onChange: (newValue: string[]) => {
-       setFeValue(newValue); 
-       console.log('Selected Values:', newValue);
+  }, []);
 
-     },
-     placeholder: 'Subjects',
-     maxTagCount: 'responsive',
-   };
- 
-   const seSelectProps: SelectProps = {
-     mode: 'multiple',
-     style: { width: '100%' },
-     value: seValue,
-     options: addSeSubjects(options),
-     onChange: (newValue: string[]) => {
-       setSeValue(newValue);
-       console.log('Selected Values:', newValue);
-     },
-     placeholder: 'Subjects',
-     maxTagCount: 'responsive',
-   };
- 
-   const teSelectProps: SelectProps = {
-     mode: 'multiple',
-     style: { width: '100%' },
-     value: teValue,
-     options: addTeSubjects(options),
-     onChange: (newValue: string[]) => {
-       setTeValue(newValue);
-       console.log('Selected Values:', newValue);
-     },
-     placeholder: 'Subjects',
-     maxTagCount: 'responsive',
-   };
- 
-   const beSelectProps: SelectProps = {
-     mode: 'multiple',
-     style: { width: '100%' },
-     value: beValue,
-     options: addBeSubjects(options),
-     onChange: (newValue: string[]) => {
-       setBeValue(newValue);
-       console.log('Selected Values:', newValue);
-     },
-     placeholder: 'Subjects',
-     maxTagCount: 'responsive',
-   };
- 
+  const handleSubjectChange = (
+    value: string[],
+    index: number,
+    year: string
+  ) => {
+    switch (year) {
+      case "firstYear":
+        setFirstYearSelections((prevState) => {
+          const newState = [...prevState];
+          newState[index].selectedSubjects = value;
+          return newState;
+        });
+        break;
+      case "secondYear":
+        setSecondYearSelections((prevState) => {
+          const newState = [...prevState];
+          newState[index].selectedSubjects = value;
+          return newState;
+        });
+        break;
+      case "thirdYear":
+        setThirdYearSelections((prevState) => {
+          const newState = [...prevState];
+          newState[index].selectedSubjects = value;
+          return newState;
+        });
+        break;
+      case "fourthYear":
+        setFourthYearSelections((prevState) => {
+          const newState = [...prevState];
+          newState[index].selectedSubjects = value;
+          return newState;
+        });
+        break;
+      default:
+        break;
+    }
+  };
+
+  const addSubjectSelection = (year: string) => {
+    switch (year) {
+      case "firstYear":
+        setFirstYearSelections((prevState) => [
+          ...prevState,
+          { selectedSubjects: [] },
+        ]);
+        break;
+      case "secondYear":
+        setSecondYearSelections((prevState) => [
+          ...prevState,
+          { selectedSubjects: [] },
+        ]);
+        break;
+      case "thirdYear":
+        setThirdYearSelections((prevState) => [
+          ...prevState,
+          { selectedSubjects: [] },
+        ]);
+        break;
+      case "fourthYear":
+        setFourthYearSelections((prevState) => [
+          ...prevState,
+          { selectedSubjects: [] },
+        ]);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const removeSubjectSelection = (sectionType: string, index: number) => {
+    switch (sectionType) {
+      case "firstYear":
+        const newFirstYearSelections = [...firstYearSelections];
+        newFirstYearSelections.splice(index, 1);
+        setFirstYearSelections(newFirstYearSelections);
+        break;
+      case "secondYear":
+        const newSecondYearSelections = [...secondYearSelections];
+        newSecondYearSelections.splice(index, 1);
+        setSecondYearSelections(newSecondYearSelections);
+        break;
+      case "thirdYear":
+        const newThirdYearSelections = [...thirdYearSelections];
+        newThirdYearSelections.splice(index, 1);
+        setThirdYearSelections(newThirdYearSelections);
+        break;
+      case "fourthYear":
+        const newFourthYearSelections = [...fourthYearSelections];
+        newFourthYearSelections.splice(index, 1);
+        setFourthYearSelections(newFourthYearSelections);
+        break;
+      default:
+        break;
+    }
+  };
+
+  // Function to generate division labels
+  const getDivisionLabel = (index: number) =>
+    `DIV ${String.fromCharCode(65 + index)}`;
+
   return (
-    <>
-      <div className="flex items-center mb-4">
-        <h1 className="mr-5">FE</h1> 
-       
-        <Form.Item className='mr-5'
-              validateStatus={
-                touchedFields.feStrength && feStrength === undefined ? "error" : ""
-              }
-              help={
-                touchedFields.feStrength && feStrength === undefined
-                  ? "Please enter the Fe  Strength"
-                  : ""
-              }
+    <div>
+      <form>
+        <div className="flex items-center mb-3 mt-2">
+          <span>First Year</span>
+          <hr className="flex-grow border-gray-300 ml-4  " />
+        </div>
+        {firstYearSelections.map((selection, index) => (
+          <React.Fragment key={index}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginBottom: "20px",
+              }}
             >
-              <label className="block mb-2 text-sm font-medium text-gray-900">
-                Strength
-              </label>
-              <InputNumber
-                type="number"
-                value={feStrength}
-                onChange={handleFeStrengthChange}
-                className={`bg-gray-50 border ${
-                  touchedFields.feStrength && feStrength === undefined
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
-                placeholder="Enter the Strength"
-                formatter={(value) =>
-                  value ? `${value}`.replace(/[^0-9]/g, "") : ""
-                }
-              />
-            </Form.Item>
-            <Form.Item className='mr-5'
-              validateStatus={
-                touchedFields.fePractical && fePractical === undefined ? "error" : ""
-              }
-              help={
-                touchedFields.fePractical && fePractical === undefined
-                  ? "Please enter the Fe  Practical"
-                  : ""
-              }
+              <div
+                style={{
+                  marginRight: "20px",
+                  marginTop: "22px",
+                  color: "#718096",
+                }}
+              >
+                {getDivisionLabel(index)}
+              </div>
+              <div className="grid gap-6 mb-1 md:grid-cols-3 flex-grow">
+                <div>
+                  <label
+                    htmlFor={`first_name_${index}`}
+                    className="block mb-2 text-sm font-medium text-gray-900"
+                  >
+                    Class Strength
+                  </label>
+                  <input
+                    type="text"
+                    id={`first_name_${index}`}
+                    className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    placeholder="Enter the strength..."
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor={`last_name_${index}`}
+                    className="block mb-2 text-sm font-medium text-gray-900"
+                  >
+                    No. of practical batches
+                  </label>
+                  <input
+                    type="number"
+                    id={`last_name_${index}`}
+                    className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    placeholder="Enter the practical batches..."
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor={`subjects_${index}`}
+                    className="block mb-2 text-sm font-medium text-gray-900"
+                  >
+                    Select the Subjects
+                  </label>
+                  <Select
+                    mode="tags"
+                    style={{ width: "100%" }}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-10 border-none"
+                    placeholder="Select the subjects..."
+                    onChange={(value) => handleSubjectChange(value, index)}
+                    options={options}
+                    optionRender={(option) => (
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          width: "100%",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            marginBottom: "4px",
+                          }}
+                        >
+                          <span>{option.data.label}</span>
+                          <span>{option.data.department}</span>
+                        </div>
+                        <div
+                          style={{
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {option.data.desc}
+                        </div>
+                      </div>
+                    )}
+                  />
+                </div>
+              </div>
+              {index !== 0 && (
+                <MinusCircleOutlined
+                  onClick={() => removeSubjectSelection("firstYear", index)}
+                  style={{
+                    color: "red",
+                    marginLeft: "10px",
+                    marginTop: "20px",
+                    cursor: "pointer",
+                  }}
+                />
+              )}
+            </div>
+          </React.Fragment>
+        ))}
+        <div className="flex justify-center">
+          <button
+            onClick={() => addSubjectSelection("firstYear")}
+            className="bg-gray-200 border-dashed border border-gray-400 w-3/4 text-gray-500 rounded-lg"
+          >
+            + Add field
+          </button>
+        </div>
+        <div className="flex items-center mb-3 mt-2">
+          <span>Second Year</span>
+          <hr className="flex-grow border-gray-300 ml-4  " />
+        </div>
+        {secondYearSelections.map((selection, index) => (
+          <React.Fragment key={index}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginBottom: "20px",
+              }}
             >
-              <label className="block mb-2 text-sm font-medium text-gray-900">
-              Practical Batch
-              </label>
-              <InputNumber
-                type="number"
-                value={fePractical}
-                onChange={handleFePracticalChange}
-                className={`bg-gray-50 border ${
-                  touchedFields.fePractical && fePractical=== undefined
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 `}
-                placeholder="Enter the Practical Batch"
-                formatter={(value) =>
-                  value ? `${value}`.replace(/[^0-9]/g, "") : ""
-                }
-              />
-            </Form.Item>
-           
-            
-          <Space direction="vertical" className='w-48 h-12  '>
-          <Select {...feSelectProps} />
-        </Space>
-      </div>
-
-      <div className="flex items-center mb-4">
-        <h1 className="mr-5">SE</h1>
-        <Form.Item className='mr-5'
-              validateStatus={
-                touchedFields.seStrength && seStrength === undefined ? "error" : ""
-              }
-              help={
-                touchedFields.seStrength && seStrength === undefined
-                  ? "Please enter the Fe  Strength"
-                  : ""
-              }
+              <div
+                style={{
+                  marginRight: "20px",
+                  marginTop: "22px",
+                  color: "#718096",
+                }}
+              >
+                {getDivisionLabel(index)}
+              </div>
+              <div className="grid gap-6 mb-1 md:grid-cols-3 flex-grow">
+                <div>
+                  <label
+                    htmlFor={`first_name_${index}`}
+                    className="block mb-2 text-sm font-medium text-gray-900"
+                  >
+                    Class Strength
+                  </label>
+                  <input
+                    type="text"
+                    id={`first_name_${index}`}
+                    className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    placeholder="Enter the strength..."
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor={`last_name_${index}`}
+                    className="block mb-2 text-sm font-medium text-gray-900"
+                  >
+                    No. of practical batches
+                  </label>
+                  <input
+                    type="number"
+                    id={`last_name_${index}`}
+                    className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    placeholder="Enter the practical batches..."
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor={`subjects_${index}`}
+                    className="block mb-2 text-sm font-medium text-gray-900"
+                  >
+                    Select the Subjects
+                  </label>
+                  <Select
+                    mode="tags"
+                    style={{ width: "100%" }}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-10 border-none"
+                    placeholder="Select the subjects..."
+                    onChange={(value) => handleSubjectChange(value, index)}
+                    options={options}
+                    optionRender={(option) => (
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          width: "100%",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            marginBottom: "4px",
+                          }}
+                        >
+                          <span>{option.data.label}</span>
+                          <span>{option.data.department}</span>
+                        </div>
+                        <div
+                          style={{
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {option.data.desc}
+                        </div>
+                      </div>
+                    )}
+                  />
+                </div>
+              </div>
+              {index !== 0 && (
+                <MinusCircleOutlined
+                  onClick={() => removeSubjectSelection("secondYear", index)}
+                  style={{
+                    color: "red",
+                    marginLeft: "10px",
+                    marginTop: "20px",
+                    cursor: "pointer",
+                  }}
+                />
+              )}
+            </div>
+          </React.Fragment>
+        ))}
+        <div className="flex justify-center">
+          <button
+            onClick={() => addSubjectSelection("secondYear")}
+            className="bg-gray-200 border-dashed border border-gray-400 w-3/4 text-gray-500 rounded-lg"
+          >
+            + Add field
+          </button>
+        </div>
+        <div className="flex items-center mb-3 mt-2">
+          <span>Third Year</span>
+          <hr className="flex-grow border-gray-300 ml-4  " />
+        </div>
+        {thirdYearSelections.map((selection, index) => (
+          <React.Fragment key={index}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginBottom: "20px",
+              }}
             >
-              <label className="block mb-2 text-sm font-medium text-gray-900">
-                Strength
-              </label>
-              <InputNumber
-                type="number"
-                value={seStrength}
-                onChange={handleSeStrengthChange}
-                className={`bg-gray-50 border ${
-                  touchedFields.seStrength && seStrength === undefined
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
-                placeholder="Enter the Strength"
-                formatter={(value) =>
-                  value ? `${value}`.replace(/[^0-9]/g, "") : ""
-                }
-              />
-            </Form.Item>
-            <Form.Item className='mr-5'
-              validateStatus={
-                touchedFields.sePractical && sePractical === undefined ? "error" : ""
-              }
-              help={
-                touchedFields.sePractical && sePractical === undefined
-                  ? "Please enter the Fe  Practical"
-                  : ""
-              }
+              <div
+                style={{
+                  marginRight: "20px",
+                  marginTop: "22px",
+                  color: "#718096",
+                }}
+              >
+                {getDivisionLabel(index)}
+              </div>
+              <div className="grid gap-6 mb-1 md:grid-cols-3 flex-grow">
+                <div>
+                  <label
+                    htmlFor={`first_name_${index}`}
+                    className="block mb-2 text-sm font-medium text-gray-900"
+                  >
+                    Class Strength
+                  </label>
+                  <input
+                    type="text"
+                    id={`first_name_${index}`}
+                    className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    placeholder="Enter the strength..."
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor={`last_name_${index}`}
+                    className="block mb-2 text-sm font-medium text-gray-900"
+                  >
+                    No. of practical batches
+                  </label>
+                  <input
+                    type="number"
+                    id={`last_name_${index}`}
+                    className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    placeholder="Enter the practical batches..."
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor={`subjects_${index}`}
+                    className="block mb-2 text-sm font-medium text-gray-900"
+                  >
+                    Select the Subjects
+                  </label>
+                  <Select
+                    mode="tags"
+                    style={{ width: "100%" }}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-10 border-none"
+                    placeholder="Select the subjects..."
+                    onChange={(value) => handleSubjectChange(value, index)}
+                    options={options}
+                    optionRender={(option) => (
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          width: "100%",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            marginBottom: "4px",
+                          }}
+                        >
+                          <span>{option.data.label}</span>
+                          <span>{option.data.department}</span>
+                        </div>
+                        <div
+                          style={{
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {option.data.desc}
+                        </div>
+                      </div>
+                    )}
+                  />
+                </div>
+              </div>
+              {index !== 0 && (
+                <MinusCircleOutlined
+                  onClick={() => removeSubjectSelection("thirdYear", index)}
+                  style={{
+                    color: "red",
+                    marginLeft: "10px",
+                    marginTop: "20px",
+                    cursor: "pointer",
+                  }}
+                />
+              )}
+            </div>
+          </React.Fragment>
+        ))}
+        <div className="flex justify-center">
+          <button
+            onClick={() => addSubjectSelection("thirdYear")}
+            className="bg-gray-200 border-dashed border border-gray-400 w-3/4 text-gray-500 rounded-lg"
+          >
+            + Add field
+          </button>
+        </div>
+        <div className="flex items-center mb-3 mt-2">
+          <span>Fourth Year</span>
+          <hr className="flex-grow border-gray-300 ml-4  " />
+        </div>
+        {fourthYearSelections.map((selection, index) => (
+          <React.Fragment key={index}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginBottom: "20px",
+              }}
             >
-              <label className="block mb-2 text-sm font-medium text-gray-900">
-              Practical Batch
-              </label>
-              <InputNumber
-                type="number"
-                value={sePractical}
-                onChange={handleSePracticalChange}
-                className={`bg-gray-50 border ${
-                  touchedFields.sePractical && sePractical=== undefined
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 `}
-                placeholder="Enter the Practical Batch"
-                formatter={(value) =>
-                  value ? `${value}`.replace(/[^0-9]/g, "") : ""
-                }
-              />
-            </Form.Item>
-    
-           <Space direction="vertical" className='w-48 h-12'>
-          <Select {...seSelectProps} />
-        </Space>
-      </div>
-
-      <div className="flex items-center mb-4">
-        <h1 className="mr-5">TE</h1>
-        <Form.Item className='mr-5'
-              validateStatus={
-                touchedFields.teStrength && teStrength === undefined ? "error" : ""
-              }
-              help={
-                touchedFields.teStrength && teStrength === undefined
-                  ? "Please enter the Fe  Strength"
-                  : ""
-              }
-            >
-              <label className="block mb-2 text-sm font-medium text-gray-900">
-                Strength
-              </label>
-              <InputNumber
-                type="number"
-                value={teStrength}
-                onChange={handleTeStrengthChange}
-                className={`bg-gray-50 border ${
-                  touchedFields.teStrength && teStrength === undefined
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
-                placeholder="Enter the Strength"
-                formatter={(value) =>
-                  value ? `${value}`.replace(/[^0-9]/g, "") : ""
-                }
-              />
-            </Form.Item>
-            <Form.Item className='mr-5'
-              validateStatus={
-                touchedFields.tePractical && tePractical === undefined ? "error" : ""
-              }
-              help={
-                touchedFields.tePractical && tePractical === undefined
-                  ? "Please enter the Fe  Practical"
-                  : ""
-              }
-            >
-              <label className="block mb-2 text-sm font-medium text-gray-900">
-              Practical Batch
-              </label>
-              <InputNumber
-                type="number"
-                value={tePractical}
-                onChange={handleTePracticalChange}
-                className={`bg-gray-50 border ${
-                  touchedFields.tePractical && tePractical=== undefined
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 `}
-                placeholder="Enter the Practical Batch"
-                formatter={(value) =>
-                  value ? `${value}`.replace(/[^0-9]/g, "") : ""
-                }
-              />
-            </Form.Item>
-      
-           <Space direction="vertical" className='w-48 h-12'>
-          <Select {...teSelectProps} />
-        </Space>
-      </div>
-
-      <div className="flex items-center mb-4">
-        <h1 className="mr-5">BE</h1>
-        <Form.Item className='mr-5'
-              validateStatus={
-                touchedFields.feStrength && feStrength === undefined ? "error" : ""
-              }
-              help={
-                touchedFields.feStrength && feStrength === undefined
-                  ? "Please enter the Fe  Strength"
-                  : ""
-              }
-            >
-              <label className="block mb-2 text-sm font-medium text-gray-900">
-                Strength
-              </label>
-              <InputNumber
-                type="number"
-                value={beStrength}
-                onChange={handleBeStrengthChange}
-                className={`bg-gray-50 border ${
-                  touchedFields.feStrength && feStrength === undefined
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
-                placeholder="Enter the Strength"
-                formatter={(value) =>
-                  value ? `${value}`.replace(/[^0-9]/g, "") : ""
-                }
-              />
-            </Form.Item>
-            <Form.Item className='mr-5'
-              validateStatus={
-                touchedFields.bePractical && bePractical === undefined ? "error" : ""
-              }
-              help={
-                touchedFields.bePractical && bePractical === undefined
-                  ? "Please enter the Fe  Practical"
-                  : ""
-              }
-            >
-              <label className="block mb-2 text-sm font-medium text-gray-900">
-              Practical Batch
-              </label>
-              <InputNumber
-                type="number"
-                value={bePractical}
-                onChange={handleBePracticalChange}
-                className={`bg-gray-50 border ${
-                  touchedFields.bePractical && bePractical=== undefined
-                    ? "border-red-500"
-                    : "border-gray-300"
-                } text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 `}
-                placeholder="Enter the Practical Batch"
-                formatter={(value) =>
-                  value ? `${value}`.replace(/[^0-9]/g, "") : ""
-                }
-              />
-            </Form.Item>
-        
-         <Space direction="vertical" className='w-48 h-12'>
-          <Select {...beSelectProps} />
-        </Space>
-      </div> 
-      
-      <Button  type="primary" >Primary Button</Button>
-     
-    </>
+              <div
+                style={{
+                  marginRight: "20px",
+                  marginTop: "22px",
+                  color: "#718096",
+                }}
+              >
+                {getDivisionLabel(index)}
+              </div>
+              <div className="grid gap-6 mb-1 md:grid-cols-3 flex-grow">
+                <div>
+                  <label
+                    htmlFor={`first_name_${index}`}
+                    className="block mb-2 text-sm font-medium text-gray-900"
+                  >
+                    Class Strength
+                  </label>
+                  <input
+                    type="text"
+                    id={`first_name_${index}`}
+                    className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    placeholder="Enter the strength..."
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor={`last_name_${index}`}
+                    className="block mb-2 text-sm font-medium text-gray-900"
+                  >
+                    No. of practical batches
+                  </label>
+                  <input
+                    type="number"
+                    id={`last_name_${index}`}
+                    className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                    placeholder="Enter the practical batches..."
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor={`subjects_${index}`}
+                    className="block mb-2 text-sm font-medium text-gray-900"
+                  >
+                    Select the Subjects
+                  </label>
+                  <Select
+                    mode="tags"
+                    style={{ width: "100%" }}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-10 border-none"
+                    placeholder="Select the subjects..."
+                    onChange={(value) => handleSubjectChange(value, index)}
+                    options={options}
+                    optionRender={(option) => (
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          width: "100%",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            marginBottom: "4px",
+                          }}
+                        >
+                          <span>{option.data.label}</span>
+                          <span>{option.data.department}</span>
+                        </div>
+                        <div
+                          style={{
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {option.data.desc}
+                        </div>
+                      </div>
+                    )}
+                  />
+                </div>
+              </div>
+              {index !== 0 && (
+                <MinusCircleOutlined
+                  onClick={() => removeSubjectSelection("fourthYear", index)}
+                  style={{
+                    color: "red",
+                    marginLeft: "10px",
+                    marginTop: "20px",
+                    cursor: "pointer",
+                  }}
+                />
+              )}
+            </div>
+          </React.Fragment>
+        ))}
+        <div className="flex justify-center">
+          <button
+            onClick={() => addSubjectSelection("fourthYear")}
+            className="bg-gray-200 border-dashed border border-gray-400 w-3/4 text-gray-500 rounded-lg"
+          >
+            + Add field
+          </button>
+        </div>
+      </form>
+    </div>
   );
-}
+};
 
 export default MechClassForm;
+
+

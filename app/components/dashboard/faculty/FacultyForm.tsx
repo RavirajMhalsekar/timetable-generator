@@ -27,7 +27,7 @@ const FacultyForm: React.FC = () => {
   };
 
   const handleFacultyNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFacultyName(e.target.value.trim()); // Trim the value
+    setFacultyName(e.target.value);
     handleFieldTouch("facultyName");
   };
 
@@ -71,7 +71,7 @@ const FacultyForm: React.FC = () => {
     }
 
     const formData = {
-      facultyName,
+      facultyName: facultyName.trim(), 
       designation,
       department,
     };
@@ -88,16 +88,13 @@ const FacultyForm: React.FC = () => {
           designation: false,
           department: false,
         });
-      }, 700); // Simulating a delay before showing the success notification
+      }, 700); 
     } catch (error) {
       setIsLoading(false);
     }
   };
   return (
     <div className="relative">
-      <div className="flex items-center justify-between">
-        {/* <p className="text-gray-700">Want to add a new room?</p> */}
-      </div>
       <div className="absolute top-1 right-1 z-50 ">
         <button
           onClick={showModal}
@@ -164,7 +161,7 @@ const FacultyForm: React.FC = () => {
                 Designation
               </label>
               <Select
-                style={{ width: "100%", border: "none", height: 42 }} // Adjust width and border as needed
+                style={{ width: "100%", border: "none", height: 42 }} 
                 placeholder="Select designation"
                 value={designation}
                 onChange={handleDesignationChange}
@@ -197,7 +194,7 @@ const FacultyForm: React.FC = () => {
                 Department
               </label>
               <Select
-                style={{ width: "100%", border: "none", height: 42 }} // Adjust width and border as needed
+                style={{ width: "100%", border: "none", height: 42 }} 
                 placeholder="Select department"
                 value={department}
                 onChange={handleDepartmentChange}

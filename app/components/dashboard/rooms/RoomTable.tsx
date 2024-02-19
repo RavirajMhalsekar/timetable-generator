@@ -11,16 +11,17 @@ const RoomTable: React.FC = () => {
   useEffect(() => {
     const client = new Client();
     client
-      .setEndpoint('https://cloud.appwrite.io/v1')
-      .setProject('65af81642532e75bf90e');
+      .setEndpoint("https://cloud.appwrite.io/v1")
+      .setProject("65cca38ecf87da7b211a");
 
     const databases = new Databases(client);
 
     const fetchData = () => {
-      databases.listDocuments("65b12ffa18f8493c948e", "65b1300f9d902549e29f")
+      databases
+        .listDocuments("65cca3b35db95a90e8c4", "65cca3c1705d93403824")
         .then((response) => {
           const mappedData = response.documents.map((doc, index) => [
-            (index + 1),
+            index + 1,
             doc.name,
             doc.capacity,
           ]);
