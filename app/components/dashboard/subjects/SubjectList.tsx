@@ -21,9 +21,9 @@ const SubjectList: React.FC = () => {
 
   useEffect(() => {
     const client = new Client();
-    client
-      .setEndpoint("https://cloud.appwrite.io/v1")
-      .setProject("65cca38ecf87da7b211a");
+     client
+       .setEndpoint("https://cloud.appwrite.io/v1")
+       .setProject("65cca38ecf87da7b211a");
 
     const databases = new Databases(client);
 

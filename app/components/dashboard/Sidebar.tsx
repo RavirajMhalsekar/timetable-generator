@@ -16,7 +16,7 @@ function Sidebar() {
 
   return (
     <div className="sticky top-0 h-full w-3/12 bg-white rounded-2xl p-3 shadow-lg overflow-y-auto">
-      <div className="text-center space-x-4 p-2">Dashboard</div>
+      <div className="text-center space-x-4 p-2 text-lg text-gray-500">Dashboard</div>
       <hr className="w-full" />
       <ul className="space-y-2 text-sm mt-2">
         {/* Rooms Link */}
@@ -220,16 +220,16 @@ function Sidebar() {
           </Link>
         </li>
         <li>
-          <Link href="/components/dashboard/classroomDetails/Additional">
+          <Link href="/components/dashboard/additional">
             <p
               className={`flex items-center space-x-3 p-2 rounded-md font-medium ${
-                isActive("/components/dashboard/classroomDetails/Additional")
+                isActive("/components/dashboard/additional")
                   ? "bg-indigo-500 text-white"
                   : "text-gray-700 hover:bg-indigo-500 focus:bg-indigo-500 hover:text-white focus:shadow-outline"
               }`}
               onClick={() =>
                 handleSetActiveLink(
-                  "/components/dashboard/classroomDetails/Additional"
+                  "/components/dashboard/additional"
                 )
               }
             >

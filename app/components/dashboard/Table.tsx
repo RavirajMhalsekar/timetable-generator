@@ -38,11 +38,13 @@ const Table: FC<SimpleTableProps> = ({ columns, data }) => {
     return sortableItems;
   }, [data, sortConfig]);
 
-  const filteredData = sortedData.filter((row) =>
-    row.some((cell) => 
-      cell.toString().toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
+ const filteredData = sortedData.filter((row) =>
+   row.some(
+     (cell) =>
+       cell !== undefined &&
+       cell.toString().toLowerCase().includes(searchTerm.toLowerCase())
+   )
+ );
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;

@@ -12,7 +12,7 @@ const SubjectForm: React.FC = () => {
   const [lecture, setLecture] = useState<string>("");
   const [tutorial, setTutorial] = useState<string>("");
   const [practical, setPractical] = useState<string>("");
-  const [hours, setHours] = useState<string>("");
+
   const [semester, setSemester] = useState<string>("");
   const [department, setDepartment] = useState<string | undefined>(undefined);
   const [requireSplit, setRequireSplit] = useState<string | undefined>(
@@ -32,7 +32,7 @@ const SubjectForm: React.FC = () => {
     lecture: false,
     tutorial: false,
     practical: false,
-    hours: false,
+
     semester: false,
     department: false,
     requireSplit: false,
@@ -52,7 +52,7 @@ const SubjectForm: React.FC = () => {
     setLecture("");
     setTutorial("");
     setPractical("");
-    setHours("");
+
     setSemester("");
     setDepartment(undefined);
     setRequireSplit(undefined);
@@ -76,10 +76,6 @@ const SubjectForm: React.FC = () => {
 
   const handlePracticalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPractical(e.target.value);
-  };
-
-  const handleHoursChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setHours(e.target.value);
   };
 
   const handleSemesterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -109,7 +105,7 @@ const SubjectForm: React.FC = () => {
       lecture: !lecture.trim(),
       tutorial: !tutorial.trim(),
       practical: !practical.trim(),
-      hours: !hours.trim(),
+
       semester: !semester.trim(),
       department: !department,
       requireSplit: !requireSplit,
@@ -125,7 +121,7 @@ const SubjectForm: React.FC = () => {
         lecture: emptyFields.lecture,
         tutorial: emptyFields.tutorial,
         practical: emptyFields.practical,
-        hours: emptyFields.hours,
+
         semester: emptyFields.semester,
         department: emptyFields.department,
         requireSplit: emptyFields.requireSplit,
@@ -140,7 +136,7 @@ const SubjectForm: React.FC = () => {
       lecture,
       tutorial,
       practical,
-      hours,
+
       semester,
       department,
       requireSplit,
@@ -154,7 +150,7 @@ const SubjectForm: React.FC = () => {
         setLecture("");
         setTutorial("");
         setPractical("");
-        setHours("");
+
         setSemester("");
         setDepartment(undefined);
         setRequireSplit(undefined);
@@ -167,7 +163,7 @@ const SubjectForm: React.FC = () => {
           lecture: false,
           tutorial: false,
           practical: false,
-          hours: false,
+
           semester: false,
           department: false,
           requireSplit: false,
@@ -299,24 +295,6 @@ const SubjectForm: React.FC = () => {
                   />
                 </div>
               </div>
-              <div>
-                <label className="block mb-2 text-sm font-medium text-gray-900 ">
-                  Hours
-                </label>
-                <input
-                  type="number"
-                  className={`border ${
-                    touchedFields.hours && !hours && "border-red-500"
-                  } border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
-                  placeholder="Enter the hours..."
-                  pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
-                  value={hours}
-                  onChange={(e) => {
-                    handleHoursChange(e);
-                    handleFieldTouch("hours");
-                  }}
-                />
-              </div>
 
               <div>
                 <label className="block mb-2 text-sm font-medium text-gray-900 ">
@@ -335,6 +313,7 @@ const SubjectForm: React.FC = () => {
                   }}
                 />
               </div>
+
               <div style={{ position: "relative", width: "100%" }}>
                 <label className="block mb-2 text-sm font-medium text-gray-900">
                   Department
@@ -404,7 +383,7 @@ const SubjectForm: React.FC = () => {
                       setRequireSplit(value);
                       handleFieldTouch("requireSplit");
                     }}
-                    style={{ height: 42 }}
+                    style={{ height: 42, marginTop: 7 }}
                   >
                     <Option value="undefined" disabled>
                       Select an option
@@ -414,23 +393,6 @@ const SubjectForm: React.FC = () => {
                   </Select>
                 </Form.Item>
               </div>
-              {/* <div style={{ marginTop: "-0.5rem" }}>
-                <label className="block mb-2 text-sm font-medium text-gray-900 ">
-                  Faculty
-                </label>
-                <input
-                  type="text"
-                  className={`border ${
-                    touchedFields.faculty && !faculty && "border-red-500"
-                  } border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
-                  placeholder="Name of the faculty..."
-                  value={faculty}
-                  onChange={(e) => {
-                    handleFacultyChange(e);
-                    handleFieldTouch("faculty");
-                  }}
-                />
-              </div> */}
             </div>
             <div className="flex justify-center items-center mb-8 ">
               {isLoading ? (
