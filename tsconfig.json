@@ -22,6 +22,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/components/Database/SubmitRoomData.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/components/Database/SubmitRoomData.jsx", "app/components/dashboard/classroomDetails/Mechanical/MechClassForm.tsx"],
   "exclude": ["node_modules"]
 }

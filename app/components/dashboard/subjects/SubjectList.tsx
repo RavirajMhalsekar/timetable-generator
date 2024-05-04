@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useState } from 'react';
-import { Client, Databases } from 'appwrite';
+import { Client, Databases, Query } from "appwrite";
 import Table from "../Table";
 const SubjectList: React.FC = () => {
   const [data, setData] = useState<string[][]>([]);
@@ -29,7 +29,9 @@ const SubjectList: React.FC = () => {
 
     const fetchData = () => {
       databases
-        .listDocuments("65cca3b35db95a90e8c4", "65cca44746b071c7d98a")
+        .listDocuments("65cca3b35db95a90e8c4", "65cca44746b071c7d98a", [
+          Query.limit(300),
+        ])
         .then((response) => {
           console.log(response.documents);
           const mappedData = response.documents.map((doc, index) => [

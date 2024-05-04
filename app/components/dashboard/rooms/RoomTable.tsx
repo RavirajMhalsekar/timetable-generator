@@ -31,12 +31,12 @@ const RoomTable: React.FC = () => {
           console.log(error);
         });
     };
-
+ 
     fetchData(); // Initial fetch
 
-    const interval = setInterval(fetchData, pollingInterval); // Set up polling
+    // const interval = setInterval(fetchData, pollingInterval); // Set up polling
 
-    return () => clearInterval(interval); // Clear interval on component unmount
+    // return () => clearInterval(interval); // Clear interval on component unmount
   }, []);
 
   return (

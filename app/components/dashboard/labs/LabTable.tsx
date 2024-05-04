@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Client, Databases } from "appwrite";
+import { Client, Databases, Query } from "appwrite";
 import Table from "../Table";
 
 const LabTable: React.FC = () => {
@@ -23,7 +23,9 @@ const LabTable: React.FC = () => {
 
     const fetchData = () => {
       databases
-        .listDocuments("65cca3b35db95a90e8c4", "65cca3d2d3e781f1f216")
+        .listDocuments("65cca3b35db95a90e8c4", "65cca3d2d3e781f1f216", [
+          Query.limit(100),
+        ])
         .then((response) => {
           const mappedData = response.documents.map((doc, index) => [
             index + 1,

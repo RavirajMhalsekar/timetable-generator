@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useState } from 'react';
-import { Client, Databases } from 'appwrite';
+import { Client, Databases, Query } from "appwrite";
 import Table from "../Table";
 
 function FacultyList() {
@@ -18,7 +18,9 @@ function FacultyList() {
 
     const fetchData = () => {
       databases
-        .listDocuments("65cca3b35db95a90e8c4", "65cca3db4edc1e2a17bf")
+        .listDocuments("65cca3b35db95a90e8c4", "65cca3db4edc1e2a17bf", [
+          Query.limit(100),
+        ])
         .then((response) => {
           const mappedData = response.documents.map((doc, index) => [
             index + 1,
