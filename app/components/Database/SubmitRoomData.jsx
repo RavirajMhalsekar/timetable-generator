@@ -11,9 +11,10 @@ async function SubmitRoomData(formData) {
     try {
         const databaseID = "65cca3b35db95a90e8c4";
         const collectionId = "65cca3c1705d93403824"; 
-        await databases.createDocument(databaseID,collectionId, ID.unique(), {
-            name: formData.name,
-            capacity: formData.capacity,
+        await databases.createDocument(databaseID, collectionId, ID.unique(), {
+          name: formData.name,
+          capacity: formData.capacity,
+          department: formData.department,
         });
         notification.success({
             message: "Form data submitted successfully!",

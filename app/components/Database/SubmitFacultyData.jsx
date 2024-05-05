@@ -15,6 +15,7 @@ async function SubmitFacultyData(formData) {
       name: formData.facultyName,
       designation: formData.designation,
       department: formData.department,
+      shortName: formData.shortName,
     });
     notification.success({
       message: "Form data submitted successfully!",

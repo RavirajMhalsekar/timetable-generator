@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Modal, Form, Select, message } from "antd";
+import { Modal, Form, Select, message,Input } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import SubmitSubjectData from "../../Database/SubmitSubjectData";
 
@@ -67,15 +67,24 @@ const SubjectForm: React.FC = () => {
   };
 
   const handleLectureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLecture(e.target.value);
+    const value = parseInt(e.target.value, 10); // Convert the input value to a number
+    if (!isNaN(value)) {
+      setLecture(value.toString()); // Update the state with the converted value
+    }
   };
 
   const handleTutorialChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTutorial(e.target.value);
+    const value = parseInt(e.target.value, 10);
+    if (!isNaN(value)) {
+      setTutorial(value.toString());
+    }
   };
 
   const handlePracticalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPractical(e.target.value);
+    const value = parseInt(e.target.value, 10);
+    if (!isNaN(value)) {
+      setPractical(value.toString());
+    }
   };
 
   const handleSemesterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,11 +114,9 @@ const SubjectForm: React.FC = () => {
       lecture: !lecture.trim(),
       tutorial: !tutorial.trim(),
       practical: !practical.trim(),
-
       semester: !semester.trim(),
       department: !department,
       requireSplit: !requireSplit,
-      // faculty: !faculty.trim(),
     };
     const anyEmptyField = Object.values(emptyFields).some((field) => field);
 
@@ -121,28 +128,27 @@ const SubjectForm: React.FC = () => {
         lecture: emptyFields.lecture,
         tutorial: emptyFields.tutorial,
         practical: emptyFields.practical,
-
         semester: emptyFields.semester,
         department: emptyFields.department,
         requireSplit: emptyFields.requireSplit,
-        // faculty: emptyFields.faculty,
       });
       setIsLoading(false);
       return;
     }
-    const formData = {
-      subjectName,
-      subjectCode,
-      lecture,
-      tutorial,
-      practical,
 
-      semester,
+    const formData = {
+      subjectName, // Include subjectName as the name field
+      subjectCode, // Add the subjectCode as the code field
+      lecture: parseInt(lecture, 10),
+      tutorial: parseInt(tutorial, 10),
+      practical: parseInt(practical, 10),
+      semester: parseInt(semester, 10),
       department,
       requireSplit,
-      // faculty,
     };
+
     try {
+      console.log(formData);
       await SubmitSubjectData(formData);
       setTimeout(() => {
         setSubjectName("");
@@ -150,11 +156,9 @@ const SubjectForm: React.FC = () => {
         setLecture("");
         setTutorial("");
         setPractical("");
-
         setSemester("");
         setDepartment(undefined);
         setRequireSplit(undefined);
-        // setFaculty("");
         setIsModalOpen(false);
         setIsLoading(false);
         setTouchedFields({
@@ -163,11 +167,9 @@ const SubjectForm: React.FC = () => {
           lecture: false,
           tutorial: false,
           practical: false,
-
           semester: false,
           department: false,
           requireSplit: false,
-          // faculty: false,
         });
       }, 700); // Simulating a delay before showing the success notification
     } catch (error) {
@@ -204,26 +206,55 @@ const SubjectForm: React.FC = () => {
         <Modal open={isModalOpen} onCancel={handleCancel} footer={null}>
           <Form onFinish={handleSubmit}>
             <div className="grid gap-6 mt-2 mb-6 md:grid-cols-2">
-              <div>
-                <label className="block mb-2 text-sm font-medium text-gray-900 ">
-                  Subject Name
+              <Form.Item
+              // validateStatus={
+              //   touchedFields.subjectName && !subjectName ? "error" : ""
+              // }
+              // help={
+              //   touchedFields.subjectName && !subjectName
+              //     ? "Please enter faculty name"
+              //     : ""
+              // }
+              >
+                <label className="block mb-2 text-sm font-medium text-gray-900">
+                  Name
                 </label>
-                <input
-                  type="text"
+                <Input
                   className={`border ${
                     touchedFields.subjectName &&
                     !subjectName &&
                     "border-red-500"
                   } border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
-                  placeholder="eg. Cloud Computing"
+                  placeholder="Enter the name.."
                   value={subjectName}
-                  onChange={(e) => {
-                    handleSubjectNameChange(e);
-                    handleFieldTouch("subjectName");
-                  }}
+                  onChange={handleSubjectNameChange}
                 />
-              </div>
-              <div>
+              </Form.Item>
+              <Form.Item
+              // validateStatus={
+              //   touchedFields.subjectName && !subjectName ? "error" : ""
+              // }
+              // help={
+              //   touchedFields.subjectName && !subjectName
+              //     ? "Please enter faculty name"
+              //     : ""
+              // }
+              >
+                <label className="block mb-2 text-sm font-medium text-gray-900">
+                  Code
+                </label>
+                <Input
+                  className={`border ${
+                    touchedFields.subjectCode &&
+                    !subjectCode &&
+                    "border-red-500"
+                  } border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
+                  placeholder="Enter the code.."
+                  value={subjectCode}
+                  onChange={handleSubjectCodeChange}
+                />
+              </Form.Item>
+              {/* <div>
                 <label className="block mb-2 text-sm font-medium text-gray-900 ">
                   Subject Code
                 </label>
@@ -241,7 +272,7 @@ const SubjectForm: React.FC = () => {
                     handleFieldTouch("subjectCode");
                   }}
                 />
-              </div>
+              </div> */}
               <div className="grid gap-3 mb-2 md:grid-cols-3">
                 <div>
                   <label className="block mb-2 text-sm font-medium text-gray-900 ">
@@ -252,12 +283,8 @@ const SubjectForm: React.FC = () => {
                     className={`border ${
                       touchedFields.lecture && !lecture && "border-red-500"
                     } border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
-                    pattern="[0-9]{3}"
                     value={lecture}
-                    onChange={(e) => {
-                      handleLectureChange(e);
-                      handleFieldTouch("lecture");
-                    }}
+                    onChange={handleLectureChange}
                   />
                 </div>
                 <div>
@@ -269,12 +296,8 @@ const SubjectForm: React.FC = () => {
                     className={`border ${
                       touchedFields.tutorial && !tutorial && "border-red-500"
                     } border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
-                    pattern="[0-9]{3}"
                     value={tutorial}
-                    onChange={(e) => {
-                      handleTutorialChange(e);
-                      handleFieldTouch("tutorial");
-                    }}
+                    onChange={handleTutorialChange}
                   />
                 </div>
                 <div>
@@ -286,12 +309,8 @@ const SubjectForm: React.FC = () => {
                     className={`border ${
                       touchedFields.practical && !practical && "border-red-500"
                     } border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
-                    pattern="[0-9]{3}"
                     value={practical}
-                    onChange={(e) => {
-                      handlePracticalChange(e);
-                      handleFieldTouch("practical");
-                    }}
+                    onChange={handlePracticalChange}
                   />
                 </div>
               </div>

@@ -11,7 +11,6 @@ const SubjectList: React.FC = () => {
     "Lec",
     "Tut",
     "Prac",
-    "hours",
     "Sem",
     "Dept",
     "Split",
@@ -41,7 +40,6 @@ const SubjectList: React.FC = () => {
             doc.lecture,
             doc.tutorial,
             doc.practical,
-            doc.hours,
             doc.semester,
             doc.department,
             doc.split,
@@ -56,9 +54,9 @@ const SubjectList: React.FC = () => {
 
     fetchData(); // Initial fetch
 
-    const interval = setInterval(fetchData, pollingInterval); // Set up polling
+    // const interval = setInterval(fetchData, pollingInterval); // Set up polling
 
-    return () => clearInterval(interval); // Clear interval on component unmount
+    // return () => clearInterval(interval); // Clear interval on component unmount
   }, []);
   return (
     <div>

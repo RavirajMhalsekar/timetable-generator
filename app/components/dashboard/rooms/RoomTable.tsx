@@ -5,7 +5,7 @@ import Table from "../Table";
 
 const RoomTable: React.FC = () => {
   const [data, setData] = useState<string[][]>([]);
-  const columns = ["SrNo", "Name", "Capacity"];
+  const columns = ["SrNo", "Name", "Capacity", "Department"];
   const pollingInterval = 5000; // Poll every 5 seconds
 
   useEffect(() => {
@@ -24,6 +24,7 @@ const RoomTable: React.FC = () => {
             index + 1,
             doc.name,
             doc.capacity,
+            doc.department,
           ]);
           setData(mappedData);
         })

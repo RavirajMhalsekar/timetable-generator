@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Select, Button } from "antd";
 import { MinusCircleOutlined } from "@ant-design/icons";
 import { Client, Databases, Query } from "appwrite";
-
+import Link from "next/link";
 interface Option {
   label: string;
   value: string;
@@ -36,6 +36,7 @@ interface FacultyOption {
 const MechClassForm: React.FC = () => {
   const [options, setOptions] = useState<Option[]>([]);
   const [facultyOptions, setFacultyOptions] = useState<FacultyOption[]>([]);
+  const [shouldNavigate, setShouldNavigate] = useState(false);
   const [firstYearSelections, setFirstYearSelections] = useState<
     SubjectSelection[]
   >([
@@ -533,7 +534,8 @@ const MechClassForm: React.FC = () => {
     processYearData(fourthYearSelections, "BE");
 
     console.log(classDetails);
-    alert("Data sent successfully!");
+
+    setShouldNavigate(true);
   };
   const handlePracticalBatchChange = (
   value: number | null,
@@ -565,265 +567,4071 @@ const handleStrengthChange = (
   return (
     <div>
       <form>
-        <div className="flex items-center mb-3 mt-2">
-          <span>First Year</span>
-          <hr className="flex-grow border-gray-300 ml-4" />
-        </div>
-        {firstYearSelections.map((selection, index) => (
-          <React.Fragment key={index}>
-            {index !== 0 ? <hr className="my-4" /> : null}
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginBottom: "20px",
-              }}
-            >
+        <div className="mt-3 bg-white p-5 rounded-2xl shadow-lg mb-2">
+          <p className=" mb-3 text-center text-lg">Mechanical Department</p>
+          <div className="flex items-center mb-3 mt-2">
+            <span>First Year</span>
+            <hr className="flex-grow border-gray-300 ml-4" />
+          </div>
+          {firstYearSelections.map((selection, index) => (
+            <React.Fragment key={index}>
+              {index !== 0 ? <hr className="my-4" /> : null}
               <div
                 style={{
-                  marginRight: "20px",
-                  marginTop: "22px",
-                  color: "#718096",
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "20px",
                 }}
               >
-                <p className="flex flex-wrap">{getDivisionLabel(index)}</p>
-              </div>
-              <div className="grid gap-6 mb-1 md:grid-cols-3 flex-grow">
-                <div>
-                  <label
-                    htmlFor={`first_name_${index}`}
-                    className="block mb-2 text-sm font-medium text-gray-900"
-                  >
-                    Class Strength
-                  </label>
-                  <input
-                    type="number"
-                    id={`strength_${index}`}
-                    className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                    placeholder="Enter the strength..."
-                    value={strengths[`firstYear`]?.[index] ?? ""} // Change here
-                    onChange={(e) =>
-                      handleStrengthChange(
-                        e.target.value ? Number(e.target.value) : null,
-                        "firstYear",
-                        index
-                      )
-                    }
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor={`last_name_${index}`}
-                    className="block mb-2 text-sm font-medium text-gray-900"
-                  >
-                    No. of practical batches
-                  </label>
-                  <input
-                    type="number"
-                    id={`practical_batch_${index}`}
-                    className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                    placeholder="Enter the practical batches..."
-                    value={practicalBatches[`firstYear`]?.[index] ?? ""} // Change here
-                    onChange={(e) =>
-                      handlePracticalBatchChange(
-                        e.target.value ? Number(e.target.value) : null,
-                        "firstYear",
-                        index
-                      )
-                    }
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor={`subjects_${index}`}
-                    className="block mb-2 text-sm font-medium text-gray-900"
-                  >
-                    Select the Subjects
-                  </label>
-                  <Select
-                    mode="tags"
-                    style={{ width: "100%" }}
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-11 border-none"
-                    placeholder="Select the subjects..."
-                    onChange={(value) =>
-                      handleSubjectChange(value, index, "firstYear")
-                    }
-                    options={options}
-                    optionRender={(option) => (
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          width: "100%",
-                        }}
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            marginBottom: "4px",
-                          }}
-                        >
-                          <span>
-                            {option.data.label} (Sem {option.data.semester})
-                          </span>
-                          {/* <span>SEM {option.data.semester}</span> */}
-                          <span>{option.data.department}</span>
-                        </div>
-                        <div
-                          style={{
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                          }}
-                        >
-                          {option.data.desc}
-                        </div>
-                      </div>
-                    )}
-                  />
-                </div>
-              </div>
-              {index !== 0 && (
-                <MinusCircleOutlined
-                  onClick={() => removeSubjectSelection("firstYear", index)}
-                  style={{
-                    color: "red",
-                    marginLeft: "10px",
-                    marginTop: "20px",
-                    cursor: "pointer",
-                  }}
-                />
-              )}
-            </div>
-            <div className=" grid grid-cols-2 gap-5 rounded justify-center">
-              {selection.selectedSubjects.map((subject, subjectIndex) => (
                 <div
-                  key={subjectIndex}
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginBottom: "10px",
-                    marginLeft: "5px",
+                    marginRight: "20px",
+                    marginTop: "22px",
+                    color: "#718096",
                   }}
                 >
-                  <span className="mt-5 mr-2">
-                    {options.find((opt) => opt.value === subject)?.label}
-                  </span>
+                  <p className="flex flex-wrap">{getDivisionLabel(index)}</p>
+                </div>
+                <div className="grid gap-6 mb-1 md:grid-cols-3 flex-grow">
                   <div>
                     <label
-                      htmlFor={`faculty_${index}_${subjectIndex}`}
+                      htmlFor={`first_name_${index}`}
                       className="block mb-2 text-sm font-medium text-gray-900"
                     >
-                      Assign Faculty
-                    </label>
-                    <Select
-                      id={`faculty_${index}_${subjectIndex}`}
-                      style={{ width: "120px" }}
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
-                      options={facultyOptions}
-                      optionRender={(option) => (
-                        <div className="flex flex-col w-full">
-                          <span>{option.data.label}</span>
-                          {option.data.department && (
-                            <span className="text-gray-500 text-sm">
-                              {option.data.department}
-                            </span>
-                          )}
-                          {option.data.designation && (
-                            <span className="text-gray-500 text-sm">
-                              {option.data.designation}
-                            </span>
-                          )}
-                        </div>
-                      )}
-                      onChange={(value) =>
-                        handleFacultyAssignment(
-                          subject,
-                          value,
-                          index,
-                          "firstYear"
-                        )
-                      }
-                      value={
-                        selection.facultyAssignment[subject]
-                          ? `${selection.facultyAssignment[subject].name} (${selection.facultyAssignment[subject].department})`
-                          : ""
-                      }
-                      popupMatchSelectWidth={false}
-                      dropdownStyle={{ width: "300px" }}
-                    />
-                  </div>
-                  <div style={{ marginLeft: "20px" }}>
-                    <label
-                      htmlFor={`student_count_${index}_${subjectIndex}`}
-                      className="block mb-2 text-sm font-medium text-gray-900"
-                    >
-                      Student Count
+                      Class Strength
                     </label>
                     <input
                       type="number"
-                      id={`student_count_${index}_${subjectIndex}`}
-                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[120px] p-2.5"
-                      value={selection.studentCount[subject] || ""}
+                      id={`strength_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the strength..."
+                      value={strengths[`firstYear`]?.[index] ?? ""} // Change here
                       onChange={(e) =>
-                        handleStudentCount(
-                          subject,
-                          Number(e.target.value),
-                          index,
-                          "firstYear"
+                        handleStrengthChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "firstYear",
+                          index
                         )
                       }
                     />
                   </div>
-                  <div style={{ marginLeft: "20px" }}>
+                  <div>
                     <label
-                      htmlFor={`is_open_elective_${index}_${subjectIndex}`}
+                      htmlFor={`last_name_${index}`}
                       className="block mb-2 text-sm font-medium text-gray-900"
                     >
-                      Open Elective?
+                      No. of practical batches
+                    </label>
+                    <input
+                      type="number"
+                      id={`practical_batch_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the practical batches..."
+                      value={practicalBatches[`firstYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handlePracticalBatchChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "firstYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`subjects_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Select the Subjects
                     </label>
                     <Select
-                      style={{ width: "120px" }}
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
-                      id={`is_open_elective_${index}_${subjectIndex}`}
-                      value={selection.isOpenElective[subject] || "No"}
+                      mode="tags"
+                      style={{ width: "100%" }}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-11 border-none"
+                      placeholder="Select the subjects..."
                       onChange={(value) =>
-                        handleIsOpenElective(subject, value, index, "firstYear")
+                        handleSubjectChange(value, index, "firstYear")
                       }
-                      options={[
-                        { value: "Yes", label: "Yes" },
-                        { value: "No", label: "No" },
-                      ]}
+                      options={options}
+                      optionRender={(option) => (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "100%",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              marginBottom: "4px",
+                            }}
+                          >
+                            <span>
+                              {option.data.label} (Sem {option.data.semester})
+                            </span>
+                            {/* <span>SEM {option.data.semester}</span> */}
+                            <span>{option.data.department}</span>
+                          </div>
+                          <div
+                            style={{
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {option.data.desc}
+                          </div>
+                        </div>
+                      )}
                     />
                   </div>
                 </div>
-              ))}
-            </div>
-          </React.Fragment>
-        ))}
+                {index !== 0 && (
+                  <MinusCircleOutlined
+                    onClick={() => removeSubjectSelection("firstYear", index)}
+                    style={{
+                      color: "red",
+                      marginLeft: "10px",
+                      marginTop: "20px",
+                      cursor: "pointer",
+                    }}
+                  />
+                )}
+              </div>
+              <div className=" grid grid-cols-2 gap-5 rounded justify-center">
+                {selection.selectedSubjects.map((subject, subjectIndex) => (
+                  <div
+                    key={subjectIndex}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "10px",
+                      marginLeft: "5px",
+                    }}
+                  >
+                    <span className="mt-5 mr-2">
+                      {options.find((opt) => opt.value === subject)?.label}
+                    </span>
+                    <div>
+                      <label
+                        htmlFor={`faculty_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Assign Faculty
+                      </label>
+                      <Select
+                        id={`faculty_${index}_${subjectIndex}`}
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        options={facultyOptions}
+                        optionRender={(option) => (
+                          <div className="flex flex-col w-full">
+                            <span>{option.data.label}</span>
+                            {option.data.department && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.department}
+                              </span>
+                            )}
+                            {option.data.designation && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.designation}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        onChange={(value) =>
+                          handleFacultyAssignment(
+                            subject,
+                            value,
+                            index,
+                            "firstYear"
+                          )
+                        }
+                        value={
+                          selection.facultyAssignment[subject]
+                            ? `${selection.facultyAssignment[subject].name} (${selection.facultyAssignment[subject].department})`
+                            : ""
+                        }
+                        popupMatchSelectWidth={false}
+                        dropdownStyle={{ width: "300px" }}
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`student_count_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Student Count
+                      </label>
+                      <input
+                        type="number"
+                        id={`student_count_${index}_${subjectIndex}`}
+                        className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[120px] p-2.5"
+                        value={selection.studentCount[subject] || ""}
+                        onChange={(e) =>
+                          handleStudentCount(
+                            subject,
+                            Number(e.target.value),
+                            index,
+                            "firstYear"
+                          )
+                        }
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`is_open_elective_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Open Elective?
+                      </label>
+                      <Select
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        id={`is_open_elective_${index}_${subjectIndex}`}
+                        value={selection.isOpenElective[subject] || "No"}
+                        onChange={(value) =>
+                          handleIsOpenElective(
+                            subject,
+                            value,
+                            index,
+                            "firstYear"
+                          )
+                        }
+                        options={[
+                          { value: "Yes", label: "Yes" },
+                          { value: "No", label: "No" },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </React.Fragment>
+          ))}
 
-        <div className="flex justify-center">
-          <button
-            onClick={(event) => addSubjectSelection("firstYear", event)}
-            className="bg-gray-200 border-dashed border border-gray-400 w-3/4 text-gray-500 rounded-lg"
-          >
-            + Add more division
-          </button>
+          <div className="flex justify-center">
+            <button
+              onClick={(event) => addSubjectSelection("firstYear", event)}
+              className="bg-gray-200 border-dashed border border-gray-400 w-3/4 text-gray-500 rounded-lg"
+            >
+              + Add more division
+            </button>
+          </div>
+
+          <div className="flex items-center mb-3 mt-2">
+            <span>Second Year</span>
+            <hr className="flex-grow border-gray-300 ml-4" />
+          </div>
+          {secondYearSelections.map((selection, index) => (
+            <React.Fragment key={index}>
+              {index !== 0 ? <hr className="my-4" /> : null}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "20px",
+                }}
+              >
+                <div
+                  style={{
+                    marginRight: "20px",
+                    marginTop: "22px",
+                    color: "#718096",
+                  }}
+                >
+                  <p className="flex flex-wrap">{getDivisionLabel(index)}</p>
+                </div>
+                <div className="grid gap-6 mb-1 md:grid-cols-3 flex-grow">
+                  <div>
+                    <label
+                      htmlFor={`first_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Class Strength
+                    </label>
+                    <input
+                      type="number"
+                      id={`strength_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the strength..."
+                      value={strengths[`secondYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handleStrengthChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "secondYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`last_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      No. of practical batches
+                    </label>
+                    <input
+                      type="number"
+                      id={`practical_batch_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the practical batches..."
+                      value={practicalBatches[`secondYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handlePracticalBatchChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "secondYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`subjects_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Select the Subjects
+                    </label>
+                    <Select
+                      mode="tags"
+                      style={{ width: "100%" }}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-11 border-none"
+                      placeholder="Select the subjects..."
+                      onChange={(value) =>
+                        handleSubjectChange(value, index, "secondYear")
+                      }
+                      options={options}
+                      optionRender={(option) => (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "100%",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              marginBottom: "4px",
+                            }}
+                          >
+                            <span>
+                              {option.data.label} (Sem {option.data.semester})
+                            </span>
+                            {/* <span>SEM {option.data.semester}</span> */}
+                            <span>{option.data.department}</span>
+                          </div>
+                          <div
+                            style={{
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {option.data.desc}
+                          </div>
+                        </div>
+                      )}
+                    />
+                  </div>
+                </div>
+                {index !== 0 && (
+                  <MinusCircleOutlined
+                    onClick={() => removeSubjectSelection("secondYear", index)}
+                    style={{
+                      color: "red",
+                      marginLeft: "10px",
+                      marginTop: "20px",
+                      cursor: "pointer",
+                    }}
+                  />
+                )}
+              </div>
+              <div className=" grid grid-cols-2 gap-5 rounded justify-center">
+                {selection.selectedSubjects.map((subject, subjectIndex) => (
+                  <div
+                    key={subjectIndex}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "10px",
+                      marginLeft: "5px",
+                    }}
+                  >
+                    <span className="mt-5 mr-2">
+                      {options.find((opt) => opt.value === subject)?.label}
+                    </span>
+                    <div>
+                      <label
+                        htmlFor={`faculty_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Assign Faculty
+                      </label>
+                      <Select
+                        id={`faculty_${index}_${subjectIndex}`}
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        options={facultyOptions}
+                        optionRender={(option) => (
+                          <div className="flex flex-col w-full">
+                            <span>{option.data.label}</span>
+                            {option.data.department && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.department}
+                              </span>
+                            )}
+                            {option.data.designation && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.designation}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        onChange={(value) =>
+                          handleFacultyAssignment(
+                            subject,
+                            value,
+                            index,
+                            "secondYear"
+                          )
+                        }
+                        value={
+                          selection.facultyAssignment[subject]
+                            ? `${selection.facultyAssignment[subject].name} (${selection.facultyAssignment[subject].department})`
+                            : ""
+                        }
+                        popupMatchSelectWidth={false}
+                        dropdownStyle={{ width: "300px" }}
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`student_count_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Student Count
+                      </label>
+                      <input
+                        type="number"
+                        id={`student_count_${index}_${subjectIndex}`}
+                        className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[120px] p-2.5"
+                        value={selection.studentCount[subject] || ""}
+                        onChange={(e) =>
+                          handleStudentCount(
+                            subject,
+                            Number(e.target.value),
+                            index,
+                            "secondYear"
+                          )
+                        }
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`is_open_elective_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Open Elective?
+                      </label>
+                      <Select
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        id={`is_open_elective_${index}_${subjectIndex}`}
+                        value={selection.isOpenElective[subject] || "No"}
+                        onChange={(value) =>
+                          handleIsOpenElective(
+                            subject,
+                            value,
+                            index,
+                            "secondYear"
+                          )
+                        }
+                        options={[
+                          { value: "Yes", label: "Yes" },
+                          { value: "No", label: "No" },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </React.Fragment>
+          ))}
+
+          <div className="flex justify-center">
+            <button
+              onClick={(event) => addSubjectSelection("secondYear", event)}
+              className="bg-gray-200 border-dashed border border-gray-400 w-3/4 text-gray-500 rounded-lg"
+            >
+              + Add more division
+            </button>
+          </div>
+
+          <div className="flex items-center mb-3 mt-2">
+            <span>Third Year</span>
+            <hr className="flex-grow border-gray-300 ml-4" />
+          </div>
+          {thirdYearSelections.map((selection, index) => (
+            <React.Fragment key={index}>
+              {index !== 0 ? <hr className="my-4" /> : null}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "20px",
+                }}
+              >
+                <div
+                  style={{
+                    marginRight: "20px",
+                    marginTop: "22px",
+                    color: "#718096",
+                  }}
+                >
+                  <p className="flex flex-wrap">{getDivisionLabel(index)}</p>
+                </div>
+                <div className="grid gap-6 mb-1 md:grid-cols-3 flex-grow">
+                  <div>
+                    <label
+                      htmlFor={`first_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Class Strength
+                    </label>
+                    <input
+                      type="number"
+                      id={`strength_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the strength..."
+                      value={strengths[`thirdYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handleStrengthChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "thirdYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`last_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      No. of practical batches
+                    </label>
+                    <input
+                      type="number"
+                      id={`practical_batch_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the practical batches..."
+                      value={practicalBatches[`thirdYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handlePracticalBatchChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "thirdYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`subjects_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Select the Subjects
+                    </label>
+                    <Select
+                      mode="tags"
+                      style={{ width: "100%" }}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-11 border-none"
+                      placeholder="Select the subjects..."
+                      onChange={(value) =>
+                        handleSubjectChange(value, index, "thirdYear")
+                      }
+                      options={options}
+                      optionRender={(option) => (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "100%",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              marginBottom: "4px",
+                            }}
+                          >
+                            <span>
+                              {option.data.label} (Sem {option.data.semester})
+                            </span>
+                            {/* <span>SEM {option.data.semester}</span> */}
+                            <span>{option.data.department}</span>
+                          </div>
+                          <div
+                            style={{
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {option.data.desc}
+                          </div>
+                        </div>
+                      )}
+                    />
+                  </div>
+                </div>
+                {index !== 0 && (
+                  <MinusCircleOutlined
+                    onClick={() => removeSubjectSelection("thirdYear", index)}
+                    style={{
+                      color: "red",
+                      marginLeft: "10px",
+                      marginTop: "20px",
+                      cursor: "pointer",
+                    }}
+                  />
+                )}
+              </div>
+              <div className=" grid grid-cols-2 gap-5 rounded justify-center">
+                {selection.selectedSubjects.map((subject, subjectIndex) => (
+                  <div
+                    key={subjectIndex}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "10px",
+                      marginLeft: "5px",
+                    }}
+                  >
+                    <span className="mt-5 mr-2">
+                      {options.find((opt) => opt.value === subject)?.label}
+                    </span>
+                    <div>
+                      <label
+                        htmlFor={`faculty_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Assign Faculty
+                      </label>
+                      <Select
+                        id={`faculty_${index}_${subjectIndex}`}
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        options={facultyOptions}
+                        optionRender={(option) => (
+                          <div className="flex flex-col w-full">
+                            <span>{option.data.label}</span>
+                            {option.data.department && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.department}
+                              </span>
+                            )}
+                            {option.data.designation && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.designation}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        onChange={(value) =>
+                          handleFacultyAssignment(
+                            subject,
+                            value,
+                            index,
+                            "thirdYear"
+                          )
+                        }
+                        value={
+                          selection.facultyAssignment[subject]
+                            ? `${selection.facultyAssignment[subject].name} (${selection.facultyAssignment[subject].department})`
+                            : ""
+                        }
+                        popupMatchSelectWidth={false}
+                        dropdownStyle={{ width: "300px" }}
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`student_count_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Student Count
+                      </label>
+                      <input
+                        type="number"
+                        id={`student_count_${index}_${subjectIndex}`}
+                        className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[120px] p-2.5"
+                        value={selection.studentCount[subject] || ""}
+                        onChange={(e) =>
+                          handleStudentCount(
+                            subject,
+                            Number(e.target.value),
+                            index,
+                            "thirdYear"
+                          )
+                        }
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`is_open_elective_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Open Elective?
+                      </label>
+                      <Select
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        id={`is_open_elective_${index}_${subjectIndex}`}
+                        value={selection.isOpenElective[subject] || "No"}
+                        onChange={(value) =>
+                          handleIsOpenElective(
+                            subject,
+                            value,
+                            index,
+                            "thirdYear"
+                          )
+                        }
+                        options={[
+                          { value: "Yes", label: "Yes" },
+                          { value: "No", label: "No" },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </React.Fragment>
+          ))}
+
+          <div className="flex justify-center">
+            <button
+              onClick={(event) => addSubjectSelection("thirdYear", event)}
+              className="bg-gray-200 border-dashed border border-gray-400 w-3/4 text-gray-500 rounded-lg"
+            >
+              + Add more division
+            </button>
+          </div>
+
+          <div className="flex items-center mb-3 mt-2">
+            <span>Fourth Year</span>
+            <hr className="flex-grow border-gray-300 ml-4" />
+          </div>
+          {fourthYearSelections.map((selection, index) => (
+            <React.Fragment key={index}>
+              {index !== 0 ? <hr className="my-4" /> : null}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "20px",
+                }}
+              >
+                <div
+                  style={{
+                    marginRight: "20px",
+                    marginTop: "22px",
+                    color: "#718096",
+                  }}
+                >
+                  <p className="flex flex-wrap">{getDivisionLabel(index)}</p>
+                </div>
+                <div className="grid gap-6 mb-1 md:grid-cols-3 flex-grow">
+                  <div>
+                    <label
+                      htmlFor={`first_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Class Strength
+                    </label>
+                    <input
+                      type="number"
+                      id={`strength_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the strength..."
+                      value={strengths[`fourthYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handleStrengthChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "fourthYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`last_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      No. of practical batches
+                    </label>
+                    <input
+                      type="number"
+                      id={`practical_batch_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the practical batches..."
+                      value={practicalBatches[`fourthYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handlePracticalBatchChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "fourthYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`subjects_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Select the Subjects
+                    </label>
+                    <Select
+                      mode="tags"
+                      style={{ width: "100%" }}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-11 border-none"
+                      placeholder="Select the subjects..."
+                      onChange={(value) =>
+                        handleSubjectChange(value, index, "fourthYear")
+                      }
+                      options={options}
+                      optionRender={(option) => (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "100%",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              marginBottom: "4px",
+                            }}
+                          >
+                            <span>
+                              {option.data.label} (Sem {option.data.semester})
+                            </span>
+                            {/* <span>SEM {option.data.semester}</span> */}
+                            <span>{option.data.department}</span>
+                          </div>
+                          <div
+                            style={{
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {option.data.desc}
+                          </div>
+                        </div>
+                      )}
+                    />
+                  </div>
+                </div>
+                {index !== 0 && (
+                  <MinusCircleOutlined
+                    onClick={() => removeSubjectSelection("fourthYear", index)}
+                    style={{
+                      color: "red",
+                      marginLeft: "10px",
+                      marginTop: "20px",
+                      cursor: "pointer",
+                    }}
+                  />
+                )}
+              </div>
+              <div className=" grid grid-cols-2 gap-5 rounded justify-center">
+                {selection.selectedSubjects.map((subject, subjectIndex) => (
+                  <div
+                    key={subjectIndex}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "10px",
+                      marginLeft: "5px",
+                    }}
+                  >
+                    <span className="mt-5 mr-2">
+                      {options.find((opt) => opt.value === subject)?.label}
+                    </span>
+                    <div>
+                      <label
+                        htmlFor={`faculty_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Assign Faculty
+                      </label>
+                      <Select
+                        id={`faculty_${index}_${subjectIndex}`}
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        options={facultyOptions}
+                        optionRender={(option) => (
+                          <div className="flex flex-col w-full">
+                            <span>{option.data.label}</span>
+                            {option.data.department && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.department}
+                              </span>
+                            )}
+                            {option.data.designation && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.designation}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        onChange={(value) =>
+                          handleFacultyAssignment(
+                            subject,
+                            value,
+                            index,
+                            "fourthYear"
+                          )
+                        }
+                        value={
+                          selection.facultyAssignment[subject]
+                            ? `${selection.facultyAssignment[subject].name} (${selection.facultyAssignment[subject].department})`
+                            : ""
+                        }
+                        popupMatchSelectWidth={false}
+                        dropdownStyle={{ width: "300px" }}
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`student_count_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Student Count
+                      </label>
+                      <input
+                        type="number"
+                        id={`student_count_${index}_${subjectIndex}`}
+                        className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[120px] p-2.5"
+                        value={selection.studentCount[subject] || ""}
+                        onChange={(e) =>
+                          handleStudentCount(
+                            subject,
+                            Number(e.target.value),
+                            index,
+                            "fourthYear"
+                          )
+                        }
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`is_open_elective_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Open Elective?
+                      </label>
+                      <Select
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        id={`is_open_elective_${index}_${subjectIndex}`}
+                        value={selection.isOpenElective[subject] || "No"}
+                        onChange={(value) =>
+                          handleIsOpenElective(
+                            subject,
+                            value,
+                            index,
+                            "fourthYear"
+                          )
+                        }
+                        options={[
+                          { value: "Yes", label: "Yes" },
+                          { value: "No", label: "No" },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </React.Fragment>
+          ))}
+
+          <div className="flex justify-center">
+            <button
+              onClick={(event) => addSubjectSelection("fourthYear", event)}
+              className="bg-gray-200 border-dashed border border-gray-400 w-3/4 text-gray-500 rounded-lg"
+            >
+              + Add more division
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-3 bg-white p-5 rounded-2xl shadow-lg mb-2">
+          <p className=" mb-3 text-center text-lg">ECOMP Department</p>
+          <div className="flex items-center mb-3 mt-2">
+            <span>First Year</span>
+            <hr className="flex-grow border-gray-300 ml-4" />
+          </div>
+          {firstYearSelections.map((selection, index) => (
+            <React.Fragment key={index}>
+              {index !== 0 ? <hr className="my-4" /> : null}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "20px",
+                }}
+              >
+                <div
+                  style={{
+                    marginRight: "20px",
+                    marginTop: "22px",
+                    color: "#718096",
+                  }}
+                >
+                  <p className="flex flex-wrap">{getDivisionLabel(index)}</p>
+                </div>
+                <div className="grid gap-6 mb-1 md:grid-cols-3 flex-grow">
+                  <div>
+                    <label
+                      htmlFor={`first_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Class Strength
+                    </label>
+                    <input
+                      type="number"
+                      id={`strength_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the strength..."
+                      value={strengths[`firstYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handleStrengthChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "firstYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`last_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      No. of practical batches
+                    </label>
+                    <input
+                      type="number"
+                      id={`practical_batch_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the practical batches..."
+                      value={practicalBatches[`firstYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handlePracticalBatchChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "firstYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`subjects_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Select the Subjects
+                    </label>
+                    <Select
+                      mode="tags"
+                      style={{ width: "100%" }}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-11 border-none"
+                      placeholder="Select the subjects..."
+                      onChange={(value) =>
+                        handleSubjectChange(value, index, "firstYear")
+                      }
+                      options={options}
+                      optionRender={(option) => (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "100%",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              marginBottom: "4px",
+                            }}
+                          >
+                            <span>
+                              {option.data.label} (Sem {option.data.semester})
+                            </span>
+                            {/* <span>SEM {option.data.semester}</span> */}
+                            <span>{option.data.department}</span>
+                          </div>
+                          <div
+                            style={{
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {option.data.desc}
+                          </div>
+                        </div>
+                      )}
+                    />
+                  </div>
+                </div>
+                {index !== 0 && (
+                  <MinusCircleOutlined
+                    onClick={() => removeSubjectSelection("firstYear", index)}
+                    style={{
+                      color: "red",
+                      marginLeft: "10px",
+                      marginTop: "20px",
+                      cursor: "pointer",
+                    }}
+                  />
+                )}
+              </div>
+              <div className=" grid grid-cols-2 gap-5 rounded justify-center">
+                {selection.selectedSubjects.map((subject, subjectIndex) => (
+                  <div
+                    key={subjectIndex}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "10px",
+                      marginLeft: "5px",
+                    }}
+                  >
+                    <span className="mt-5 mr-2">
+                      {options.find((opt) => opt.value === subject)?.label}
+                    </span>
+                    <div>
+                      <label
+                        htmlFor={`faculty_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Assign Faculty
+                      </label>
+                      <Select
+                        id={`faculty_${index}_${subjectIndex}`}
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        options={facultyOptions}
+                        optionRender={(option) => (
+                          <div className="flex flex-col w-full">
+                            <span>{option.data.label}</span>
+                            {option.data.department && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.department}
+                              </span>
+                            )}
+                            {option.data.designation && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.designation}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        onChange={(value) =>
+                          handleFacultyAssignment(
+                            subject,
+                            value,
+                            index,
+                            "firstYear"
+                          )
+                        }
+                        value={
+                          selection.facultyAssignment[subject]
+                            ? `${selection.facultyAssignment[subject].name} (${selection.facultyAssignment[subject].department})`
+                            : ""
+                        }
+                        popupMatchSelectWidth={false}
+                        dropdownStyle={{ width: "300px" }}
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`student_count_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Student Count
+                      </label>
+                      <input
+                        type="number"
+                        id={`student_count_${index}_${subjectIndex}`}
+                        className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[120px] p-2.5"
+                        value={selection.studentCount[subject] || ""}
+                        onChange={(e) =>
+                          handleStudentCount(
+                            subject,
+                            Number(e.target.value),
+                            index,
+                            "firstYear"
+                          )
+                        }
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`is_open_elective_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Open Elective?
+                      </label>
+                      <Select
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        id={`is_open_elective_${index}_${subjectIndex}`}
+                        value={selection.isOpenElective[subject] || "No"}
+                        onChange={(value) =>
+                          handleIsOpenElective(
+                            subject,
+                            value,
+                            index,
+                            "firstYear"
+                          )
+                        }
+                        options={[
+                          { value: "Yes", label: "Yes" },
+                          { value: "No", label: "No" },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </React.Fragment>
+          ))}
+
+          <div className="flex justify-center">
+            <button
+              onClick={(event) => addSubjectSelection("firstYear", event)}
+              className="bg-gray-200 border-dashed border border-gray-400 w-3/4 text-gray-500 rounded-lg"
+            >
+              + Add more division
+            </button>
+          </div>
+
+          <div className="flex items-center mb-3 mt-2">
+            <span>Second Year</span>
+            <hr className="flex-grow border-gray-300 ml-4" />
+          </div>
+          {secondYearSelections.map((selection, index) => (
+            <React.Fragment key={index}>
+              {index !== 0 ? <hr className="my-4" /> : null}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "20px",
+                }}
+              >
+                <div
+                  style={{
+                    marginRight: "20px",
+                    marginTop: "22px",
+                    color: "#718096",
+                  }}
+                >
+                  <p className="flex flex-wrap">{getDivisionLabel(index)}</p>
+                </div>
+                <div className="grid gap-6 mb-1 md:grid-cols-3 flex-grow">
+                  <div>
+                    <label
+                      htmlFor={`first_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Class Strength
+                    </label>
+                    <input
+                      type="number"
+                      id={`strength_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the strength..."
+                      value={strengths[`secondYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handleStrengthChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "secondYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`last_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      No. of practical batches
+                    </label>
+                    <input
+                      type="number"
+                      id={`practical_batch_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the practical batches..."
+                      value={practicalBatches[`secondYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handlePracticalBatchChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "secondYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`subjects_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Select the Subjects
+                    </label>
+                    <Select
+                      mode="tags"
+                      style={{ width: "100%" }}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-11 border-none"
+                      placeholder="Select the subjects..."
+                      onChange={(value) =>
+                        handleSubjectChange(value, index, "secondYear")
+                      }
+                      options={options}
+                      optionRender={(option) => (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "100%",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              marginBottom: "4px",
+                            }}
+                          >
+                            <span>
+                              {option.data.label} (Sem {option.data.semester})
+                            </span>
+                            {/* <span>SEM {option.data.semester}</span> */}
+                            <span>{option.data.department}</span>
+                          </div>
+                          <div
+                            style={{
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {option.data.desc}
+                          </div>
+                        </div>
+                      )}
+                    />
+                  </div>
+                </div>
+                {index !== 0 && (
+                  <MinusCircleOutlined
+                    onClick={() => removeSubjectSelection("secondYear", index)}
+                    style={{
+                      color: "red",
+                      marginLeft: "10px",
+                      marginTop: "20px",
+                      cursor: "pointer",
+                    }}
+                  />
+                )}
+              </div>
+              <div className=" grid grid-cols-2 gap-5 rounded justify-center">
+                {selection.selectedSubjects.map((subject, subjectIndex) => (
+                  <div
+                    key={subjectIndex}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "10px",
+                      marginLeft: "5px",
+                    }}
+                  >
+                    <span className="mt-5 mr-2">
+                      {options.find((opt) => opt.value === subject)?.label}
+                    </span>
+                    <div>
+                      <label
+                        htmlFor={`faculty_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Assign Faculty
+                      </label>
+                      <Select
+                        id={`faculty_${index}_${subjectIndex}`}
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        options={facultyOptions}
+                        optionRender={(option) => (
+                          <div className="flex flex-col w-full">
+                            <span>{option.data.label}</span>
+                            {option.data.department && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.department}
+                              </span>
+                            )}
+                            {option.data.designation && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.designation}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        onChange={(value) =>
+                          handleFacultyAssignment(
+                            subject,
+                            value,
+                            index,
+                            "secondYear"
+                          )
+                        }
+                        value={
+                          selection.facultyAssignment[subject]
+                            ? `${selection.facultyAssignment[subject].name} (${selection.facultyAssignment[subject].department})`
+                            : ""
+                        }
+                        popupMatchSelectWidth={false}
+                        dropdownStyle={{ width: "300px" }}
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`student_count_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Student Count
+                      </label>
+                      <input
+                        type="number"
+                        id={`student_count_${index}_${subjectIndex}`}
+                        className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[120px] p-2.5"
+                        value={selection.studentCount[subject] || ""}
+                        onChange={(e) =>
+                          handleStudentCount(
+                            subject,
+                            Number(e.target.value),
+                            index,
+                            "secondYear"
+                          )
+                        }
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`is_open_elective_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Open Elective?
+                      </label>
+                      <Select
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        id={`is_open_elective_${index}_${subjectIndex}`}
+                        value={selection.isOpenElective[subject] || "No"}
+                        onChange={(value) =>
+                          handleIsOpenElective(
+                            subject,
+                            value,
+                            index,
+                            "secondYear"
+                          )
+                        }
+                        options={[
+                          { value: "Yes", label: "Yes" },
+                          { value: "No", label: "No" },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </React.Fragment>
+          ))}
+
+          <div className="flex justify-center">
+            <button
+              onClick={(event) => addSubjectSelection("secondYear", event)}
+              className="bg-gray-200 border-dashed border border-gray-400 w-3/4 text-gray-500 rounded-lg"
+            >
+              + Add more division
+            </button>
+          </div>
+
+          <div className="flex items-center mb-3 mt-2">
+            <span>Third Year</span>
+            <hr className="flex-grow border-gray-300 ml-4" />
+          </div>
+          {thirdYearSelections.map((selection, index) => (
+            <React.Fragment key={index}>
+              {index !== 0 ? <hr className="my-4" /> : null}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "20px",
+                }}
+              >
+                <div
+                  style={{
+                    marginRight: "20px",
+                    marginTop: "22px",
+                    color: "#718096",
+                  }}
+                >
+                  <p className="flex flex-wrap">{getDivisionLabel(index)}</p>
+                </div>
+                <div className="grid gap-6 mb-1 md:grid-cols-3 flex-grow">
+                  <div>
+                    <label
+                      htmlFor={`first_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Class Strength
+                    </label>
+                    <input
+                      type="number"
+                      id={`strength_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the strength..."
+                      value={strengths[`thirdYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handleStrengthChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "thirdYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`last_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      No. of practical batches
+                    </label>
+                    <input
+                      type="number"
+                      id={`practical_batch_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the practical batches..."
+                      value={practicalBatches[`thirdYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handlePracticalBatchChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "thirdYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`subjects_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Select the Subjects
+                    </label>
+                    <Select
+                      mode="tags"
+                      style={{ width: "100%" }}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-11 border-none"
+                      placeholder="Select the subjects..."
+                      onChange={(value) =>
+                        handleSubjectChange(value, index, "thirdYear")
+                      }
+                      options={options}
+                      optionRender={(option) => (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "100%",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              marginBottom: "4px",
+                            }}
+                          >
+                            <span>
+                              {option.data.label} (Sem {option.data.semester})
+                            </span>
+                            {/* <span>SEM {option.data.semester}</span> */}
+                            <span>{option.data.department}</span>
+                          </div>
+                          <div
+                            style={{
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {option.data.desc}
+                          </div>
+                        </div>
+                      )}
+                    />
+                  </div>
+                </div>
+                {index !== 0 && (
+                  <MinusCircleOutlined
+                    onClick={() => removeSubjectSelection("thirdYear", index)}
+                    style={{
+                      color: "red",
+                      marginLeft: "10px",
+                      marginTop: "20px",
+                      cursor: "pointer",
+                    }}
+                  />
+                )}
+              </div>
+              <div className=" grid grid-cols-2 gap-5 rounded justify-center">
+                {selection.selectedSubjects.map((subject, subjectIndex) => (
+                  <div
+                    key={subjectIndex}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "10px",
+                      marginLeft: "5px",
+                    }}
+                  >
+                    <span className="mt-5 mr-2">
+                      {options.find((opt) => opt.value === subject)?.label}
+                    </span>
+                    <div>
+                      <label
+                        htmlFor={`faculty_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Assign Faculty
+                      </label>
+                      <Select
+                        id={`faculty_${index}_${subjectIndex}`}
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        options={facultyOptions}
+                        optionRender={(option) => (
+                          <div className="flex flex-col w-full">
+                            <span>{option.data.label}</span>
+                            {option.data.department && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.department}
+                              </span>
+                            )}
+                            {option.data.designation && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.designation}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        onChange={(value) =>
+                          handleFacultyAssignment(
+                            subject,
+                            value,
+                            index,
+                            "thirdYear"
+                          )
+                        }
+                        value={
+                          selection.facultyAssignment[subject]
+                            ? `${selection.facultyAssignment[subject].name} (${selection.facultyAssignment[subject].department})`
+                            : ""
+                        }
+                        popupMatchSelectWidth={false}
+                        dropdownStyle={{ width: "300px" }}
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`student_count_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Student Count
+                      </label>
+                      <input
+                        type="number"
+                        id={`student_count_${index}_${subjectIndex}`}
+                        className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[120px] p-2.5"
+                        value={selection.studentCount[subject] || ""}
+                        onChange={(e) =>
+                          handleStudentCount(
+                            subject,
+                            Number(e.target.value),
+                            index,
+                            "thirdYear"
+                          )
+                        }
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`is_open_elective_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Open Elective?
+                      </label>
+                      <Select
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        id={`is_open_elective_${index}_${subjectIndex}`}
+                        value={selection.isOpenElective[subject] || "No"}
+                        onChange={(value) =>
+                          handleIsOpenElective(
+                            subject,
+                            value,
+                            index,
+                            "thirdYear"
+                          )
+                        }
+                        options={[
+                          { value: "Yes", label: "Yes" },
+                          { value: "No", label: "No" },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </React.Fragment>
+          ))}
+
+          <div className="flex justify-center">
+            <button
+              onClick={(event) => addSubjectSelection("thirdYear", event)}
+              className="bg-gray-200 border-dashed border border-gray-400 w-3/4 text-gray-500 rounded-lg"
+            >
+              + Add more division
+            </button>
+          </div>
+
+          <div className="flex items-center mb-3 mt-2">
+            <span>Fourth Year</span>
+            <hr className="flex-grow border-gray-300 ml-4" />
+          </div>
+          {fourthYearSelections.map((selection, index) => (
+            <React.Fragment key={index}>
+              {index !== 0 ? <hr className="my-4" /> : null}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "20px",
+                }}
+              >
+                <div
+                  style={{
+                    marginRight: "20px",
+                    marginTop: "22px",
+                    color: "#718096",
+                  }}
+                >
+                  <p className="flex flex-wrap">{getDivisionLabel(index)}</p>
+                </div>
+                <div className="grid gap-6 mb-1 md:grid-cols-3 flex-grow">
+                  <div>
+                    <label
+                      htmlFor={`first_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Class Strength
+                    </label>
+                    <input
+                      type="number"
+                      id={`strength_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the strength..."
+                      value={strengths[`fourthYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handleStrengthChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "fourthYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`last_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      No. of practical batches
+                    </label>
+                    <input
+                      type="number"
+                      id={`practical_batch_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the practical batches..."
+                      value={practicalBatches[`fourthYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handlePracticalBatchChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "fourthYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`subjects_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Select the Subjects
+                    </label>
+                    <Select
+                      mode="tags"
+                      style={{ width: "100%" }}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-11 border-none"
+                      placeholder="Select the subjects..."
+                      onChange={(value) =>
+                        handleSubjectChange(value, index, "fourthYear")
+                      }
+                      options={options}
+                      optionRender={(option) => (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "100%",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              marginBottom: "4px",
+                            }}
+                          >
+                            <span>
+                              {option.data.label} (Sem {option.data.semester})
+                            </span>
+                            {/* <span>SEM {option.data.semester}</span> */}
+                            <span>{option.data.department}</span>
+                          </div>
+                          <div
+                            style={{
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {option.data.desc}
+                          </div>
+                        </div>
+                      )}
+                    />
+                  </div>
+                </div>
+                {index !== 0 && (
+                  <MinusCircleOutlined
+                    onClick={() => removeSubjectSelection("fourthYear", index)}
+                    style={{
+                      color: "red",
+                      marginLeft: "10px",
+                      marginTop: "20px",
+                      cursor: "pointer",
+                    }}
+                  />
+                )}
+              </div>
+              <div className=" grid grid-cols-2 gap-5 rounded justify-center">
+                {selection.selectedSubjects.map((subject, subjectIndex) => (
+                  <div
+                    key={subjectIndex}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "10px",
+                      marginLeft: "5px",
+                    }}
+                  >
+                    <span className="mt-5 mr-2">
+                      {options.find((opt) => opt.value === subject)?.label}
+                    </span>
+                    <div>
+                      <label
+                        htmlFor={`faculty_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Assign Faculty
+                      </label>
+                      <Select
+                        id={`faculty_${index}_${subjectIndex}`}
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        options={facultyOptions}
+                        optionRender={(option) => (
+                          <div className="flex flex-col w-full">
+                            <span>{option.data.label}</span>
+                            {option.data.department && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.department}
+                              </span>
+                            )}
+                            {option.data.designation && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.designation}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        onChange={(value) =>
+                          handleFacultyAssignment(
+                            subject,
+                            value,
+                            index,
+                            "fourthYear"
+                          )
+                        }
+                        value={
+                          selection.facultyAssignment[subject]
+                            ? `${selection.facultyAssignment[subject].name} (${selection.facultyAssignment[subject].department})`
+                            : ""
+                        }
+                        popupMatchSelectWidth={false}
+                        dropdownStyle={{ width: "300px" }}
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`student_count_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Student Count
+                      </label>
+                      <input
+                        type="number"
+                        id={`student_count_${index}_${subjectIndex}`}
+                        className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[120px] p-2.5"
+                        value={selection.studentCount[subject] || ""}
+                        onChange={(e) =>
+                          handleStudentCount(
+                            subject,
+                            Number(e.target.value),
+                            index,
+                            "fourthYear"
+                          )
+                        }
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`is_open_elective_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Open Elective?
+                      </label>
+                      <Select
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        id={`is_open_elective_${index}_${subjectIndex}`}
+                        value={selection.isOpenElective[subject] || "No"}
+                        onChange={(value) =>
+                          handleIsOpenElective(
+                            subject,
+                            value,
+                            index,
+                            "fourthYear"
+                          )
+                        }
+                        options={[
+                          { value: "Yes", label: "Yes" },
+                          { value: "No", label: "No" },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </React.Fragment>
+          ))}
+
+          <div className="flex justify-center">
+            <button
+              onClick={(event) => addSubjectSelection("fourthYear", event)}
+              className="bg-gray-200 border-dashed border border-gray-400 w-3/4 text-gray-500 rounded-lg"
+            >
+              + Add more division
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-3 bg-white p-5 rounded-2xl shadow-lg mb-2">
+          <p className=" mb-3 text-center text-lg">Computer Department</p>
+          <div className="flex items-center mb-3 mt-2">
+            <span>First Year</span>
+            <hr className="flex-grow border-gray-300 ml-4" />
+          </div>
+          {firstYearSelections.map((selection, index) => (
+            <React.Fragment key={index}>
+              {index !== 0 ? <hr className="my-4" /> : null}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "20px",
+                }}
+              >
+                <div
+                  style={{
+                    marginRight: "20px",
+                    marginTop: "22px",
+                    color: "#718096",
+                  }}
+                >
+                  <p className="flex flex-wrap">{getDivisionLabel(index)}</p>
+                </div>
+                <div className="grid gap-6 mb-1 md:grid-cols-3 flex-grow">
+                  <div>
+                    <label
+                      htmlFor={`first_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Class Strength
+                    </label>
+                    <input
+                      type="number"
+                      id={`strength_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the strength..."
+                      value={strengths[`firstYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handleStrengthChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "firstYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`last_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      No. of practical batches
+                    </label>
+                    <input
+                      type="number"
+                      id={`practical_batch_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the practical batches..."
+                      value={practicalBatches[`firstYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handlePracticalBatchChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "firstYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`subjects_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Select the Subjects
+                    </label>
+                    <Select
+                      mode="tags"
+                      style={{ width: "100%" }}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-11 border-none"
+                      placeholder="Select the subjects..."
+                      onChange={(value) =>
+                        handleSubjectChange(value, index, "firstYear")
+                      }
+                      options={options}
+                      optionRender={(option) => (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "100%",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              marginBottom: "4px",
+                            }}
+                          >
+                            <span>
+                              {option.data.label} (Sem {option.data.semester})
+                            </span>
+                            {/* <span>SEM {option.data.semester}</span> */}
+                            <span>{option.data.department}</span>
+                          </div>
+                          <div
+                            style={{
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {option.data.desc}
+                          </div>
+                        </div>
+                      )}
+                    />
+                  </div>
+                </div>
+                {index !== 0 && (
+                  <MinusCircleOutlined
+                    onClick={() => removeSubjectSelection("firstYear", index)}
+                    style={{
+                      color: "red",
+                      marginLeft: "10px",
+                      marginTop: "20px",
+                      cursor: "pointer",
+                    }}
+                  />
+                )}
+              </div>
+              <div className=" grid grid-cols-2 gap-5 rounded justify-center">
+                {selection.selectedSubjects.map((subject, subjectIndex) => (
+                  <div
+                    key={subjectIndex}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "10px",
+                      marginLeft: "5px",
+                    }}
+                  >
+                    <span className="mt-5 mr-2">
+                      {options.find((opt) => opt.value === subject)?.label}
+                    </span>
+                    <div>
+                      <label
+                        htmlFor={`faculty_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Assign Faculty
+                      </label>
+                      <Select
+                        id={`faculty_${index}_${subjectIndex}`}
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        options={facultyOptions}
+                        optionRender={(option) => (
+                          <div className="flex flex-col w-full">
+                            <span>{option.data.label}</span>
+                            {option.data.department && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.department}
+                              </span>
+                            )}
+                            {option.data.designation && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.designation}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        onChange={(value) =>
+                          handleFacultyAssignment(
+                            subject,
+                            value,
+                            index,
+                            "firstYear"
+                          )
+                        }
+                        value={
+                          selection.facultyAssignment[subject]
+                            ? `${selection.facultyAssignment[subject].name} (${selection.facultyAssignment[subject].department})`
+                            : ""
+                        }
+                        popupMatchSelectWidth={false}
+                        dropdownStyle={{ width: "300px" }}
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`student_count_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Student Count
+                      </label>
+                      <input
+                        type="number"
+                        id={`student_count_${index}_${subjectIndex}`}
+                        className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[120px] p-2.5"
+                        value={selection.studentCount[subject] || ""}
+                        onChange={(e) =>
+                          handleStudentCount(
+                            subject,
+                            Number(e.target.value),
+                            index,
+                            "firstYear"
+                          )
+                        }
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`is_open_elective_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Open Elective?
+                      </label>
+                      <Select
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        id={`is_open_elective_${index}_${subjectIndex}`}
+                        value={selection.isOpenElective[subject] || "No"}
+                        onChange={(value) =>
+                          handleIsOpenElective(
+                            subject,
+                            value,
+                            index,
+                            "firstYear"
+                          )
+                        }
+                        options={[
+                          { value: "Yes", label: "Yes" },
+                          { value: "No", label: "No" },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </React.Fragment>
+          ))}
+
+          <div className="flex justify-center">
+            <button
+              onClick={(event) => addSubjectSelection("firstYear", event)}
+              className="bg-gray-200 border-dashed border border-gray-400 w-3/4 text-gray-500 rounded-lg"
+            >
+              + Add more division
+            </button>
+          </div>
+
+          <div className="flex items-center mb-3 mt-2">
+            <span>Second Year</span>
+            <hr className="flex-grow border-gray-300 ml-4" />
+          </div>
+          {secondYearSelections.map((selection, index) => (
+            <React.Fragment key={index}>
+              {index !== 0 ? <hr className="my-4" /> : null}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "20px",
+                }}
+              >
+                <div
+                  style={{
+                    marginRight: "20px",
+                    marginTop: "22px",
+                    color: "#718096",
+                  }}
+                >
+                  <p className="flex flex-wrap">{getDivisionLabel(index)}</p>
+                </div>
+                <div className="grid gap-6 mb-1 md:grid-cols-3 flex-grow">
+                  <div>
+                    <label
+                      htmlFor={`first_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Class Strength
+                    </label>
+                    <input
+                      type="number"
+                      id={`strength_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the strength..."
+                      value={strengths[`secondYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handleStrengthChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "secondYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`last_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      No. of practical batches
+                    </label>
+                    <input
+                      type="number"
+                      id={`practical_batch_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the practical batches..."
+                      value={practicalBatches[`secondYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handlePracticalBatchChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "secondYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`subjects_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Select the Subjects
+                    </label>
+                    <Select
+                      mode="tags"
+                      style={{ width: "100%" }}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-11 border-none"
+                      placeholder="Select the subjects..."
+                      onChange={(value) =>
+                        handleSubjectChange(value, index, "secondYear")
+                      }
+                      options={options}
+                      optionRender={(option) => (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "100%",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              marginBottom: "4px",
+                            }}
+                          >
+                            <span>
+                              {option.data.label} (Sem {option.data.semester})
+                            </span>
+                            {/* <span>SEM {option.data.semester}</span> */}
+                            <span>{option.data.department}</span>
+                          </div>
+                          <div
+                            style={{
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {option.data.desc}
+                          </div>
+                        </div>
+                      )}
+                    />
+                  </div>
+                </div>
+                {index !== 0 && (
+                  <MinusCircleOutlined
+                    onClick={() => removeSubjectSelection("secondYear", index)}
+                    style={{
+                      color: "red",
+                      marginLeft: "10px",
+                      marginTop: "20px",
+                      cursor: "pointer",
+                    }}
+                  />
+                )}
+              </div>
+              <div className=" grid grid-cols-2 gap-5 rounded justify-center">
+                {selection.selectedSubjects.map((subject, subjectIndex) => (
+                  <div
+                    key={subjectIndex}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "10px",
+                      marginLeft: "5px",
+                    }}
+                  >
+                    <span className="mt-5 mr-2">
+                      {options.find((opt) => opt.value === subject)?.label}
+                    </span>
+                    <div>
+                      <label
+                        htmlFor={`faculty_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Assign Faculty
+                      </label>
+                      <Select
+                        id={`faculty_${index}_${subjectIndex}`}
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        options={facultyOptions}
+                        optionRender={(option) => (
+                          <div className="flex flex-col w-full">
+                            <span>{option.data.label}</span>
+                            {option.data.department && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.department}
+                              </span>
+                            )}
+                            {option.data.designation && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.designation}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        onChange={(value) =>
+                          handleFacultyAssignment(
+                            subject,
+                            value,
+                            index,
+                            "secondYear"
+                          )
+                        }
+                        value={
+                          selection.facultyAssignment[subject]
+                            ? `${selection.facultyAssignment[subject].name} (${selection.facultyAssignment[subject].department})`
+                            : ""
+                        }
+                        popupMatchSelectWidth={false}
+                        dropdownStyle={{ width: "300px" }}
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`student_count_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Student Count
+                      </label>
+                      <input
+                        type="number"
+                        id={`student_count_${index}_${subjectIndex}`}
+                        className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[120px] p-2.5"
+                        value={selection.studentCount[subject] || ""}
+                        onChange={(e) =>
+                          handleStudentCount(
+                            subject,
+                            Number(e.target.value),
+                            index,
+                            "secondYear"
+                          )
+                        }
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`is_open_elective_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Open Elective?
+                      </label>
+                      <Select
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        id={`is_open_elective_${index}_${subjectIndex}`}
+                        value={selection.isOpenElective[subject] || "No"}
+                        onChange={(value) =>
+                          handleIsOpenElective(
+                            subject,
+                            value,
+                            index,
+                            "secondYear"
+                          )
+                        }
+                        options={[
+                          { value: "Yes", label: "Yes" },
+                          { value: "No", label: "No" },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </React.Fragment>
+          ))}
+
+          <div className="flex justify-center">
+            <button
+              onClick={(event) => addSubjectSelection("secondYear", event)}
+              className="bg-gray-200 border-dashed border border-gray-400 w-3/4 text-gray-500 rounded-lg"
+            >
+              + Add more division
+            </button>
+          </div>
+
+          <div className="flex items-center mb-3 mt-2">
+            <span>Third Year</span>
+            <hr className="flex-grow border-gray-300 ml-4" />
+          </div>
+          {thirdYearSelections.map((selection, index) => (
+            <React.Fragment key={index}>
+              {index !== 0 ? <hr className="my-4" /> : null}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "20px",
+                }}
+              >
+                <div
+                  style={{
+                    marginRight: "20px",
+                    marginTop: "22px",
+                    color: "#718096",
+                  }}
+                >
+                  <p className="flex flex-wrap">{getDivisionLabel(index)}</p>
+                </div>
+                <div className="grid gap-6 mb-1 md:grid-cols-3 flex-grow">
+                  <div>
+                    <label
+                      htmlFor={`first_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Class Strength
+                    </label>
+                    <input
+                      type="number"
+                      id={`strength_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the strength..."
+                      value={strengths[`thirdYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handleStrengthChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "thirdYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`last_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      No. of practical batches
+                    </label>
+                    <input
+                      type="number"
+                      id={`practical_batch_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the practical batches..."
+                      value={practicalBatches[`thirdYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handlePracticalBatchChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "thirdYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`subjects_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Select the Subjects
+                    </label>
+                    <Select
+                      mode="tags"
+                      style={{ width: "100%" }}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-11 border-none"
+                      placeholder="Select the subjects..."
+                      onChange={(value) =>
+                        handleSubjectChange(value, index, "thirdYear")
+                      }
+                      options={options}
+                      optionRender={(option) => (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "100%",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              marginBottom: "4px",
+                            }}
+                          >
+                            <span>
+                              {option.data.label} (Sem {option.data.semester})
+                            </span>
+                            {/* <span>SEM {option.data.semester}</span> */}
+                            <span>{option.data.department}</span>
+                          </div>
+                          <div
+                            style={{
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {option.data.desc}
+                          </div>
+                        </div>
+                      )}
+                    />
+                  </div>
+                </div>
+                {index !== 0 && (
+                  <MinusCircleOutlined
+                    onClick={() => removeSubjectSelection("thirdYear", index)}
+                    style={{
+                      color: "red",
+                      marginLeft: "10px",
+                      marginTop: "20px",
+                      cursor: "pointer",
+                    }}
+                  />
+                )}
+              </div>
+              <div className=" grid grid-cols-2 gap-5 rounded justify-center">
+                {selection.selectedSubjects.map((subject, subjectIndex) => (
+                  <div
+                    key={subjectIndex}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "10px",
+                      marginLeft: "5px",
+                    }}
+                  >
+                    <span className="mt-5 mr-2">
+                      {options.find((opt) => opt.value === subject)?.label}
+                    </span>
+                    <div>
+                      <label
+                        htmlFor={`faculty_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Assign Faculty
+                      </label>
+                      <Select
+                        id={`faculty_${index}_${subjectIndex}`}
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        options={facultyOptions}
+                        optionRender={(option) => (
+                          <div className="flex flex-col w-full">
+                            <span>{option.data.label}</span>
+                            {option.data.department && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.department}
+                              </span>
+                            )}
+                            {option.data.designation && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.designation}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        onChange={(value) =>
+                          handleFacultyAssignment(
+                            subject,
+                            value,
+                            index,
+                            "thirdYear"
+                          )
+                        }
+                        value={
+                          selection.facultyAssignment[subject]
+                            ? `${selection.facultyAssignment[subject].name} (${selection.facultyAssignment[subject].department})`
+                            : ""
+                        }
+                        popupMatchSelectWidth={false}
+                        dropdownStyle={{ width: "300px" }}
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`student_count_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Student Count
+                      </label>
+                      <input
+                        type="number"
+                        id={`student_count_${index}_${subjectIndex}`}
+                        className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[120px] p-2.5"
+                        value={selection.studentCount[subject] || ""}
+                        onChange={(e) =>
+                          handleStudentCount(
+                            subject,
+                            Number(e.target.value),
+                            index,
+                            "thirdYear"
+                          )
+                        }
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`is_open_elective_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Open Elective?
+                      </label>
+                      <Select
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        id={`is_open_elective_${index}_${subjectIndex}`}
+                        value={selection.isOpenElective[subject] || "No"}
+                        onChange={(value) =>
+                          handleIsOpenElective(
+                            subject,
+                            value,
+                            index,
+                            "thirdYear"
+                          )
+                        }
+                        options={[
+                          { value: "Yes", label: "Yes" },
+                          { value: "No", label: "No" },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </React.Fragment>
+          ))}
+
+          <div className="flex justify-center">
+            <button
+              onClick={(event) => addSubjectSelection("thirdYear", event)}
+              className="bg-gray-200 border-dashed border border-gray-400 w-3/4 text-gray-500 rounded-lg"
+            >
+              + Add more division
+            </button>
+          </div>
+
+          <div className="flex items-center mb-3 mt-2">
+            <span>Fourth Year</span>
+            <hr className="flex-grow border-gray-300 ml-4" />
+          </div>
+          {fourthYearSelections.map((selection, index) => (
+            <React.Fragment key={index}>
+              {index !== 0 ? <hr className="my-4" /> : null}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "20px",
+                }}
+              >
+                <div
+                  style={{
+                    marginRight: "20px",
+                    marginTop: "22px",
+                    color: "#718096",
+                  }}
+                >
+                  <p className="flex flex-wrap">{getDivisionLabel(index)}</p>
+                </div>
+                <div className="grid gap-6 mb-1 md:grid-cols-3 flex-grow">
+                  <div>
+                    <label
+                      htmlFor={`first_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Class Strength
+                    </label>
+                    <input
+                      type="number"
+                      id={`strength_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the strength..."
+                      value={strengths[`fourthYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handleStrengthChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "fourthYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`last_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      No. of practical batches
+                    </label>
+                    <input
+                      type="number"
+                      id={`practical_batch_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the practical batches..."
+                      value={practicalBatches[`fourthYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handlePracticalBatchChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "fourthYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`subjects_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Select the Subjects
+                    </label>
+                    <Select
+                      mode="tags"
+                      style={{ width: "100%" }}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-11 border-none"
+                      placeholder="Select the subjects..."
+                      onChange={(value) =>
+                        handleSubjectChange(value, index, "fourthYear")
+                      }
+                      options={options}
+                      optionRender={(option) => (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "100%",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              marginBottom: "4px",
+                            }}
+                          >
+                            <span>
+                              {option.data.label} (Sem {option.data.semester})
+                            </span>
+                            {/* <span>SEM {option.data.semester}</span> */}
+                            <span>{option.data.department}</span>
+                          </div>
+                          <div
+                            style={{
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {option.data.desc}
+                          </div>
+                        </div>
+                      )}
+                    />
+                  </div>
+                </div>
+                {index !== 0 && (
+                  <MinusCircleOutlined
+                    onClick={() => removeSubjectSelection("fourthYear", index)}
+                    style={{
+                      color: "red",
+                      marginLeft: "10px",
+                      marginTop: "20px",
+                      cursor: "pointer",
+                    }}
+                  />
+                )}
+              </div>
+              <div className=" grid grid-cols-2 gap-5 rounded justify-center">
+                {selection.selectedSubjects.map((subject, subjectIndex) => (
+                  <div
+                    key={subjectIndex}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "10px",
+                      marginLeft: "5px",
+                    }}
+                  >
+                    <span className="mt-5 mr-2">
+                      {options.find((opt) => opt.value === subject)?.label}
+                    </span>
+                    <div>
+                      <label
+                        htmlFor={`faculty_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Assign Faculty
+                      </label>
+                      <Select
+                        id={`faculty_${index}_${subjectIndex}`}
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        options={facultyOptions}
+                        optionRender={(option) => (
+                          <div className="flex flex-col w-full">
+                            <span>{option.data.label}</span>
+                            {option.data.department && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.department}
+                              </span>
+                            )}
+                            {option.data.designation && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.designation}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        onChange={(value) =>
+                          handleFacultyAssignment(
+                            subject,
+                            value,
+                            index,
+                            "fourthYear"
+                          )
+                        }
+                        value={
+                          selection.facultyAssignment[subject]
+                            ? `${selection.facultyAssignment[subject].name} (${selection.facultyAssignment[subject].department})`
+                            : ""
+                        }
+                        popupMatchSelectWidth={false}
+                        dropdownStyle={{ width: "300px" }}
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`student_count_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Student Count
+                      </label>
+                      <input
+                        type="number"
+                        id={`student_count_${index}_${subjectIndex}`}
+                        className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[120px] p-2.5"
+                        value={selection.studentCount[subject] || ""}
+                        onChange={(e) =>
+                          handleStudentCount(
+                            subject,
+                            Number(e.target.value),
+                            index,
+                            "fourthYear"
+                          )
+                        }
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`is_open_elective_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Open Elective?
+                      </label>
+                      <Select
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        id={`is_open_elective_${index}_${subjectIndex}`}
+                        value={selection.isOpenElective[subject] || "No"}
+                        onChange={(value) =>
+                          handleIsOpenElective(
+                            subject,
+                            value,
+                            index,
+                            "fourthYear"
+                          )
+                        }
+                        options={[
+                          { value: "Yes", label: "Yes" },
+                          { value: "No", label: "No" },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </React.Fragment>
+          ))}
+
+          <div className="flex justify-center">
+            <button
+              onClick={(event) => addSubjectSelection("fourthYear", event)}
+              className="bg-gray-200 border-dashed border border-gray-400 w-3/4 text-gray-500 rounded-lg"
+            >
+              + Add more division
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-3 bg-white p-5 rounded-2xl shadow-lg mb-2">
+          <p className=" mb-3 text-center text-lg">IT Department</p>
+          <div className="flex items-center mb-3 mt-2">
+            <span>First Year</span>
+            <hr className="flex-grow border-gray-300 ml-4" />
+          </div>
+          {firstYearSelections.map((selection, index) => (
+            <React.Fragment key={index}>
+              {index !== 0 ? <hr className="my-4" /> : null}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "20px",
+                }}
+              >
+                <div
+                  style={{
+                    marginRight: "20px",
+                    marginTop: "22px",
+                    color: "#718096",
+                  }}
+                >
+                  <p className="flex flex-wrap">{getDivisionLabel(index)}</p>
+                </div>
+                <div className="grid gap-6 mb-1 md:grid-cols-3 flex-grow">
+                  <div>
+                    <label
+                      htmlFor={`first_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Class Strength
+                    </label>
+                    <input
+                      type="number"
+                      id={`strength_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the strength..."
+                      value={strengths[`firstYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handleStrengthChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "firstYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`last_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      No. of practical batches
+                    </label>
+                    <input
+                      type="number"
+                      id={`practical_batch_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the practical batches..."
+                      value={practicalBatches[`firstYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handlePracticalBatchChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "firstYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`subjects_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Select the Subjects
+                    </label>
+                    <Select
+                      mode="tags"
+                      style={{ width: "100%" }}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-11 border-none"
+                      placeholder="Select the subjects..."
+                      onChange={(value) =>
+                        handleSubjectChange(value, index, "firstYear")
+                      }
+                      options={options}
+                      optionRender={(option) => (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "100%",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              marginBottom: "4px",
+                            }}
+                          >
+                            <span>
+                              {option.data.label} (Sem {option.data.semester})
+                            </span>
+                            {/* <span>SEM {option.data.semester}</span> */}
+                            <span>{option.data.department}</span>
+                          </div>
+                          <div
+                            style={{
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {option.data.desc}
+                          </div>
+                        </div>
+                      )}
+                    />
+                  </div>
+                </div>
+                {index !== 0 && (
+                  <MinusCircleOutlined
+                    onClick={() => removeSubjectSelection("firstYear", index)}
+                    style={{
+                      color: "red",
+                      marginLeft: "10px",
+                      marginTop: "20px",
+                      cursor: "pointer",
+                    }}
+                  />
+                )}
+              </div>
+              <div className=" grid grid-cols-2 gap-5 rounded justify-center">
+                {selection.selectedSubjects.map((subject, subjectIndex) => (
+                  <div
+                    key={subjectIndex}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "10px",
+                      marginLeft: "5px",
+                    }}
+                  >
+                    <span className="mt-5 mr-2">
+                      {options.find((opt) => opt.value === subject)?.label}
+                    </span>
+                    <div>
+                      <label
+                        htmlFor={`faculty_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Assign Faculty
+                      </label>
+                      <Select
+                        id={`faculty_${index}_${subjectIndex}`}
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        options={facultyOptions}
+                        optionRender={(option) => (
+                          <div className="flex flex-col w-full">
+                            <span>{option.data.label}</span>
+                            {option.data.department && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.department}
+                              </span>
+                            )}
+                            {option.data.designation && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.designation}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        onChange={(value) =>
+                          handleFacultyAssignment(
+                            subject,
+                            value,
+                            index,
+                            "firstYear"
+                          )
+                        }
+                        value={
+                          selection.facultyAssignment[subject]
+                            ? `${selection.facultyAssignment[subject].name} (${selection.facultyAssignment[subject].department})`
+                            : ""
+                        }
+                        popupMatchSelectWidth={false}
+                        dropdownStyle={{ width: "300px" }}
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`student_count_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Student Count
+                      </label>
+                      <input
+                        type="number"
+                        id={`student_count_${index}_${subjectIndex}`}
+                        className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[120px] p-2.5"
+                        value={selection.studentCount[subject] || ""}
+                        onChange={(e) =>
+                          handleStudentCount(
+                            subject,
+                            Number(e.target.value),
+                            index,
+                            "firstYear"
+                          )
+                        }
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`is_open_elective_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Open Elective?
+                      </label>
+                      <Select
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        id={`is_open_elective_${index}_${subjectIndex}`}
+                        value={selection.isOpenElective[subject] || "No"}
+                        onChange={(value) =>
+                          handleIsOpenElective(
+                            subject,
+                            value,
+                            index,
+                            "firstYear"
+                          )
+                        }
+                        options={[
+                          { value: "Yes", label: "Yes" },
+                          { value: "No", label: "No" },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </React.Fragment>
+          ))}
+
+          <div className="flex justify-center">
+            <button
+              onClick={(event) => addSubjectSelection("firstYear", event)}
+              className="bg-gray-200 border-dashed border border-gray-400 w-3/4 text-gray-500 rounded-lg"
+            >
+              + Add more division
+            </button>
+          </div>
+
+          <div className="flex items-center mb-3 mt-2">
+            <span>Second Year</span>
+            <hr className="flex-grow border-gray-300 ml-4" />
+          </div>
+          {secondYearSelections.map((selection, index) => (
+            <React.Fragment key={index}>
+              {index !== 0 ? <hr className="my-4" /> : null}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "20px",
+                }}
+              >
+                <div
+                  style={{
+                    marginRight: "20px",
+                    marginTop: "22px",
+                    color: "#718096",
+                  }}
+                >
+                  <p className="flex flex-wrap">{getDivisionLabel(index)}</p>
+                </div>
+                <div className="grid gap-6 mb-1 md:grid-cols-3 flex-grow">
+                  <div>
+                    <label
+                      htmlFor={`first_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Class Strength
+                    </label>
+                    <input
+                      type="number"
+                      id={`strength_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the strength..."
+                      value={strengths[`secondYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handleStrengthChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "secondYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`last_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      No. of practical batches
+                    </label>
+                    <input
+                      type="number"
+                      id={`practical_batch_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the practical batches..."
+                      value={practicalBatches[`secondYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handlePracticalBatchChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "secondYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`subjects_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Select the Subjects
+                    </label>
+                    <Select
+                      mode="tags"
+                      style={{ width: "100%" }}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-11 border-none"
+                      placeholder="Select the subjects..."
+                      onChange={(value) =>
+                        handleSubjectChange(value, index, "secondYear")
+                      }
+                      options={options}
+                      optionRender={(option) => (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "100%",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              marginBottom: "4px",
+                            }}
+                          >
+                            <span>
+                              {option.data.label} (Sem {option.data.semester})
+                            </span>
+                            {/* <span>SEM {option.data.semester}</span> */}
+                            <span>{option.data.department}</span>
+                          </div>
+                          <div
+                            style={{
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {option.data.desc}
+                          </div>
+                        </div>
+                      )}
+                    />
+                  </div>
+                </div>
+                {index !== 0 && (
+                  <MinusCircleOutlined
+                    onClick={() => removeSubjectSelection("secondYear", index)}
+                    style={{
+                      color: "red",
+                      marginLeft: "10px",
+                      marginTop: "20px",
+                      cursor: "pointer",
+                    }}
+                  />
+                )}
+              </div>
+              <div className=" grid grid-cols-2 gap-5 rounded justify-center">
+                {selection.selectedSubjects.map((subject, subjectIndex) => (
+                  <div
+                    key={subjectIndex}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "10px",
+                      marginLeft: "5px",
+                    }}
+                  >
+                    <span className="mt-5 mr-2">
+                      {options.find((opt) => opt.value === subject)?.label}
+                    </span>
+                    <div>
+                      <label
+                        htmlFor={`faculty_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Assign Faculty
+                      </label>
+                      <Select
+                        id={`faculty_${index}_${subjectIndex}`}
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        options={facultyOptions}
+                        optionRender={(option) => (
+                          <div className="flex flex-col w-full">
+                            <span>{option.data.label}</span>
+                            {option.data.department && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.department}
+                              </span>
+                            )}
+                            {option.data.designation && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.designation}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        onChange={(value) =>
+                          handleFacultyAssignment(
+                            subject,
+                            value,
+                            index,
+                            "secondYear"
+                          )
+                        }
+                        value={
+                          selection.facultyAssignment[subject]
+                            ? `${selection.facultyAssignment[subject].name} (${selection.facultyAssignment[subject].department})`
+                            : ""
+                        }
+                        popupMatchSelectWidth={false}
+                        dropdownStyle={{ width: "300px" }}
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`student_count_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Student Count
+                      </label>
+                      <input
+                        type="number"
+                        id={`student_count_${index}_${subjectIndex}`}
+                        className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[120px] p-2.5"
+                        value={selection.studentCount[subject] || ""}
+                        onChange={(e) =>
+                          handleStudentCount(
+                            subject,
+                            Number(e.target.value),
+                            index,
+                            "secondYear"
+                          )
+                        }
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`is_open_elective_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Open Elective?
+                      </label>
+                      <Select
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        id={`is_open_elective_${index}_${subjectIndex}`}
+                        value={selection.isOpenElective[subject] || "No"}
+                        onChange={(value) =>
+                          handleIsOpenElective(
+                            subject,
+                            value,
+                            index,
+                            "secondYear"
+                          )
+                        }
+                        options={[
+                          { value: "Yes", label: "Yes" },
+                          { value: "No", label: "No" },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </React.Fragment>
+          ))}
+
+          <div className="flex justify-center">
+            <button
+              onClick={(event) => addSubjectSelection("secondYear", event)}
+              className="bg-gray-200 border-dashed border border-gray-400 w-3/4 text-gray-500 rounded-lg"
+            >
+              + Add more division
+            </button>
+          </div>
+
+          <div className="flex items-center mb-3 mt-2">
+            <span>Third Year</span>
+            <hr className="flex-grow border-gray-300 ml-4" />
+          </div>
+          {thirdYearSelections.map((selection, index) => (
+            <React.Fragment key={index}>
+              {index !== 0 ? <hr className="my-4" /> : null}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "20px",
+                }}
+              >
+                <div
+                  style={{
+                    marginRight: "20px",
+                    marginTop: "22px",
+                    color: "#718096",
+                  }}
+                >
+                  <p className="flex flex-wrap">{getDivisionLabel(index)}</p>
+                </div>
+                <div className="grid gap-6 mb-1 md:grid-cols-3 flex-grow">
+                  <div>
+                    <label
+                      htmlFor={`first_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Class Strength
+                    </label>
+                    <input
+                      type="number"
+                      id={`strength_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the strength..."
+                      value={strengths[`thirdYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handleStrengthChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "thirdYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`last_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      No. of practical batches
+                    </label>
+                    <input
+                      type="number"
+                      id={`practical_batch_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the practical batches..."
+                      value={practicalBatches[`thirdYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handlePracticalBatchChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "thirdYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`subjects_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Select the Subjects
+                    </label>
+                    <Select
+                      mode="tags"
+                      style={{ width: "100%" }}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-11 border-none"
+                      placeholder="Select the subjects..."
+                      onChange={(value) =>
+                        handleSubjectChange(value, index, "thirdYear")
+                      }
+                      options={options}
+                      optionRender={(option) => (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "100%",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              marginBottom: "4px",
+                            }}
+                          >
+                            <span>
+                              {option.data.label} (Sem {option.data.semester})
+                            </span>
+                            {/* <span>SEM {option.data.semester}</span> */}
+                            <span>{option.data.department}</span>
+                          </div>
+                          <div
+                            style={{
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {option.data.desc}
+                          </div>
+                        </div>
+                      )}
+                    />
+                  </div>
+                </div>
+                {index !== 0 && (
+                  <MinusCircleOutlined
+                    onClick={() => removeSubjectSelection("thirdYear", index)}
+                    style={{
+                      color: "red",
+                      marginLeft: "10px",
+                      marginTop: "20px",
+                      cursor: "pointer",
+                    }}
+                  />
+                )}
+              </div>
+              <div className=" grid grid-cols-2 gap-5 rounded justify-center">
+                {selection.selectedSubjects.map((subject, subjectIndex) => (
+                  <div
+                    key={subjectIndex}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "10px",
+                      marginLeft: "5px",
+                    }}
+                  >
+                    <span className="mt-5 mr-2">
+                      {options.find((opt) => opt.value === subject)?.label}
+                    </span>
+                    <div>
+                      <label
+                        htmlFor={`faculty_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Assign Faculty
+                      </label>
+                      <Select
+                        id={`faculty_${index}_${subjectIndex}`}
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        options={facultyOptions}
+                        optionRender={(option) => (
+                          <div className="flex flex-col w-full">
+                            <span>{option.data.label}</span>
+                            {option.data.department && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.department}
+                              </span>
+                            )}
+                            {option.data.designation && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.designation}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        onChange={(value) =>
+                          handleFacultyAssignment(
+                            subject,
+                            value,
+                            index,
+                            "thirdYear"
+                          )
+                        }
+                        value={
+                          selection.facultyAssignment[subject]
+                            ? `${selection.facultyAssignment[subject].name} (${selection.facultyAssignment[subject].department})`
+                            : ""
+                        }
+                        popupMatchSelectWidth={false}
+                        dropdownStyle={{ width: "300px" }}
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`student_count_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Student Count
+                      </label>
+                      <input
+                        type="number"
+                        id={`student_count_${index}_${subjectIndex}`}
+                        className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[120px] p-2.5"
+                        value={selection.studentCount[subject] || ""}
+                        onChange={(e) =>
+                          handleStudentCount(
+                            subject,
+                            Number(e.target.value),
+                            index,
+                            "thirdYear"
+                          )
+                        }
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`is_open_elective_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Open Elective?
+                      </label>
+                      <Select
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        id={`is_open_elective_${index}_${subjectIndex}`}
+                        value={selection.isOpenElective[subject] || "No"}
+                        onChange={(value) =>
+                          handleIsOpenElective(
+                            subject,
+                            value,
+                            index,
+                            "thirdYear"
+                          )
+                        }
+                        options={[
+                          { value: "Yes", label: "Yes" },
+                          { value: "No", label: "No" },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </React.Fragment>
+          ))}
+
+          <div className="flex justify-center">
+            <button
+              onClick={(event) => addSubjectSelection("thirdYear", event)}
+              className="bg-gray-200 border-dashed border border-gray-400 w-3/4 text-gray-500 rounded-lg"
+            >
+              + Add more division
+            </button>
+          </div>
+
+          <div className="flex items-center mb-3 mt-2">
+            <span>Fourth Year</span>
+            <hr className="flex-grow border-gray-300 ml-4" />
+          </div>
+          {fourthYearSelections.map((selection, index) => (
+            <React.Fragment key={index}>
+              {index !== 0 ? <hr className="my-4" /> : null}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "20px",
+                }}
+              >
+                <div
+                  style={{
+                    marginRight: "20px",
+                    marginTop: "22px",
+                    color: "#718096",
+                  }}
+                >
+                  <p className="flex flex-wrap">{getDivisionLabel(index)}</p>
+                </div>
+                <div className="grid gap-6 mb-1 md:grid-cols-3 flex-grow">
+                  <div>
+                    <label
+                      htmlFor={`first_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Class Strength
+                    </label>
+                    <input
+                      type="number"
+                      id={`strength_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the strength..."
+                      value={strengths[`fourthYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handleStrengthChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "fourthYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`last_name_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      No. of practical batches
+                    </label>
+                    <input
+                      type="number"
+                      id={`practical_batch_${index}`}
+                      className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                      placeholder="Enter the practical batches..."
+                      value={practicalBatches[`fourthYear`]?.[index] ?? ""} // Change here
+                      onChange={(e) =>
+                        handlePracticalBatchChange(
+                          e.target.value ? Number(e.target.value) : null,
+                          "fourthYear",
+                          index
+                        )
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor={`subjects_${index}`}
+                      className="block mb-2 text-sm font-medium text-gray-900"
+                    >
+                      Select the Subjects
+                    </label>
+                    <Select
+                      mode="tags"
+                      style={{ width: "100%" }}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full h-11 border-none"
+                      placeholder="Select the subjects..."
+                      onChange={(value) =>
+                        handleSubjectChange(value, index, "fourthYear")
+                      }
+                      options={options}
+                      optionRender={(option) => (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "100%",
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              marginBottom: "4px",
+                            }}
+                          >
+                            <span>
+                              {option.data.label} (Sem {option.data.semester})
+                            </span>
+                            {/* <span>SEM {option.data.semester}</span> */}
+                            <span>{option.data.department}</span>
+                          </div>
+                          <div
+                            style={{
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {option.data.desc}
+                          </div>
+                        </div>
+                      )}
+                    />
+                  </div>
+                </div>
+                {index !== 0 && (
+                  <MinusCircleOutlined
+                    onClick={() => removeSubjectSelection("fourthYear", index)}
+                    style={{
+                      color: "red",
+                      marginLeft: "10px",
+                      marginTop: "20px",
+                      cursor: "pointer",
+                    }}
+                  />
+                )}
+              </div>
+              <div className=" grid grid-cols-2 gap-5 rounded justify-center">
+                {selection.selectedSubjects.map((subject, subjectIndex) => (
+                  <div
+                    key={subjectIndex}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "10px",
+                      marginLeft: "5px",
+                    }}
+                  >
+                    <span className="mt-5 mr-2">
+                      {options.find((opt) => opt.value === subject)?.label}
+                    </span>
+                    <div>
+                      <label
+                        htmlFor={`faculty_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Assign Faculty
+                      </label>
+                      <Select
+                        id={`faculty_${index}_${subjectIndex}`}
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        options={facultyOptions}
+                        optionRender={(option) => (
+                          <div className="flex flex-col w-full">
+                            <span>{option.data.label}</span>
+                            {option.data.department && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.department}
+                              </span>
+                            )}
+                            {option.data.designation && (
+                              <span className="text-gray-500 text-sm">
+                                {option.data.designation}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        onChange={(value) =>
+                          handleFacultyAssignment(
+                            subject,
+                            value,
+                            index,
+                            "fourthYear"
+                          )
+                        }
+                        value={
+                          selection.facultyAssignment[subject]
+                            ? `${selection.facultyAssignment[subject].name} (${selection.facultyAssignment[subject].department})`
+                            : ""
+                        }
+                        popupMatchSelectWidth={false}
+                        dropdownStyle={{ width: "300px" }}
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`student_count_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Student Count
+                      </label>
+                      <input
+                        type="number"
+                        id={`student_count_${index}_${subjectIndex}`}
+                        className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[120px] p-2.5"
+                        value={selection.studentCount[subject] || ""}
+                        onChange={(e) =>
+                          handleStudentCount(
+                            subject,
+                            Number(e.target.value),
+                            index,
+                            "fourthYear"
+                          )
+                        }
+                      />
+                    </div>
+                    <div style={{ marginLeft: "20px" }}>
+                      <label
+                        htmlFor={`is_open_elective_${index}_${subjectIndex}`}
+                        className="block mb-2 text-sm font-medium text-gray-900"
+                      >
+                        Open Elective?
+                      </label>
+                      <Select
+                        style={{ width: "120px" }}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block h-10 border-none"
+                        id={`is_open_elective_${index}_${subjectIndex}`}
+                        value={selection.isOpenElective[subject] || "No"}
+                        onChange={(value) =>
+                          handleIsOpenElective(
+                            subject,
+                            value,
+                            index,
+                            "fourthYear"
+                          )
+                        }
+                        options={[
+                          { value: "Yes", label: "Yes" },
+                          { value: "No", label: "No" },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </React.Fragment>
+          ))}
+
+          <div className="flex justify-center">
+            <button
+              onClick={(event) => addSubjectSelection("fourthYear", event)}
+              className="bg-gray-200 border-dashed border border-gray-400 w-3/4 text-gray-500 rounded-lg"
+            >
+              + Add more division
+            </button>
+          </div>
         </div>
 
         {/* Repeat the above code for other years */}
         {/* ... */}
-        <button
+        <Link
           type="button"
+          href="/components/timetable"
           onClick={handleSubmit}
           className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
         >
           Submit
-        </button>
+        </Link>
       </form>
+      {shouldNavigate && (
+        <Link href="/components/timetable" passHref>
+          Navigate to Timetable
+        </Link>
+      )}
     </div>
   );
 };
 
 export default MechClassForm;
+
+
+

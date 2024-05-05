@@ -9,6 +9,7 @@ const { Option } = Select;
 const FacultyForm: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [facultyName, setFacultyName] = useState("");
+  const [shortName, setShortName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [designation, setDesignation] = useState<string | undefined>(undefined);
   const [department, setDepartment] = useState<string | undefined>(undefined);
@@ -16,6 +17,7 @@ const FacultyForm: React.FC = () => {
     facultyName: false,
     designation: false,
     department: false,
+    shortName:false,
   });
 
   const showModal = () => {
@@ -29,6 +31,10 @@ const FacultyForm: React.FC = () => {
   const handleFacultyNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFacultyName(e.target.value);
     handleFieldTouch("facultyName");
+  };
+  const handleShortNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setShortName(e.target.value);
+    handleFieldTouch("shortName");
   };
 
   const handleDesignationChange = (value: string) => {
@@ -53,6 +59,7 @@ const FacultyForm: React.FC = () => {
 
     const emptyFields = {
       facultyName: !facultyName.trim(),
+      shortName: !shortName.trim(),
       designation: !designation || designation === "undefined",
       department: !department || department === "undefined",
     };
@@ -65,20 +72,23 @@ const FacultyForm: React.FC = () => {
         facultyName: emptyFields.facultyName,
         designation: emptyFields.designation,
         department: emptyFields.department,
+        shortName: emptyFields.shortName,
       });
       setIsLoading(false);
       return;
     }
 
     const formData = {
-      facultyName: facultyName.trim(), 
+      facultyName: facultyName.trim(),
       designation,
       department,
+      shortName: shortName.trim().toUpperCase(),
     };
     try {
       await SubmitFacultyData(formData);
       setTimeout(() => {
         setFacultyName("");
+        setShortName("");
         setDesignation(undefined);
         setDepartment(undefined);
         setIsModalOpen(false);
@@ -87,6 +97,7 @@ const FacultyForm: React.FC = () => {
           facultyName: false,
           designation: false,
           department: false,
+          shortName: false,
         });
       }, 700); 
     } catch (error) {
@@ -161,12 +172,12 @@ const FacultyForm: React.FC = () => {
                 Designation
               </label>
               <Select
-                style={{ width: "100%", border: "none", height: 42 }} 
+                style={{ width: "100%", border: "none", height: 42 }}
                 placeholder="Select designation"
                 value={designation}
                 onChange={handleDesignationChange}
               >
-                <Option value="Professor - Head of Department">
+                <Option value="Head of Department">
                   Professor - Head of Department
                 </Option>
                 <Option value="Associate Professor">Associate Professor</Option>
@@ -194,7 +205,7 @@ const FacultyForm: React.FC = () => {
                 Department
               </label>
               <Select
-                style={{ width: "100%", border: "none", height: 42 }} 
+                style={{ width: "100%", border: "none", height: 42 }}
                 placeholder="Select department"
                 value={department}
                 onChange={handleDepartmentChange}
@@ -205,6 +216,28 @@ const FacultyForm: React.FC = () => {
                 <Option value="IT">IT</Option>
                 <Option value="Humanities">Humanities</Option>
               </Select>
+            </Form.Item>
+            <Form.Item
+              validateStatus={
+                touchedFields.shortName && !shortName ? "error" : ""
+              }
+              help={
+                touchedFields.shortName && !shortName
+                  ? "Please enter faculty name"
+                  : ""
+              }
+            >
+              <label className="block mb-2 text-sm font-medium text-gray-900">
+                short Name
+              </label>
+              <Input
+                className={`border ${
+                  touchedFields.shortName && !shortName && "border-red-500"
+                } border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5`}
+                placeholder="Enter the name.. eg. PP"
+                value={shortName}
+                onChange={handleShortNameChange}
+              />
             </Form.Item>
 
             <div className="flex justify-center items-center mb-8 ">

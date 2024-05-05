@@ -1,17 +1,21 @@
 "use client";
 import React, { useState } from "react";
-import { Modal, Input, InputNumber, Form, notification } from "antd";
+import { Modal, Input, InputNumber, Form, notification, Select } from "antd";
 import SubmitRoomData from "../../Database/SubmitRoomData";
 import { LoadingOutlined } from "@ant-design/icons";
 
+const { Option } = Select;
+
 const RoomForm: React.FC = () => {
   const [name, setName] = useState<string>("");
-  const [capacity, setCapacity] = useState<number | undefined>();
+  const [capacity, setCapacity] = useState<number | undefined>(undefined);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [department, setDepartment] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [touchedFields, setTouchedFields] = useState({
     name: false,
     capacity: false,
+    department: false,
   });
 
   const showModal = () => {
@@ -24,16 +28,18 @@ const RoomForm: React.FC = () => {
   };
 
   const handleCapacityChange = (value: number | undefined | null) => {
-    setCapacity(value === null ? undefined : value);
+    setCapacity(value || undefined);
     handleFieldTouch("capacity");
   };
 
   const resetForm = () => {
     setName("");
     setCapacity(undefined);
+    setDepartment("");
     setTouchedFields({
       name: false,
       capacity: false,
+      department: false,
     });
   };
 
@@ -50,6 +56,7 @@ const RoomForm: React.FC = () => {
     const emptyFields = {
       name: !name.trim(),
       capacity: capacity === undefined,
+      department: !department.trim(),
     };
 
     const anyEmptyField = Object.values(emptyFields).some((field) => field);
@@ -64,6 +71,7 @@ const RoomForm: React.FC = () => {
       setTouchedFields({
         name: emptyFields.name,
         capacity: emptyFields.capacity,
+        department: emptyFields.department,
       });
 
       setIsLoading(false);
@@ -73,6 +81,7 @@ const RoomForm: React.FC = () => {
     const formData = {
       name,
       capacity,
+      department,
     };
 
     try {
@@ -166,6 +175,35 @@ const RoomForm: React.FC = () => {
                   value ? `${value}`.replace(/[^0-9]/g, "") : ""
                 }
               />
+            </Form.Item>
+            <Form.Item
+              validateStatus={
+                touchedFields.department && !department.trim() ? "error" : ""
+              }
+              help={
+                touchedFields.department && !department.trim()
+                  ? "Please select a department"
+                  : ""
+              }
+            >
+              <label className="block mb-2 text-sm font-medium text-gray-900">
+                Department
+              </label>
+              <Select
+                placeholder="Select Department"
+                value={department}
+                onChange={(value) => {
+                  setDepartment(value);
+                  handleFieldTouch("department");
+                }}
+                style={{ height: 42 }}
+              >
+                <Option value="">Select an option</Option>
+                <Option value="MECH">Mechanical</Option>
+                <Option value="ECOMP">ECOMP</Option>
+                <Option value="COMP">Computer</Option>
+                <Option value="IT">IT</Option>
+              </Select>
             </Form.Item>
 
             <div className="flex justify-center items-center mb-8 ">
